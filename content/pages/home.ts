@@ -38,7 +38,6 @@ export type FinalCtaContent = {
   secondaryCta: CtaLink;
 };
 
-<<<<<<< HEAD
 export type TrustSectionContent = {
   title: string;
   intro: string;
@@ -46,20 +45,18 @@ export type TrustSectionContent = {
   note: string;
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
-=======
+};
+
 export type ExploreLinkItem = {
   title: string;
   description: string;
   href: string;
   anchorText: string;
->>>>>>> origin/main
 };
 
 export type HomePageContent = {
   hero: HeroContent;
-<<<<<<< HEAD
   trust: TrustSectionContent;
-=======
   exploreLinks: {
     title: string;
     intro: string;
@@ -73,7 +70,6 @@ export type HomePageContent = {
       after: string;
     };
   };
->>>>>>> origin/main
   benefits: {
     title: string;
     intro: string;
@@ -98,55 +94,49 @@ export type HomePageContent = {
 
 export const homePageContent: HomePageContent = {
   hero: {
-    eyebrow: "PPTWatermarkRemover",
-    title: "Clean up PPT, PPTX, and PDF presentations before you share",
+    eyebrow: "PPT Watermark Remover",
+    title: "Clean up AI-exported slides before you present",
     description:
-      "PPTWatermarkRemover helps teams remove distracting repeated marks from presentation files with temporary secure processing and fail-safe handling for unsupported structures.",
+      "PPTWatermarkRemover helps you remove distracting watermarks from exported presentation files so your deck looks polished and client-ready.",
     primaryCta: {
-      href: "/app/upload",
-      label: "View Upload Preview",
+      href: "/contact",
+      label: "Request Early Access",
     },
     secondaryCta: {
       href: "#faq",
       label: "See FAQ",
     },
   },
-<<<<<<< HEAD
   trust: {
     title: "Temporary processing trust model",
     intro:
-      "The primary upload workflow uses temporary server-side processing with short retention and explicit deletion behavior.",
+      "The primary upload workflow uses temporary processing with short retention and explicit deletion behavior.",
     highlights: [
       {
-        title: "Temporary storage only",
+        title: "Temporary upload",
         description:
-          "Uploaded files are stored only for analysis, cleanup, and artifact generation.",
+          "Uploaded files are stored only for analysis, preview, and downloadable output generation.",
       },
       {
-        title: "Deletion after download or expiry",
+        title: "Auto delete policy",
         description:
           "Files are intended to be deleted after download or short expiry windows.",
       },
       {
-        title: "No training on uploaded files",
-        description:
-          "Uploaded file contents are not used for model training.",
-      },
-      {
-        title: "Compatibility is workflow-specific",
-        description:
-          "Object-level cleanup works only for supported structures; unsupported structures fail safely.",
+        title: "No training",
+        description: "Uploaded file contents are not used for model training.",
       },
     ],
     note: "Current status: early temporary-processing beta. No permanent archive is intended.",
     primaryCta: {
       href: "/app/upload",
-      label: "Open Temporary Upload Workflow",
+      label: "Upload and preview",
     },
     secondaryCta: {
       href: "/privacy-policy",
-      label: "Read Privacy Policy",
-=======
+      label: "View privacy policy",
+    },
+  },
   exploreLinks: {
     title: "Explore Related PPT Cleanup Pages",
     intro:
@@ -205,28 +195,27 @@ export const homePageContent: HomePageContent = {
         },
       ],
       after: ", these focused pages can help you choose the right workflow faster.",
->>>>>>> origin/main
     },
   },
   benefits: {
     title: "Why teams use PPTWatermarkRemover",
     intro:
-      "Designed for teams that need cleaner presentation files while staying thoughtful about privacy and review workflows.",
+      "Designed for people shipping presentations fast and needing clean slides that look professional.",
     items: [
       {
-        title: "Reduce repetitive editing work",
+        title: "Save manual cleanup time",
         description:
-          "Handle repeated cleanup tasks in supported scenarios such as common logos, headers, and brand marks.",
+          "Reduce repetitive editing work when exported slides include unwanted visual marks.",
       },
       {
-        title: "Protect sharing quality",
+        title: "Protect presentation quality",
         description:
-          "Make shared decks more polished for client reviews, internal handoffs, and external presentations.",
+          "Keep your decks consistent and trustworthy for sales pitches, classes, and client reviews.",
       },
       {
-        title: "Built for practical compatibility",
+        title: "Built for common export formats",
         description:
-          "Focused on realistic PPT and PDF cleanup workflows where compatibility can be clearly defined.",
+          "Focused on practical cleanup workflows around AI-generated presentations and shared deck files.",
       },
     ],
   },
@@ -253,24 +242,24 @@ export const homePageContent: HomePageContent = {
     ],
   },
   howItWorks: {
-    title: "How rollout works",
+    title: "How it works",
     intro:
-      "Current rollout is focused on temporary processing reliability, trust transparency, and supported-case expansion.",
+      "Stage 1 is focused on early access. Processing workflow details are coming next.",
     steps: [
       {
-        title: "Upload to temporary job",
+        title: "Share your cleanup use case",
         description:
-          "Upload a PDF to temporary storage for server-side analysis.",
+          "Tell us what file types and watermark patterns you need to handle.",
       },
       {
-        title: "Review candidates and apply",
+        title: "Join early access",
         description:
-          "Select supported candidates, confirm scope, and run cleanup apply.",
+          "We confirm fit and invite qualified users to the first release group.",
       },
       {
-        title: "Download and auto-expire",
+        title: "Get notified when uploads open",
         description:
-          "Download cleaned PDF and report. Files are deleted after download or short expiry.",
+          "You will be first to know when the production cleanup workflow goes live.",
       },
     ],
   },
@@ -278,43 +267,38 @@ export const homePageContent: HomePageContent = {
     title: "Frequently asked questions",
     items: [
       {
-        question: "Do you upload my PPT or PDF to your servers?",
+        question: "Can I upload files right now?",
         answer:
-          "Yes, in the current primary workflow, uploaded files are processed in temporary server-side job storage.",
+          "Not yet. Stage 1 is a marketing and waitlist phase while we validate demand and prioritize file workflows.",
       },
       {
-        question: "How long are uploaded files stored?",
+        question: "What formats are you planning to support?",
         answer:
-          "Files are intended to be deleted after download or short expiry, and we do not intend to keep a long-term archive.",
+          "We are prioritizing presentation-related exports, including PPT, PPTX, and PDF use cases common in AI-generated slide workflows.",
       },
       {
-        question: "Is this 100% secure?",
+        question: "Is this for personal and business use?",
         answer:
-          "No online service can promise 100% security or zero risk. We use temporary retention and practical safeguards, and users should still apply their own data-handling judgment.",
+          "Yes. We are collecting requirements from freelancers, agencies, educators, and creators to shape the first release.",
       },
       {
-        question: "What file types and workflows are you targeting?",
+        question: "How do I request access?",
         answer:
-          "We currently focus on supported object-level cleanup scenarios in PDF uploads, such as repeated logos, headers, footers, and repeated brand marks. Compatibility depends on file structure.",
-      },
-      {
-        question: "Can this clean every watermark in every file?",
-        answer:
-          "No. Unsupported or flattened structures may fail safely instead of forcing destructive edits.",
+          "Use the contact page to share your use case and expected volume. We will follow up with early access details.",
       },
     ],
   },
   finalCta: {
-    title: "Need temporary-processing PDF cleanup?",
+    title: "Need cleaner slides for your next presentation?",
     description:
-      "Use the upload workflow to analyze candidates and run supported object-level cleanup, then download outputs before temporary expiry.",
+      "Tell us your workflow and we will notify you when early access opens.",
     primaryCta: {
-      href: "/app/upload",
-      label: "Go to Upload Workspace",
-    },
-    secondaryCta: {
       href: "/contact",
       label: "Contact Us",
+    },
+    secondaryCta: {
+      href: "#top",
+      label: "Back to Top",
     },
   },
 };
