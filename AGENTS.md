@@ -1,28 +1,26 @@
 # AGENTS.md
 
 ## Project
-This repository is for PPTWatermarkRemover, a marketing website and SEO landing-page project for an AI-export presentation cleanup tool.
+This repository is for PPTWatermarkRemover, an early-stage temporary-processing PDF cleanup product with supporting marketing and SEO pages.
 
 ## Current Stage
-Stage 1 is marketing-only.
+Stage 3+ pivot is active: temporary server-side processing is the primary product path.
 
-Do not build:
-- backend file processing
-- authentication
-- billing
-- dashboard
-- database
-- user accounts
-- storage pipelines
-- job queues
-- API workflows for real cleanup
+Core path:
+- upload PDF
+- temporary job storage
+- server-side analyze
+- candidate review
+- server-side apply
+- cleaned artifact download
+- delete after download or short expiry
 
-## Goals for Stage 1
+## Current Goals
 Build:
-- marketing homepage
-- SEO landing pages
-- static legal/support pages
-- CTA flows to future upload, contact, or waitlist actions
+- temporary server-side upload flow and cleanup artifacts
+- explicit supported-vs-unsupported object-level cleanup behavior
+- legal/trust copy aligned to temporary retention and deletion
+- marketing pages and SEO pages aligned with real product behavior
 
 ## Required Stack
 - Next.js App Router
@@ -54,6 +52,13 @@ Build:
 - Avoid premature abstractions.
 - Run lint and build before marking work complete.
 
+## Temporary Processing Rules
+- Uploaded files are temporary only, not permanent user storage.
+- Store per-job artifacts under temporary job folders.
+- Delete files after download or short expiry.
+- Do not log raw document contents.
+- Do not claim universal cleanup success; fail safely for unsupported structures.
+
 ## Initial Page Scope
 Only these pages should be considered first:
 - /
@@ -72,8 +77,10 @@ Only these pages should be considered first:
 - CMS
 - analytics integrations
 - payment logic
-- upload backend
 - admin area
+- auth/account system
+- permanent document archive
+- queue infrastructure unless clearly required
 
 ## Done When
 A task is complete only when:

@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 
+import { Footer } from "@/components/site/footer";
+import { Header } from "@/components/site/header";
+import { homeToolContent } from "@/content/pages/home-tool";
 import { privacyPolicyContent } from "@/content/pages/privacy-policy";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | PPTWatermarkRemover",
+  title: "Privacy Policy | NotebookLM Watermark Remover",
   description:
-    "Privacy Policy for the Stage 1 PPTWatermarkRemover marketing and contact website.",
+    "Privacy details for temporary upload, preview-first cleanup, auto delete behavior, and no-training policy.",
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="bg-slate-100 px-6 py-16 sm:py-20">
-      <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
+    <div className="min-h-screen bg-slate-100">
+      <Header brand={homeToolContent.header.brand} nav={homeToolContent.header.nav} />
+      <main className="px-6 py-16 sm:py-20">
+        <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
         <header>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             {privacyPolicyContent.title}
@@ -39,7 +44,9 @@ export default function PrivacyPolicyPage() {
             </section>
           ))}
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+      <Footer content={homeToolContent.footer} />
+    </div>
   );
 }

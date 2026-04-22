@@ -38,6 +38,15 @@ export type FinalCtaContent = {
   secondaryCta: CtaLink;
 };
 
+export type TrustSectionContent = {
+  title: string;
+  intro: string;
+  highlights: BenefitItem[];
+  note: string;
+  primaryCta: CtaLink;
+  secondaryCta: CtaLink;
+};
+
 export type ExploreLinkItem = {
   title: string;
   description: string;
@@ -47,6 +56,7 @@ export type ExploreLinkItem = {
 
 export type HomePageContent = {
   hero: HeroContent;
+  trust: TrustSectionContent;
   exploreLinks: {
     title: string;
     intro: string;
@@ -95,6 +105,36 @@ export const homePageContent: HomePageContent = {
     secondaryCta: {
       href: "#faq",
       label: "See FAQ",
+    },
+  },
+  trust: {
+    title: "Temporary processing trust model",
+    intro:
+      "The primary upload workflow uses temporary processing with short retention and explicit deletion behavior.",
+    highlights: [
+      {
+        title: "Temporary upload",
+        description:
+          "Uploaded files are stored only for analysis, preview, and downloadable output generation.",
+      },
+      {
+        title: "Auto delete policy",
+        description:
+          "Files are intended to be deleted after download or short expiry windows.",
+      },
+      {
+        title: "No training",
+        description: "Uploaded file contents are not used for model training.",
+      },
+    ],
+    note: "Current status: early temporary-processing beta. No permanent archive is intended.",
+    primaryCta: {
+      href: "/app/upload",
+      label: "Upload and preview",
+    },
+    secondaryCta: {
+      href: "/privacy-policy",
+      label: "View privacy policy",
     },
   },
   exploreLinks: {

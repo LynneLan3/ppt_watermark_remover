@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 
+import { Footer } from "@/components/site/footer";
+import { Header } from "@/components/site/header";
+import { homeToolContent } from "@/content/pages/home-tool";
 import { termsContent } from "@/content/pages/terms";
 
 export const metadata: Metadata = {
-  title: "Terms of Use | PPTWatermarkRemover",
+  title: "Terms of Use | NotebookLM Watermark Remover",
   description:
-    "Terms of Use for the PPTWatermarkRemover Stage 1 marketing and contact website.",
+    "Terms for temporary upload, preview-first workflow, supported-file handling, and website use.",
 };
 
 export default function TermsPage() {
   return (
-    <main className="bg-slate-100 px-6 py-16 sm:py-20">
-      <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
+    <div className="min-h-screen bg-slate-100">
+      <Header brand={homeToolContent.header.brand} nav={homeToolContent.header.nav} />
+      <main className="px-6 py-16 sm:py-20">
+        <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
         <header>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             {termsContent.title}
@@ -39,7 +44,9 @@ export default function TermsPage() {
             </section>
           ))}
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+      <Footer content={homeToolContent.footer} />
+    </div>
   );
 }

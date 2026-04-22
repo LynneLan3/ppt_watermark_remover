@@ -1,0 +1,36 @@
+{
+  "createdAt": "2026-04-20T00:00:00Z",
+  "engineHints": [
+    "Current engine MVP supports text_run and image_xobject only."
+  ],
+  "notes": [
+    "Synthetic fixture example plan."
+  ],
+  "planVersion": "1.0",
+  "preferredEngines": [
+    "pikepdf",
+    "PyMuPDF"
+  ],
+  "preservationGoal": "Preserve original page appearance as much as possible.",
+  "riskLevel": "low",
+  "scope": {
+    "mode": "all",
+    "strategy": "all_matching_repeat_key",
+    "targetPages": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "selectedCandidate": {
+    "confidence": 0.785,
+    "id": "text-run-1-0",
+    "label": "HEADER_TEXT_WATERMARK",
+    "objectType": "text_run",
+    "pageNumber": 1,
+    "removability": "supported",
+    "repeatKey": "text_run:header_text_watermark:0.10:0.05:0.25:0.00"
+  },
+  "sourceFileName": "repeated_header_text.pdf"
+}

@@ -13,6 +13,10 @@
 - /disclaimer
 - /contact
 
+## App Preview Route
+- /app/upload (non-indexed temporary-processing upload, analyze, apply, and download workspace)
+
 ## Notes
-- Stage 1 does not include pricing, blog, or app dashboard routes.
-- These routes should be implemented first before any expansion.
+- Current product flow uses temporary server-side processing on `/app/upload`.
+- Files are intended to be deleted after download or short expiry.
+- Pricing, blog, and dashboard routes are still out of scope for now.
