@@ -1,0 +1,38 @@
+{
+  "createdAt": "2026-04-20T00:00:00Z",
+  "engineHints": [
+    "Current engine MVP supports text_run and image_xobject only."
+  ],
+  "notes": [
+    "Synthetic fixture example plan."
+  ],
+  "planVersion": "1.0",
+  "preferredEngines": [
+    "pikepdf",
+    "PyMuPDF"
+  ],
+  "preservationGoal": "Preserve original page appearance as much as possible.",
+  "riskLevel": "low",
+  "scope": {
+    "mode": "all",
+    "strategy": "all_matching_repeat_key",
+    "targetPages": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "selectedCandidate": {
+    "confidence": 0.81,
+    "id": "image-xobject-1-0",
+    "imageIdentityKey": "img:8:160x80:DeviceRGB",
+    "label": "Image XObject xref=8",
+    "objectType": "image_xobject",
+    "pageNumber": 1,
+    "removability": "supported",
+    "repeatKey": "image_xobject:img:8:160x80:DeviceRGB:0.85:0.00:0.10:0.05",
+    "resourceName": "img:8:160x80:DeviceRGB"
+  },
+  "sourceFileName": "repeated_corner_logo_image.pdf"
+}

@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "PPTWatermarkRemover",
+  name: "NotebookLM Watermark Remover",
   url: "https://www.pptwatermarkremover.com",
   description:
-    "Clean up AI-exported presentations with PPTWatermarkRemover. Remove visual watermarks from slides and keep your deck professional.",
+    "NotebookLM Watermark Remover helps remove repeated NotebookLM export watermarks from supported PPT and PDF files with temporary, privacy-focused processing.",
 };

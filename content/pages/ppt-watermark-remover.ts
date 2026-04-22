@@ -1,135 +1,221 @@
-import type {
-  FinalCtaContent,
-  HeroContent,
-  HomePageContent,
-} from "@/content/pages/home";
-
-type PptLandingContent = {
-  hero: HeroContent;
-  cleanupProblems: HomePageContent["benefits"];
-  benefits: HomePageContent["benefits"];
-  useCases: HomePageContent["scenarios"];
-  faq: HomePageContent["faq"];
-  finalCta: FinalCtaContent;
+type LinkItem = {
+  label: string;
+  href: string;
 };
 
-export const pptLandingContent: PptLandingContent = {
+type ContentCard = {
+  title: string;
+  description: string;
+};
+
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type PptSeoPageContent = {
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primaryCta: LinkItem;
+    secondaryCta: LinkItem;
+    points: string[];
+  };
+  whatItHelpsWith: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  supportedScenarios: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  whyManualSlow: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  workflow: {
+    title: string;
+    intro: string;
+    steps: ContentCard[];
+  };
+  faq: {
+    title: string;
+    intro: string;
+    items: FaqItem[];
+  };
+  finalCta: {
+    title: string;
+    description: string;
+    primaryCta: LinkItem;
+    secondaryCta: LinkItem;
+  };
+  relatedLinks: {
+    title: string;
+    links: LinkItem[];
+  };
+};
+
+export const pptSeoPageContent: PptSeoPageContent = {
   hero: {
     eyebrow: "PPT Watermark Remover",
-    title: "Clean visible watermark marks from PowerPoint presentation files",
+    title: "PPT Watermark Remover for PPT, PPTX, and presentation exports",
     description:
-      "Remove distracting watermark and export marks from PPT and PowerPoint files so your deck is ready for client, classroom, and internal presentation use.",
+      "Need a PPT watermark remover? This page focuses on general presentation cleanup intent across PPT and PPTX workflows, with a practical upload, preview, and download process.",
     primaryCta: {
-      href: "/contact",
-      label: "Request Early Access",
+      href: "/app/upload",
+      label: "Try the tool",
     },
     secondaryCta: {
-      href: "#faq",
-      label: "See FAQ",
+      href: "#how-workflow-works",
+      label: "View processing steps",
     },
+    points: [
+      "For general presentation watermark cleanup",
+      "Preview cleaned result before download",
+      "Temporary upload, auto delete, no training",
+    ],
   },
-  cleanupProblems: {
-    title: "What a PPT watermark is and why cleanup matters",
+  whatItHelpsWith: {
+    title: "What a PPT watermark remover helps with",
     intro:
-      "A PPT watermark is a visible mark, label, or export artifact that appears on slides and can reduce presentation quality in final delivery.",
+      "A PPT watermark remover helps reduce repeated visible marks in exported presentation files before sharing them with others.",
     items: [
       {
-        title: "Distracting visuals on key slides",
+        title: "Cleaner deck delivery",
         description:
-          "Unwanted marks can draw attention away from your message in sales, teaching, or reporting decks.",
+          "Make exported slides easier to present and easier to read in business and education contexts.",
       },
       {
-        title: "Manual edits across many pages",
+        title: "Repeat-task reduction",
         description:
-          "Cleaning each slide by hand is slow and often repeated whenever a new export is created.",
+          "Avoid redoing the same visual cleanup every time a new PPT or PPTX export is generated.",
       },
       {
-        title: "Inconsistent file quality for sharing",
+        title: "More consistent presentation quality",
         description:
-          "Teams need cleaner PPT output before sending files to customers, partners, or leadership.",
+          "Use a consistent workflow across teams to keep final presentation files more uniform.",
       },
     ],
   },
-  benefits: {
-    title: "Benefits of PPT watermark cleanup",
+  supportedScenarios: {
+    title: "Supported presentation cleanup scenarios",
     intro:
-      "PPTWatermarkRemover focuses on practical cleanup outcomes for presentation teams.",
+      "The strongest matches are repeated, export-like marks that appear across multiple slides in similar positions.",
     items: [
       {
-        title: "More professional-looking decks",
+        title: "Repeated export footer marks",
         description:
-          "Present polished slides that support trust and strong first impressions.",
+          "Footer-like repeated labels are among the most common cleanup requests in presentation exports.",
       },
       {
-        title: "Faster path from draft to final",
+        title: "Repeated corner or header brand marks",
         description:
-          "Reduce repetitive editing work when preparing slides for delivery deadlines.",
+          "Small repeated brand marks near corners or headers are typical targets for cleanup review.",
       },
       {
-        title: "Better consistency across outputs",
+        title: "Cross-team sharing files",
         description:
-          "Keep file quality steady across projects, teams, and recurring deck updates.",
+          "Files prepared for client review, leadership updates, and partner handoffs often require cleaner exports.",
       },
     ],
   },
-  useCases: {
-    title: "Common PPT cleanup use cases",
+  whyManualSlow: {
+    title: "Why exported presentation files are hard to clean manually",
     intro:
-      "Users rely on PPT cleanup across client work, internal communication, and education.",
+      "Manual cleanup often looks simple at first, but becomes slow and error-prone when slide count and version count increase.",
     items: [
       {
-        title: "Client pitch and proposal decks",
+        title: "Slide-by-slide repetition",
         description:
-          "Clean presentation files before external meetings and decision-making sessions.",
+          "The same cleanup action can repeat across many pages, especially for recurring presentation formats.",
       },
       {
-        title: "Internal reports and reviews",
+        title: "Version churn",
         description:
-          "Share cleaner status and strategy decks with managers and cross-functional teams.",
+          "When a deck is regenerated, manual edits are often lost and must be done again.",
       },
       {
-        title: "Course and workshop materials",
+        title: "Inconsistent outcomes",
         description:
-          "Prepare readable slides for teaching, training, and learning sessions.",
+          "Different editors and rushed updates can produce inconsistent visual quality in final files.",
+      },
+    ],
+  },
+  workflow: {
+    title: "How the workflow works",
+    intro:
+      "The product flow is designed to stay simple: upload source export, preview cleaned result, then download cleaned file.",
+    steps: [
+      {
+        title: "1) Upload presentation export",
+        description:
+          "Upload your exported file in temporary mode to start cleanup analysis.",
+      },
+      {
+        title: "2) Preview cleaned result",
+        description:
+          "Review preview output before deciding to download, rather than committing blind edits.",
+      },
+      {
+        title: "3) Download cleaned file",
+        description:
+          "Download cleaned output once the preview looks right for your sharing scenario.",
       },
     ],
   },
   faq: {
-    title: "PPT watermark remover FAQ",
+    title: "FAQ",
+    intro: "Quick answers for users searching for a PPT watermark remover.",
     items: [
       {
-        question: "Can I remove marks from PPT files today?",
+        question: "Does it support PPTX files?",
         answer:
-          "Not yet. Stage 1 focuses on marketing and early access while we validate workflows and demand.",
+          "Yes, the page intent covers PPT and PPTX presentation cleanup workflows, with support depending on export structure.",
       },
       {
-        question: "Does this support standard PowerPoint formats?",
+        question: "Can I preview before download?",
         answer:
-          "Yes, PPT and PowerPoint cleanup scenarios are a core priority for the first release direction.",
+          "Yes. The flow is preview-first so you can inspect cleaned output before downloading.",
       },
       {
-        question: "Will this help with AI-exported presentation files too?",
+        question: "Is it only for NotebookLM exports?",
         answer:
-          "Yes. The broader product scope includes cleanup for common AI-exported presentation file workflows.",
+          "No. This page targets broader presentation watermark remover intent beyond NotebookLM-specific cases.",
       },
       {
-        question: "How do I join the early access list?",
+        question: "Does it work for repeated export marks?",
         answer:
-          "Use the contact page and share your cleanup use case. We will follow up with early access updates.",
+          "Repeated export-like marks are common target scenarios, especially when they recur in similar positions.",
+      },
+      {
+        question: "Are files stored permanently?",
+        answer:
+          "No. The workflow uses temporary upload with auto delete behavior and no model training on uploaded files.",
       },
     ],
   },
   finalCta: {
-    title: "Need cleaner PPT and PowerPoint files?",
+    title: "Ready to clean your presentation export?",
     description:
-      "Tell us your workflow and we will let you know when early access opens.",
+      "Start with upload and preview, then download cleaned file when the output matches your expectations.",
     primaryCta: {
-      href: "/contact",
-      label: "Contact Us",
+      href: "/app/upload",
+      label: "Upload and preview",
     },
     secondaryCta: {
-      href: "#top",
-      label: "Back to Top",
+      href: "/",
+      label: "Try the tool",
     },
+  },
+  relatedLinks: {
+    title: "Related pages",
+    links: [
+      { label: "Read the NotebookLM-specific page", href: "/notebooklm-watermark-remover" },
+      { label: "Need step-by-step? Use the PowerPoint guide", href: "/remove-watermark-from-powerpoint" },
+    ],
   },
 };

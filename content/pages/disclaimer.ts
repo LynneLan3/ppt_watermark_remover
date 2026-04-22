@@ -1,4 +1,4 @@
-import type { PolicySection } from "@/content/pages/privacy-policy";
+import type { PolicySection } from "@/content/types/policy";
 
 export type DisclaimerContent = {
   title: string;
@@ -9,21 +9,22 @@ export type DisclaimerContent = {
 
 export const disclaimerContent: DisclaimerContent = {
   title: "Disclaimer",
-  lastUpdated: "April 18, 2026",
+  lastUpdated: "April 20, 2026",
   intro:
-    "This page provides important notices about brand references and general use of the PPTWatermarkRemover website.",
+    "This page provides important notices about brand references and general use of the NotebookLM Watermark Remover website.",
   sections: [
     {
       title: "No Affiliation with Third-Party Brands",
       paragraphs: [
-        "PPTWatermarkRemover is an independent project and is not affiliated with, endorsed by, or sponsored by Gamma, Google, NotebookLM, Microsoft, or any other third-party brand referenced on this site.",
+        "NotebookLM Watermark Remover is an independent project and is not affiliated with, endorsed by, or sponsored by Gamma, Google, NotebookLM, Microsoft, or any other third-party brand referenced on this site.",
         "Any brand names, product names, trademarks, or logos are used only for identification and descriptive compatibility context.",
       ],
     },
     {
-      title: "Informational Website",
+      title: "Early Product Status",
       paragraphs: [
-        "The current Stage 1 website is for marketing, informational content, and contact intake. It is not yet a production file-processing platform.",
+        "NotebookLM Watermark Remover includes a temporary upload and preview-first cleanup workflow.",
+        "Support depends on file structure and supported-file checks. Unsupported cases may be blocked instead of forcing destructive edits.",
       ],
     },
     {
@@ -41,7 +42,7 @@ export const disclaimerContent: DisclaimerContent = {
     {
       title: "Future Product Changes",
       paragraphs: [
-        "Product capabilities, workflows, and availability may change as development progresses beyond Stage 1.",
+        "Product capabilities, workflows, and availability may change as development progresses.",
       ],
     },
     {

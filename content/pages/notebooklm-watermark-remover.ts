@@ -1,135 +1,232 @@
-import type {
-  FinalCtaContent,
-  HeroContent,
-  HomePageContent,
-} from "@/content/pages/home";
-
-type NotebooklmLandingContent = {
-  hero: HeroContent;
-  whyCleanup: HomePageContent["benefits"];
-  benefits: HomePageContent["benefits"];
-  useCases: HomePageContent["scenarios"];
-  faq: HomePageContent["faq"];
-  finalCta: FinalCtaContent;
+type LinkItem = {
+  label: string;
+  href: string;
 };
 
-export const notebooklmLandingContent: NotebooklmLandingContent = {
+type ContentCard = {
+  title: string;
+  description: string;
+};
+
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type NotebooklmSeoPageContent = {
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primaryCta: LinkItem;
+    secondaryCta: LinkItem;
+    points: string[];
+  };
+  whyCleanupMatters: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  commonUseCases: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  whyManualCleanupSlow: {
+    title: string;
+    intro: string;
+    items: ContentCard[];
+  };
+  howToolWorks: {
+    title: string;
+    intro: string;
+    steps: ContentCard[];
+  };
+  faq: {
+    title: string;
+    intro: string;
+    items: FaqItem[];
+  };
+  finalCta: {
+    title: string;
+    description: string;
+    primaryCta: LinkItem;
+    secondaryCta: LinkItem;
+  };
+  relatedLinks: {
+    title: string;
+    links: LinkItem[];
+  };
+};
+
+export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
   hero: {
     eyebrow: "NotebookLM Watermark Remover",
-    title: "Clean NotebookLM-exported slides before final delivery",
+    title: "NotebookLM Watermark Remover for PDF and PPTX exports",
     description:
-      "Remove distracting marks from NotebookLM-exported PPTX and PDF files so your presentation looks polished and professional.",
+      "Looking for a NotebookLM watermark remover? This page explains how post-export cleanup works for common NotebookLM PDF and PPTX sharing workflows, with upload, preview, and download steps.",
     primaryCta: {
-      href: "/contact",
-      label: "Request Early Access",
+      href: "/app/upload",
+      label: "Try the tool",
     },
     secondaryCta: {
-      href: "#faq",
-      label: "See FAQ",
+      href: "#how-the-tool-works",
+      label: "View processing steps",
     },
+    points: [
+      "Built for NotebookLM export cleanup intent",
+      "Preview cleaned result before download",
+      "Temporary upload, auto delete, no training",
+    ],
   },
-  whyCleanup: {
-    title: "Why NotebookLM exports can need cleanup",
+  whyCleanupMatters: {
+    title: "Why cleanup matters for NotebookLM exports",
     intro:
-      "NotebookLM helps teams generate ideas and materials quickly, but exported presentation files can still need final visual refinement before sharing.",
+      "NotebookLM helps users create material quickly, but exported files may still need visual cleanup before final sharing.",
     items: [
       {
-        title: "Presentation-ready polish",
+        title: "Share-ready presentation quality",
         description:
-          "Client and stakeholder decks often require cleaner visuals for credibility and trust.",
+          "Teams often need cleaner files before sending to clients, teammates, or external stakeholders.",
       },
       {
-        title: "Less manual correction work",
+        title: "Consistent visual output",
         description:
-          "Teams want to avoid repetitive slide-by-slide edits after every export cycle.",
+          "When multiple people create files, a consistent cleanup step helps maintain quality and trust.",
       },
       {
-        title: "Consistent output across teams",
+        title: "Faster handoff to final review",
         description:
-          "Standardized cleanup improves quality when multiple people produce and share decks.",
+          "A focused NotebookLM watermark remover workflow reduces last-minute formatting friction.",
       },
     ],
   },
-  benefits: {
-    title: "Benefits of NotebookLM-focused cleanup",
+  commonUseCases: {
+    title: "Common use cases",
     intro:
-      "PPTWatermarkRemover is built to support practical post-export workflows for presentation teams.",
+      "The most common search intent behind \"notebooklm watermark remover\" comes from practical sharing scenarios.",
     items: [
       {
-        title: "Cleaner files for external sharing",
+        title: "Client updates and proposal decks",
         description:
-          "Deliver NotebookLM-exported PPTX and PDF files with fewer visual distractions.",
+          "Users want cleaner exports before review meetings or proposal delivery.",
       },
       {
-        title: "Faster turnaround to final deck",
+        title: "Internal strategy and briefing files",
         description:
-          "Move from generated draft to presentation-ready version with less friction.",
+          "Teams need polished materials for recurring updates without spending time on repetitive edits.",
       },
       {
-        title: "Stronger brand and message clarity",
+        title: "Education and training materials",
         description:
-          "Keep audience attention on your content by removing avoidable export artifacts.",
+          "Instructors and creators often clean exports before publishing or presenting.",
+      },
+      {
+        title: "Cross-format workflow (PDF and PPTX)",
+        description:
+          "Many users move between PDF sharing and PPTX revision, so cleanup expectations apply to both formats.",
       },
     ],
   },
-  useCases: {
-    title: "Common NotebookLM cleanup use cases",
+  whyManualCleanupSlow: {
+    title: "Why manual cleanup is slow",
     intro:
-      "Early users request NotebookLM cleanup for recurring business and educational workflows.",
+      "Manually removing repeated marks from PDF or PPTX files is usually more time-consuming than expected.",
     items: [
       {
-        title: "Internal briefings and strategy decks",
+        title: "Repetitive page-by-page edits",
         description:
-          "Prepare cleaner presentation exports for leadership updates and team alignment.",
+          "The same action is repeated across many pages, which creates avoidable editing fatigue.",
       },
       {
-        title: "Client proposals and review meetings",
+        title: "Different structure in every file",
         description:
-          "Polish deck files before sharing with external stakeholders or decision makers.",
+          "NotebookLM exports are not always identical, so manual steps can break from one file to another.",
       },
       {
-        title: "Training and educational materials",
+        title: "Higher risk of visual mistakes",
         description:
-          "Create cleaner learning content for workshops, lessons, and webinar sessions.",
+          "Manual edits can shift layout or leave inconsistent artifacts before final delivery.",
+      },
+    ],
+  },
+  howToolWorks: {
+    title: "How the tool works",
+    intro:
+      "The product flow is intentionally simple and action-oriented for NotebookLM watermark remover use.",
+    steps: [
+      {
+        title: "1) Upload NotebookLM export",
+        description:
+          "Start by uploading your NotebookLM-exported file in temporary upload mode.",
+      },
+      {
+        title: "2) Preview cleaned result",
+        description:
+          "Review the preview first so you can confirm expected cleanup before any download.",
+      },
+      {
+        title: "3) Download cleaned file",
+        description:
+          "Download cleaned output after confirmation, instead of committing blindly.",
       },
     ],
   },
   faq: {
-    title: "NotebookLM watermark remover FAQ",
+    title: "FAQ",
+    intro:
+      "Quick answers for users searching for a NotebookLM watermark remover.",
     items: [
       {
-        question: "Can I upload NotebookLM files now?",
+        question: "Does it work for NotebookLM PDF exports?",
         answer:
-          "Not yet. Stage 1 is focused on marketing and early access while we validate demand and workflows.",
+          "It is designed for NotebookLM export cleanup workflows and prioritizes supported PDF cases where reliable preview and cleanup can be provided.",
       },
       {
-        question: "Which NotebookLM exports are prioritized?",
+        question: "Does it support PPTX files?",
         answer:
-          "We are prioritizing NotebookLM-exported PPTX and PDF file cleanup use cases first.",
+          "The product direction includes NotebookLM PDF and PPTX sharing scenarios. Current handling may vary by structure and support status.",
       },
       {
-        question: "Is this page only for NotebookLM users?",
+        question: "Can I preview the cleaned result first?",
         answer:
-          "This page targets NotebookLM-specific search intent, while the broader product vision covers additional presentation cleanup scenarios.",
+          "Yes. The flow is built around preview before download so users can review results before exporting cleaned files.",
       },
       {
-        question: "How can I get updates?",
+        question: "Is it a full presentation editor?",
         answer:
-          "Use the contact page with your use case details and we will follow up with early access updates.",
+          "No. It is a focused NotebookLM watermark remover and cleanup tool, not a full slide authoring platform.",
+      },
+      {
+        question: "Are files stored permanently?",
+        answer:
+          "No. The workflow emphasizes temporary upload with auto delete behavior rather than permanent storage.",
+      },
+      {
+        question: "Is this affiliated with Google or NotebookLM?",
+        answer:
+          "No. This is an independent tool for NotebookLM export cleanup workflows and is not affiliated with Google or NotebookLM.",
       },
     ],
   },
   finalCta: {
-    title: "Need cleaner NotebookLM-exported presentation files?",
+    title: "Ready to clean a NotebookLM export?",
     description:
-      "Share your workflow today and we will notify you as soon as early access opens.",
+      "Start with upload and preview, then download cleaned file when the result looks right.",
     primaryCta: {
-      href: "/contact",
-      label: "Contact Us",
+      href: "/app/upload",
+      label: "Upload and preview",
     },
     secondaryCta: {
-      href: "#top",
-      label: "Back to Top",
+      href: "/",
+      label: "Try the tool",
     },
+  },
+  relatedLinks: {
+    title: "Related pages",
+    links: [
+      { label: "See the broader PPT cleanup page", href: "/ppt-watermark-remover" },
+      { label: "Open the PowerPoint-specific guide", href: "/remove-watermark-from-powerpoint" },
+    ],
   },
 };
