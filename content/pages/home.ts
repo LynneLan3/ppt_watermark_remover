@@ -38,6 +38,7 @@ export type FinalCtaContent = {
   secondaryCta: CtaLink;
 };
 
+<<<<<<< HEAD
 export type TrustSectionContent = {
   title: string;
   intro: string;
@@ -45,11 +46,34 @@ export type TrustSectionContent = {
   note: string;
   primaryCta: CtaLink;
   secondaryCta: CtaLink;
+=======
+export type ExploreLinkItem = {
+  title: string;
+  description: string;
+  href: string;
+  anchorText: string;
+>>>>>>> origin/main
 };
 
 export type HomePageContent = {
   hero: HeroContent;
+<<<<<<< HEAD
   trust: TrustSectionContent;
+=======
+  exploreLinks: {
+    title: string;
+    intro: string;
+    items: ExploreLinkItem[];
+    contextualSentence: {
+      before: string;
+      links: Array<{
+        href: string;
+        label: string;
+      }>;
+      after: string;
+    };
+  };
+>>>>>>> origin/main
   benefits: {
     title: string;
     intro: string;
@@ -87,6 +111,7 @@ export const homePageContent: HomePageContent = {
       label: "See FAQ",
     },
   },
+<<<<<<< HEAD
   trust: {
     title: "Temporary processing trust model",
     intro:
@@ -121,6 +146,66 @@ export const homePageContent: HomePageContent = {
     secondaryCta: {
       href: "/privacy-policy",
       label: "Read Privacy Policy",
+=======
+  exploreLinks: {
+    title: "Explore Related PPT Cleanup Pages",
+    intro:
+      "Compare common watermark and export cleanup scenarios, then jump straight to the page that best matches your presentation file problem.",
+    items: [
+      {
+        title: "PPT Watermark Remover",
+        description:
+          "Open the core cleanup page focused on removing watermark traces and export marks from presentation files.",
+        href: "/ppt-watermark-remover",
+        anchorText: "Remove watermarks from PPT exports",
+      },
+      {
+        title: "Remove Watermark from PowerPoint",
+        description:
+          "Use a focused workflow page for repeated PowerPoint cleanup tasks when slides need fast visual fixes.",
+        href: "/remove-watermark-from-powerpoint",
+        anchorText: "Fix PowerPoint watermark cleanup workflows",
+      },
+      {
+        title: "Gamma Watermark Remover",
+        description:
+          "Review cleanup guidance tailored to Gamma-exported presentation files before client delivery.",
+        href: "/gamma-watermark-remover",
+        anchorText: "Clean Gamma-exported presentation files",
+      },
+      {
+        title: "NotebookLM Watermark Remover",
+        description:
+          "See how to clean NotebookLM-generated slide exports with fewer manual edits across PPTX and PDF outputs.",
+        href: "/notebooklm-watermark-remover",
+        anchorText: "Clean NotebookLM slide exports",
+      },
+      {
+        title: "Contact for Early Access",
+        description:
+          "Share your cleanup use case and request early access if you need consistent presentation output quality.",
+        href: "/contact",
+        anchorText: "Request early access for presentation cleanup",
+      },
+    ],
+    contextualSentence: {
+      before: "Different export issues often require different cleanup paths. If you need to",
+      links: [
+        {
+          href: "/remove-watermark-from-powerpoint",
+          label: "remove visible marks from PowerPoint slides",
+        },
+        {
+          href: "/gamma-watermark-remover",
+          label: "clean Gamma presentation exports",
+        },
+        {
+          href: "/notebooklm-watermark-remover",
+          label: "fix NotebookLM slide artifacts",
+        },
+      ],
+      after: ", these focused pages can help you choose the right workflow faster.",
+>>>>>>> origin/main
     },
   },
   benefits: {
