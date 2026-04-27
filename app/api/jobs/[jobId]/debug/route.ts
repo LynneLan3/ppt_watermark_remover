@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { head } from "@vercel/blob";
 
-import { getStorageDiagnostics, readJob, sourcePdfExists } from "@/lib/jobs/repository";
+import { fileExists, getStorageDiagnostics, readJob, resolvePaths, sourcePdfExists } from "@/lib/jobs/repository";
 import { JobNotFoundError } from "@/lib/blob-storage/job-store";
 
 export const runtime = "nodejs";
@@ -17,6 +18,26 @@ export async function GET(_request: Request, { params }: Params) {
     const job = await readJob(jobId);
     const hasSourcePathname = !!job.sourcePathname;
     const sourcePdfExistsResult = hasSourcePathname ? await sourcePdfExists(jobId) : false;
+    const processedPathname = job.processedPathname || `jobs/${jobId}/processed.pdf`;
+    let processedPdfExists = false;
+    let processedSize: number | null = job.processedSize ?? null;
+    try {
+      const info = await head(processedPathname, {
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      processedPdfExists = Boolean(info);
+      if (info?.size && !processedSize) {
+        processedSize = info.size;
+      }
+    } catch {
+      const localProcessedPath = job.processOutputPath ?? resolvePaths(jobId).processedPdfPath;
+      processedPdfExists = await fileExists(localProcessedPath);
+    }
+    const processedBlobUrlHost = job.processedBlobUrl
+      ? new URL(job.processedBlobUrl).host
+      : job.processOutputBlobUrl
+        ? new URL(job.processOutputBlobUrl).host
+        : null;
 
     return NextResponse.json({
       ok: true,
@@ -36,6 +57,11 @@ export async function GET(_request: Request, { params }: Params) {
       sourceFilename: job.sourceFilename || null,
       sourceSize: job.sourceSize || null,
       sourceContentType: job.sourceContentType || null,
+      processedPathname,
+      processedBlobUrlHost,
+      processedPdfExists,
+      processedSize,
+      processMode: job.processMode || null,
       createdAt: job.createdAt,
       updatedAt: job.updatedAt,
       expiresAt: job.expiresAt,

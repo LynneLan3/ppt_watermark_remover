@@ -9,7 +9,7 @@
 
 - **项目名称**: NotebookLM Watermark Remover
 - **当前阶段**: Stage 2 - Beta 上线准备（免费预览确认模式）
-- **当前重点**: 修复 Preview analyze 内部失败：阶段化诊断 + Python 兼容检查 + JS/Passthrough fallback
+- **当前重点**: 修复 Preview process 输出缺失：统一 processed 字段契约 + passthrough fallback 稳定产出
 - **算法策略**: 默认 `stable-light-complex-v5`，禁用 v6 micro polish experimental path
 
 ---
@@ -47,6 +47,11 @@
 - [x] Preview 自动 JS analyze fallback（python runtime/script/dependency 异常时）
 - [x] process 增加 Preview passthrough-fallback（Python 不可用时返回原 PDF）
 - [x] 新增本地复现脚本：`pnpm analyze:debug -- <path-to-pdf>`
+- [x] 统一 process 成功响应字段：processedPathname/processedBlobUrl/processedSize/processedContentType/processMode/status
+- [x] process source 解析改为 body 优先，manifest fallback；缺失时返回 process_source_missing
+- [x] process passthrough-fallback 改为可靠 Blob 写入+回读校验，避免 processed output missing
+- [x] preview/download 读取优先级统一为 processedPathname -> job.processedPathname -> 默认路径 -> 旧字段兼容
+- [x] debug endpoint 增加 processedPathname/processedPdfExists/processedSize/processMode/error 状态
 
 ### Pending
 - [ ] Vercel Preview 部署验证主流程（create -> upload-token -> upload-source -> finalize-upload -> analyze -> process）
@@ -67,6 +72,7 @@
 | 上传链路一致性 | create/upload/finalize/analyze/process 使用同一 jobId 与同一路径 | 一致 | 🟢 本地代码校验通过 |
 | Stateless 容错 | manifest 读失败时 analyze/process 可继续（需 body source） | 启用 | 🟢 本地代码校验通过 |
 | Analyze 诊断可观测性 | analyze 失败返回 phase/code/runtime/error 结构化字段 | 启用 | 🟢 本地代码校验通过 |
+| Process 输出可用性 | Python 不可用时仍可生成 `jobs/{jobId}/processed.pdf` | 启用 | 🟢 本地代码校验通过 |
 
 ---
 
@@ -118,6 +124,13 @@
 | 2026-04-27 | components/tool/upload-hero.tsx | modify | View processing steps 显示 analyze 阶段细节、失败 phase/code |
 | 2026-04-27 | scripts/debug-analyze.mjs | create | 本地 analyze 诊断脚本（bytes/analyzer/python/script/dependency） |
 | 2026-04-27 | package.json | modify | 新增 `analyze:debug` 脚本命令 |
+| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | process 改为 body source 优先 + 统一成功字段 + 结构化失败诊断 |
+| 2026-04-27 | lib/jobs/service.ts | modify | processJobStateless 统一输出字段、Blob 写入/回读校验、可靠 passthrough fallback |
+| 2026-04-27 | app/api/jobs/[jobId]/preview/route.ts | modify | 统一 processedPathname 优先读取链路并兼容旧字段 |
+| 2026-04-27 | app/api/jobs/[jobId]/download/route.ts | modify | 统一 processedPathname 优先读取链路并兼容旧字段 |
+| 2026-04-27 | app/api/jobs/[jobId]/debug/route.ts | modify | 增加 processedPathname/processedPdfExists/processedSize/processMode 调试字段 |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | process 请求透传 source+analysis；保存 processMode/warning/processedPathname 并继续 preview/download |
+| 2026-04-27 | lib/jobs/types.ts | modify | 新增 process_source_missing/processed_pdf_* /pdf_processor_* 错误码与 JobRecord processed 字段 |
 | 2026-04-27 | AGENTS.md | modify | 更新为 Stage 2 Beta，明确允许范围和禁止事项 |
 | 2026-04-27 | docs/prd.md | modify | 更新为 Stage 2 Beta 目标和成功标准 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |

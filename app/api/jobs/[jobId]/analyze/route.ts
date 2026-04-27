@@ -107,6 +107,7 @@ export async function POST(request: Request, { params }: Params) {
       job: result.job ?? job ?? undefined,
       data: {
         review: result.review,
+        analysis: result.analysisObject,
         analysisPath: result.analysisPath,
         sourcePathname: result.sourcePathname,
         hasSourceBlobUrl: Boolean(result.sourceBlobUrl),

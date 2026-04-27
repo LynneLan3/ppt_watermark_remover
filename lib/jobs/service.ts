@@ -1066,19 +1066,27 @@ export async function processJobStateless(params: {
   analysis?: Record<string, unknown>;
 }): Promise<{
   job: JobRecord | null;
-  outputPath: string;
-  reportPath: string;
-  outputBlobUrl: string | null;
-  reportBlobUrl: string | null;
-  processMode: "raster_repair_v1" | "object_level_v2" | "passthrough-fallback";
+  status: "ready_for_download";
+  processedPathname: string;
+  processedBlobUrl: string;
+  processedSize: number;
+  processedContentType: "application/pdf";
+  processMode: "python" | "raster_page" | "passthrough-fallback";
   warning?: string;
 }> {
   const { jobId } = params;
   const paths = resolvePaths(jobId);
-  const processMode = params.processMode ?? "raster_repair_v1";
+  const requestedProcessMode = params.processMode ?? "raster_repair_v1";
+  const isPreviewLike =
+    process.env.ENABLE_JOB_DEBUG === "1" ||
+    process.env.VERCEL_ENV === "preview" ||
+    process.env.NODE_ENV !== "production";
 
   const sourcePathname = params.sourcePathname ?? "";
   const sourceBlobUrl = params.sourceBlobUrl ?? "";
+  if (!sourcePathname && !sourceBlobUrl) {
+    throw new Error("PROCESS_SOURCE_MISSING");
+  }
   const { buffer } = await readSourcePdfBuffer({
     sourcePathname,
     sourceBlobUrl,
@@ -1089,11 +1097,15 @@ export async function processJobStateless(params: {
   const inputPdfPath = join(tempDir, "source.pdf");
   await writeFile(inputPdfPath, buffer);
 
-  let outputBlobUrl: string | null = null;
-  let reportBlobUrl: string | null = null;
+  const canonicalProcessedPathname = `jobs/${jobId}/processed.pdf`;
+  let processedBlobUrl: string | null = null;
+  let processedSize = 0;
   let persistedJob: JobRecord | null = null;
-  let effectiveProcessMode: "raster_repair_v1" | "object_level_v2" | "passthrough-fallback" = processMode;
+  let effectiveProcessMode: "python" | "raster_page" | "passthrough-fallback" = "python";
   let warning: string | undefined;
+  let pythonFailureReason = "";
+  let pythonStderr = "";
+  let localProcessedBytes: Buffer | null = null;
 
   try {
     if (params.analysisPath) {
@@ -1118,10 +1130,10 @@ export async function processJobStateless(params: {
       pageCommandsPath: paths.pageCommandsPath,
       selection: [],
       candidates: [],
-      processMode,
+      processMode: requestedProcessMode,
       algorithmProfile: getWatermarkAlgorithmProfile(),
       rasterProcessConfig:
-        processMode === "raster_repair_v1"
+        requestedProcessMode === "raster_repair_v1"
           ? {
               watermarkRegionHint: "right_bottom",
               roi: {
@@ -1137,7 +1149,7 @@ export async function processJobStateless(params: {
     await getStorageAdapter().writeJson(paths.processRequestPath, requestPayload);
 
     const commandArgs =
-      processMode === "raster_repair_v1"
+      requestedProcessMode === "raster_repair_v1"
         ? [
             "python/process_raster_watermark_v1.py",
             "--request",
@@ -1162,59 +1174,80 @@ export async function processJobStateless(params: {
           ];
 
     const result = await runPythonCommand({
-      commandName: processMode === "raster_repair_v1" ? "process-raster-v1" : "process-v2",
+      commandName: requestedProcessMode === "raster_repair_v1" ? "process-raster-v1" : "process-v2",
       args: commandArgs,
       options: {
-        timeoutMs: processMode === "raster_repair_v1" ? 180_000 : 90_000,
+        timeoutMs: requestedProcessMode === "raster_repair_v1" ? 180_000 : 90_000,
       },
     });
+    pythonStderr = result.stderr;
+
     if (!result.ok) {
-      const isPreviewLike =
-        process.env.ENABLE_JOB_DEBUG === "1" ||
-        process.env.VERCEL_ENV === "preview" ||
-        process.env.NODE_ENV !== "production";
-      const runtimeOrDependencyIssue =
-        result.stderr.toLowerCase().includes("no module named") ||
-        result.stderr.toLowerCase().includes("command not found") ||
-        result.stderr.toLowerCase().includes("not found") ||
-        result.stderr.toLowerCase().includes("python");
-      if (isPreviewLike && runtimeOrDependencyIssue) {
-        await writeFile(paths.processedPdfPath, buffer);
-        await getStorageAdapter().writeJson(paths.processReportPath, {
-          ok: true,
-          processMode: "passthrough-fallback",
-          warning: "Python processor unavailable in preview; returned original PDF.",
-          inputPageCount: await readPdfPageCount(inputPdfPath),
-          outputPageCount: await readPdfPageCount(inputPdfPath),
-        });
-        effectiveProcessMode = "passthrough-fallback";
-        warning = "Python processor unavailable in preview; returned original PDF.";
-      } else {
-        throw new Error(result.stderr || "python process failed");
-      }
+      pythonFailureReason = result.stderr || "python process failed";
     }
 
     const processedExists = await fileExists(paths.processedPdfPath);
-    if (!processedExists) {
-      throw new Error("processed output missing");
+    if (result.ok && processedExists) {
+      localProcessedBytes = await readFile(paths.processedPdfPath);
+      effectiveProcessMode = requestedProcessMode === "raster_repair_v1" ? "raster_page" : "python";
+    } else if (!result.ok && !isPreviewLike) {
+      const lower = (pythonStderr || "").toLowerCase();
+      if (
+        lower.includes("no module named") ||
+        lower.includes("command not found") ||
+        lower.includes("python") ||
+        lower.includes("fitz") ||
+        lower.includes("pikepdf") ||
+        lower.includes("cv2")
+      ) {
+        throw new Error(`PDF_PROCESSOR_DEPENDENCY_MISSING:${pythonFailureReason}`);
+      }
+      throw new Error(`PDF_PROCESSOR_FAILED:${pythonFailureReason}`);
+    }
+
+    if (!localProcessedBytes && isPreviewLike) {
+      // Reliable passthrough fallback: use source bytes directly.
+      localProcessedBytes = buffer;
+      effectiveProcessMode = "passthrough-fallback";
+      warning = "Python processor unavailable in preview; returned original PDF.";
+      await getStorageAdapter().writeJson(paths.processReportPath, {
+        ok: true,
+        processMode: "passthrough-fallback",
+        warning,
+        inputPageCount: await readPdfPageCount(inputPdfPath),
+        outputPageCount: await readPdfPageCount(inputPdfPath),
+      });
+    }
+
+    if (!localProcessedBytes) {
+      throw new Error("PROCESSED_OUTPUT_MISSING");
     }
 
     if (isBlobStorageEnabled()) {
-      const { put } = await import("@vercel/blob");
-      const outputBytes = await readFile(paths.processedPdfPath);
-      const reportBytes = await readFile(paths.processReportPath);
-      const outputBlob = await put(`jobs/${jobId}/processed.pdf`, outputBytes, {
-        access: "private",
-        contentType: "application/pdf",
-        allowOverwrite: true,
-      });
-      const reportBlob = await put(`jobs/${jobId}/process-report.json`, reportBytes, {
-        access: "private",
-        contentType: "application/json",
-        allowOverwrite: true,
-      });
-      outputBlobUrl = outputBlob.url;
-      reportBlobUrl = reportBlob.url;
+      const { head, put } = await import("@vercel/blob");
+      try {
+        const outputBlob = await put(canonicalProcessedPathname, localProcessedBytes, {
+          access: "private",
+          contentType: "application/pdf",
+          allowOverwrite: true,
+        });
+        processedBlobUrl = outputBlob.url;
+        processedSize = localProcessedBytes.length;
+      } catch (error) {
+        throw new Error(`PROCESSED_PDF_WRITE_FAILED:${error instanceof Error ? error.message : "unknown"}`);
+      }
+
+      try {
+        await head(canonicalProcessedPathname, {
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+      } catch (error) {
+        throw new Error(`PROCESSED_PDF_VERIFY_FAILED:${error instanceof Error ? error.message : "unknown"}`);
+      }
+    } else {
+      await writeFile(paths.processedPdfPath, localProcessedBytes);
+      processedBlobUrl = `file://${paths.processedPdfPath}`;
+      processedSize = localProcessedBytes.length;
     }
 
     try {
@@ -1224,10 +1257,14 @@ export async function processJobStateless(params: {
         sourcePathname: sourcePathname || job.sourcePathname,
         sourceBlobUrl: sourceBlobUrl || job.sourceBlobUrl,
         status: "ready_for_download",
+        processedPathname: canonicalProcessedPathname,
+        processedBlobUrl: processedBlobUrl ?? job.processedBlobUrl,
+        processedSize: processedSize || job.processedSize,
+        processedContentType: "application/pdf",
+        processMode: effectiveProcessMode,
         processOutputPath: paths.processedPdfPath,
         processReportPath: paths.processReportPath,
-        processOutputBlobUrl: outputBlobUrl ?? job.processOutputBlobUrl,
-        processReportBlobUrl: reportBlobUrl ?? job.processReportBlobUrl,
+        processOutputBlobUrl: processedBlobUrl ?? job.processOutputBlobUrl,
         updatedAt: new Date().toISOString(),
       };
       await writeJobMetadata(updated);
@@ -1241,10 +1278,11 @@ export async function processJobStateless(params: {
 
     return {
       job: persistedJob,
-      outputPath: paths.processedPdfPath,
-      reportPath: paths.processReportPath,
-      outputBlobUrl,
-      reportBlobUrl,
+      status: "ready_for_download",
+      processedPathname: canonicalProcessedPathname,
+      processedBlobUrl: processedBlobUrl ?? `file://${paths.processedPdfPath}`,
+      processedSize: processedSize || localProcessedBytes.length,
+      processedContentType: "application/pdf",
       processMode: effectiveProcessMode,
       warning,
     };

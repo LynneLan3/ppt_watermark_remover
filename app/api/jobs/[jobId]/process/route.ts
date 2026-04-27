@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { jobError, mapRepositoryError } from "@/lib/jobs/api";
 import { processJob, processJobStateless } from "@/lib/jobs/service";
 import { readJob } from "@/lib/jobs/repository";
-import { SourcePdfNotFoundError, SourcePdfReadFailedError } from "@/lib/blob-storage/source-reader";
 
 export const runtime = "nodejs";
 
@@ -20,147 +18,163 @@ type ProcessRequest = {
 };
 
 export async function POST(request: Request, { params }: Params) {
-  const startTime = Date.now();
+  const startedAt = Date.now();
   const { jobId } = await params;
   const body = (await request.json().catch(() => ({}))) as ProcessRequest;
-
-  const processMode =
-    body.processMode === "object_level_v2" || body.processMode === "raster_repair_v1"
-      ? body.processMode
-      : undefined;
-
-  const debugMode = process.env.NODE_ENV !== "production" || new URL(request.url).searchParams.get("debug") === "1";
-  if (processMode === "object_level_v2" && !debugMode) {
-    return jobError({
-      httpStatus: 400,
-      code: "validation_error",
-      message: "object-level processing is only available in debug mode.",
-    });
-  }
+  const debugMode = process.env.ENABLE_JOB_DEBUG === "1" || process.env.VERCEL_ENV === "preview";
+  const processMode = body.processMode === "object_level_v2" || body.processMode === "raster_repair_v1" ? body.processMode : undefined;
 
   const hasBodySourcePathname = Boolean(body.sourcePathname);
-  const hasBodySourceBlobUrl = Boolean(body.sourceBlobUrl);
-  const canRunStateless = hasBodySourcePathname || hasBodySourceBlobUrl;
+  let jobManifestExists = false;
+  let jobSourcePathname: string | undefined;
+  let sourceBlobUrlFromJob: string | undefined;
+  let jobStatus: string | null = null;
+  try {
+    const job = await readJob(jobId);
+    jobManifestExists = true;
+    jobSourcePathname = job.sourcePathname;
+    sourceBlobUrlFromJob = job.sourceBlobUrl;
+    jobStatus = job.status;
+  } catch {
+    jobManifestExists = false;
+  }
+
+  const sourcePathname = body.sourcePathname || jobSourcePathname;
+  const sourceBlobUrl = body.sourceBlobUrl || sourceBlobUrlFromJob;
+  const hasJobSourcePathname = Boolean(jobSourcePathname);
+
+  if (!sourcePathname && !sourceBlobUrl) {
+    return NextResponse.json(
+      {
+        success: false,
+        code: "process_source_missing",
+        phase: "resolve_source_input",
+        jobId,
+        sourcePathname: null,
+        processedPathname: `jobs/${jobId}/processed.pdf`,
+        hasBodySourcePathname,
+        hasJobSourcePathname,
+        jobManifestExists,
+        sourcePdfExists: false,
+        processedPdfExists: false,
+        processMode: "unknown",
+        error: {
+          name: "ProcessSourceMissingError",
+          message: "Missing sourcePathname/sourceBlobUrl for process.",
+          stdoutPreview: null,
+          stderrPreview: null,
+          exitCode: null,
+        },
+        message: "Missing process source input.",
+      },
+      { status: 409 },
+    );
+  }
 
   try {
-    if (!canRunStateless) {
-      const job = await processJob(jobId, { processMode });
+    if (!body.sourcePathname && !body.sourceBlobUrl && jobManifestExists) {
+      // Backward-compatible manifest-driven path.
+      const legacy = await processJob(jobId, { processMode });
       return NextResponse.json({
         success: true,
-        code: "ok",
-        message: "Process completed. Output is ready for download.",
-        job,
-        data: {
-          nextStep: `GET /api/jobs/${jobId}/download`,
-        },
+        jobId,
+        status: legacy.status,
+        processedPathname: legacy.processedPathname ?? `jobs/${jobId}/processed.pdf`,
+        processedBlobUrl: legacy.processedBlobUrl ?? legacy.processOutputBlobUrl ?? null,
+        processedSize: legacy.processedSize ?? null,
+        processedContentType: legacy.processedContentType ?? "application/pdf",
+        processMode: legacy.processMode ?? "python",
       });
-    }
-
-    let jobManifestExists = false;
-    try {
-      await readJob(jobId);
-      jobManifestExists = true;
-    } catch {
-      jobManifestExists = false;
     }
 
     const result = await processJobStateless({
       jobId,
       processMode,
-      sourcePathname: body.sourcePathname,
-      sourceBlobUrl: body.sourceBlobUrl,
+      sourcePathname,
+      sourceBlobUrl,
       analysisPath: body.analysisPath,
       analysis: body.analysis,
     });
 
-    return NextResponse.json({
+    const responsePayload = {
       success: true,
-      code: "ok",
-      message: "Process completed. Output is ready for download.",
-      job: result.job ?? undefined,
-      data: {
-        nextStep: `GET /api/jobs/${jobId}/download`,
-        processOutputPath: result.outputPath,
-        processReportPath: result.reportPath,
-        processOutputBlobUrl: result.outputBlobUrl,
-        processReportBlobUrl: result.reportBlobUrl,
-        processMode: result.processMode,
-        warning: result.warning ?? null,
-        jobManifestExists,
-      },
-    });
+      jobId,
+      status: "ready_for_download" as const,
+      processedPathname: result.processedPathname,
+      processedBlobUrl: result.processedBlobUrl,
+      processedSize: result.processedSize,
+      processedContentType: result.processedContentType,
+      processMode: result.processMode,
+      warning: result.warning ?? null,
+    };
+    return NextResponse.json(responsePayload);
   } catch (error) {
-    if (!canRunStateless) {
-      const mapped = mapRepositoryError(error);
-      return jobError({
-        httpStatus: mapped.httpStatus,
-        code: mapped.code === "internal_error" ? "process_failed" : mapped.code,
-        message: mapped.message,
-      });
+    const rawMessage = error instanceof Error ? error.message : "Process failed.";
+    const lower = rawMessage.toLowerCase();
+    let code = "process_failed";
+    let phase = "run_processor";
+    if (lower.startsWith("processed_pdf_write_failed")) {
+      code = "processed_pdf_write_failed";
+      phase = "write_processed_output";
+    } else if (lower.startsWith("processed_pdf_verify_failed")) {
+      code = "processed_pdf_verify_failed";
+      phase = "verify_processed_output";
+    } else if (lower.startsWith("pdf_processor_dependency_missing")) {
+      code = "pdf_processor_dependency_missing";
+      phase = "run_pdf_processor";
+    } else if (lower.startsWith("pdf_processor_failed")) {
+      code = "pdf_processor_failed";
+      phase = "run_pdf_processor";
+    } else if (lower.includes("source pdf not found")) {
+      code = "source_pdf_not_found";
+      phase = "read_source_pdf";
+    } else if (lower.includes("failed to read source pdf")) {
+      code = "source_pdf_read_failed";
+      phase = "read_source_pdf";
+    } else if (lower.includes("processed_output_missing") || lower.includes("processed output missing")) {
+      code = "processed_pdf_verify_failed";
+      phase = "verify_processed_output";
     }
 
-    let jobManifestExists = false;
-    try {
-      await readJob(jobId);
-      jobManifestExists = true;
-    } catch {
-      jobManifestExists = false;
-    }
-
-    try {
-      throw error;
-    } catch (fallbackError) {
-      const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : "unknown";
-      console.error({
-        level: "error",
-        phase: "process_error_stateless",
+    const status = code === "source_pdf_not_found" ? 404 : 500;
+    const includeVerbose = debugMode || process.env.NODE_ENV !== "production";
+    return NextResponse.json(
+      {
+        success: false,
+        code,
+        phase,
         jobId,
-        error: fallbackMessage,
-        errorType: fallbackError?.constructor?.name,
-        durationMs: Date.now() - startTime,
-        timestamp: new Date().toISOString(),
-      });
-
-      if (fallbackError instanceof SourcePdfNotFoundError) {
-        return NextResponse.json(
-          {
-            success: false,
-            code: "source_pdf_not_found",
-            jobId,
-            hasBodySourcePathname,
-            hasBodySourceBlobUrl,
-            sourcePathname: body.sourcePathname ?? null,
-            jobManifestExists,
-            sourcePdfExists: false,
-            message: "Source PDF blob not found.",
-          },
-          { status: 404 },
-        );
-      }
-
-      if (fallbackError instanceof SourcePdfReadFailedError) {
-        return NextResponse.json(
-          {
-            success: false,
-            code: "source_pdf_read_failed",
-            jobId,
-            hasBodySourcePathname,
-            hasBodySourceBlobUrl,
-            sourcePathname: body.sourcePathname ?? null,
-            jobManifestExists,
-            sourcePdfExists: true,
-            message: "Failed to read source PDF from private blob storage.",
-          },
-          { status: 500 },
-        );
-      }
-
-      const mapped = mapRepositoryError(fallbackError);
-      return jobError({
-        httpStatus: mapped.httpStatus,
-        code: mapped.code === "internal_error" ? "process_failed" : mapped.code,
-        message: mapped.message,
-      });
-    }
+        sourcePathname: sourcePathname ?? null,
+        processedPathname: `jobs/${jobId}/processed.pdf`,
+        hasBodySourcePathname,
+        hasJobSourcePathname,
+        jobManifestExists,
+        sourcePdfExists: true,
+        processedPdfExists: false,
+        processMode: "unknown",
+        runtime: {
+          nodeEnv: process.env.NODE_ENV || null,
+          vercel: Boolean(process.env.VERCEL),
+          vercelEnv: process.env.VERCEL_ENV || null,
+          cwd: process.cwd(),
+          jobStatus,
+        },
+        error: includeVerbose
+          ? {
+              name: error instanceof Error ? error.name : "Error",
+              message: rawMessage,
+              stdoutPreview: null,
+              stderrPreview: rawMessage.slice(0, 2000),
+              exitCode: null,
+            }
+          : {
+              name: error instanceof Error ? error.name : "Error",
+              message: rawMessage,
+            },
+        message: rawMessage,
+        durationMs: Date.now() - startedAt,
+      },
+      { status },
+    );
   }
 }

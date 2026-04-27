@@ -163,6 +163,11 @@ export type JobRecord = {
   processReportPath?: string;
   processOutputBlobUrl?: string;
   processReportBlobUrl?: string;
+  processedPathname?: string;
+  processedBlobUrl?: string;
+  processedSize?: number;
+  processedContentType?: "application/pdf";
+  processMode?: "python" | "raster_page" | "passthrough-fallback";
   downloadedAt?: string;
   failureCode?: JobErrorCode;
   failureMessage?: string;
@@ -494,6 +499,13 @@ export type JobErrorCode =
   | "python_process_failed"
   | "page_count_mismatch"
   | "processed_file_missing"
+  | "process_source_missing"
+  | "processed_pdf_not_found"
+  | "processed_pdf_write_failed"
+  | "processed_pdf_verify_failed"
+  | "pdf_processor_runtime_missing"
+  | "pdf_processor_dependency_missing"
+  | "pdf_processor_failed"
   | "process_report_incomplete"
   | "download_unavailable"
   | "source_pdf_not_found"

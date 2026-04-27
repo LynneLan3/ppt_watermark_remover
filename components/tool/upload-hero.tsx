@@ -74,6 +74,10 @@ export function UploadHero({ content }: UploadHeroProps) {
   const [processedPdfUrl, setProcessedPdfUrl] = useState<string | null>(null);
   const [processedPreviewReady, setProcessedPreviewReady] = useState(false);
   const [processedPreviewError, setProcessedPreviewError] = useState<string | null>(null);
+  const [processedPathname, setProcessedPathname] = useState<string | null>(null);
+  const [processedBlobUrl, setProcessedBlobUrl] = useState<string | null>(null);
+  const [processModeValue, setProcessModeValue] = useState<string | null>(null);
+  const [processWarning, setProcessWarning] = useState<string | null>(null);
   const [feedbackNote, setFeedbackNote] = useState("");
   const [debugQueryEnabled, setDebugQueryEnabled] = useState(false);
   const pipelineRunIdRef = useRef(0);
@@ -225,6 +229,10 @@ export function UploadHero({ content }: UploadHeroProps) {
     setProcessedPdfUrl(null);
     setProcessedPreviewReady(false);
     setProcessedPreviewError(null);
+    setProcessedPathname(null);
+    setProcessedBlobUrl(null);
+    setProcessModeValue(null);
+    setProcessWarning(null);
     setProcessedPageCount(null);
     setFeedbackNote("");
     setProcessingSteps([
@@ -250,6 +258,10 @@ export function UploadHero({ content }: UploadHeroProps) {
     setProcessedPdfUrl(null);
     setProcessedPreviewReady(false);
     setProcessedPreviewError(null);
+    setProcessedPathname(null);
+    setProcessedBlobUrl(null);
+    setProcessModeValue(null);
+    setProcessWarning(null);
     setProcessedPageCount(null);
     setSelectedFile(file);
     setSourcePageCount(null);
@@ -490,6 +502,8 @@ export function UploadHero({ content }: UploadHeroProps) {
           processMode: "raster_repair_v1",
           sourcePathname: finalizedSourcePathname,
           sourceBlobUrl: finalizedSourceBlobUrl,
+          analysis:
+            (analyzeResult.data as { analysis?: Record<string, unknown> } | undefined)?.analysis ?? undefined,
           analysisPath:
             (analyzeResult.data as { analysisPath?: string } | undefined)?.analysisPath ?? undefined,
         }),
@@ -502,6 +516,16 @@ export function UploadHero({ content }: UploadHeroProps) {
             "Processing failed before all pages were completed. No cleaned PDF was generated. Please try another PDF or report this file.",
         );
       }
+      const processData = processResult as unknown as {
+        processedPathname?: string;
+        processedBlobUrl?: string;
+        processMode?: string;
+        warning?: string | null;
+      };
+      setProcessedPathname(processData.processedPathname ?? null);
+      setProcessedBlobUrl(processData.processedBlobUrl ?? null);
+      setProcessModeValue(processData.processMode ?? null);
+      setProcessWarning(processData.warning ?? null);
 
       try {
         await pollJobStatus(jobId, ["ready_for_download", "failed", "partial_failed"], isStale);
@@ -524,8 +548,17 @@ export function UploadHero({ content }: UploadHeroProps) {
 
       updateStep("process", "ok");
       setProcessingStage("preparing");
-      setProcessedPdfUrl(`/api/jobs/${encodeURIComponent(jobId)}/preview`);
-      setNoticeMessage("Preview is ready. Review both sides page by page before downloading.");
+      const previewUrl = processData.processedPathname
+        ? `/api/jobs/${encodeURIComponent(jobId)}/preview?processedPathname=${encodeURIComponent(processData.processedPathname)}`
+        : `/api/jobs/${encodeURIComponent(jobId)}/preview`;
+      setProcessedPdfUrl(previewUrl);
+      if (processData.processMode === "passthrough-fallback") {
+        setNoticeMessage(
+          "Preview processed with fallback mode. The original PDF was returned because the production cleanup engine is unavailable in this preview.",
+        );
+      } else {
+        setNoticeMessage("Preview is ready. Review both sides page by page before downloading.");
+      }
       setWorkflowState("ready_for_download");
       document.getElementById("result-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
@@ -601,7 +634,10 @@ export function UploadHero({ content }: UploadHeroProps) {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(`/api/jobs/${job.jobId}/download`);
+      const downloadUrl = processedPathname
+        ? `/api/jobs/${job.jobId}/download?processedPathname=${encodeURIComponent(processedPathname)}`
+        : `/api/jobs/${job.jobId}/download`;
+      const response = await fetch(downloadUrl);
       if (!response.ok) {
         const maybeError = (await response.json().catch(() => null)) as JobApiResponse<unknown> | null;
         throw new Error(maybeError?.message || "download failed");
@@ -970,6 +1006,10 @@ export function UploadHero({ content }: UploadHeroProps) {
                     </div>
                   ))}
                 </div>
+                {processedPathname ? <p className="mt-2 text-xs text-slate-600">processedPathname: {processedPathname}</p> : null}
+                {processedBlobUrl ? <p className="mt-1 text-xs text-slate-600">processedBlobUrl: {processedBlobUrl.slice(0, 80)}...</p> : null}
+                {processModeValue ? <p className="mt-1 text-xs text-slate-600">processMode: {processModeValue}</p> : null}
+                {processWarning ? <p className="mt-1 text-xs text-amber-700">warning: {processWarning}</p> : null}
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
