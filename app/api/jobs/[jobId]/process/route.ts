@@ -1,6 +1,6 @@
 import { jobError, jobOk, mapRepositoryError } from "@/lib/jobs/api";
 import { processJob } from "@/lib/jobs/service";
-import { JobNotFoundError, UploadNotFinalizedError } from "@/lib/jobs/repository";
+import { JobNotFoundError, UploadNotFinalizedError, readJob } from "@/lib/jobs/repository";
 
 export const runtime = "nodejs";
 
@@ -83,10 +83,27 @@ export async function POST(request: Request, { params }: Params) {
     }
 
     if (error instanceof UploadNotFinalizedError) {
+      // Fetch job for diagnostic info
+      let diagnosticInfo: Record<string, unknown> = {};
+      if (jobId) {
+        try {
+          const job = await readJob(jobId);
+          diagnosticInfo = {
+            jobId,
+            status: job.status,
+            hasSourceBlobUrl: Boolean(job.sourceBlobUrl),
+            hasSourcePathname: Boolean(job.sourcePathname),
+            sourcePathname: job.sourcePathname || null,
+          };
+        } catch {
+          // Ignore diagnostic fetch errors
+        }
+      }
       return jobError({
         httpStatus: 409,
         code: "upload_not_finalized",
         message: `Upload not finalized for job: ${error.jobId}`,
+        ...diagnosticInfo,
       });
     }
 

@@ -91,13 +91,16 @@ export async function uploadSourcePdf(params: {
 }
 
 export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; review: JobReviewPayload }> {
-  await transitionJobStatus(jobId, "analyzing");
   const job = await readJob(jobId);
 
-  // Check for source PDF - either local path or blob URL
-  if (!job.sourcePdfPath && !job.sourceBlobUrl) {
+  // Check for source PDF - must have both sourceBlobUrl and sourcePathname
+  const hasFinalizedUpload = Boolean(job.sourceBlobUrl) && Boolean(job.sourcePathname);
+  if (!hasFinalizedUpload) {
     throw new UploadNotFinalizedError(jobId);
   }
+
+  // Update status to analyzing
+  await transitionJobStatus(jobId, "analyzing");
 
   const paths = resolvePaths(jobId);
   const previousReview = await readReviewPayload(jobId);
@@ -106,13 +109,17 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
   let inputPdfPath: string;
   let cleanupTempFile: (() => Promise<void>) | undefined;
 
-  if (job.sourcePdfPath && !isBlobStorageEnabled()) {
+  if (job.sourcePathname && !isBlobStorageEnabled() && job.sourcePathname.startsWith("file://")) {
     // Local filesystem mode
-    inputPdfPath = job.sourcePdfPath;
+    inputPdfPath = job.sourcePathname.replace("file://", "");
   } else if (job.sourceBlobUrl) {
     // Blob storage mode - download to temp file for Python processing
     const sourceResult = await getSourcePdfForProcessing(jobId);
     if (!sourceResult.buffer) {
+      await transitionJobStatus(jobId, "failed", {
+        code: "upload_not_finalized",
+        message: "Source PDF buffer could not be retrieved",
+      });
       throw new UploadNotFinalizedError(jobId);
     }
 
@@ -131,6 +138,10 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
       }
     };
   } else {
+    await transitionJobStatus(jobId, "failed", {
+      code: "upload_not_finalized",
+      message: "Source PDF not available for processing",
+    });
     throw new UploadNotFinalizedError(jobId);
   }
 
@@ -177,6 +188,18 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
       });
       throw new Error(extractResult.stderr || "python extract page commands failed");
     }
+  } catch (error) {
+    // Ensure job is marked as failed on any error
+    const errorMessage = error instanceof Error ? error.message : "Analysis failed";
+    // Only update status if not already failed (to avoid overwriting specific error codes)
+    const currentJob = await readJob(jobId);
+    if (currentJob.status !== "failed") {
+      await transitionJobStatus(jobId, "failed", {
+        code: "analysis_failed",
+        message: errorMessage,
+      });
+    }
+    throw error;
   } finally {
     // Cleanup temp file if it was created
     if (cleanupTempFile) {
@@ -269,15 +292,16 @@ export async function processJob(
   try {
     const job = await readJob(jobId);
 
-    // Check for source PDF - either local path or blob URL
-    if (!job.sourcePdfPath && !job.sourceBlobUrl) {
+    // Check for source PDF - must have both sourceBlobUrl and sourcePathname
+    const hasFinalizedUpload = Boolean(job.sourceBlobUrl) && Boolean(job.sourcePathname);
+    if (!hasFinalizedUpload) {
       throw new UploadNotFinalizedError(jobId);
     }
 
     // Determine input path for Python processing
-    if (job.sourcePdfPath && !isBlobStorageEnabled()) {
+    if (job.sourcePathname && !isBlobStorageEnabled() && job.sourcePathname.startsWith("file://")) {
       // Local filesystem mode
-      inputPdfPath = job.sourcePdfPath;
+      inputPdfPath = job.sourcePathname.replace("file://", "");
     } else if (job.sourceBlobUrl) {
       // Blob storage mode - download to temp file for Python processing
       const sourceResult = await getSourcePdfForProcessing(jobId);

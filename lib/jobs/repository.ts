@@ -198,17 +198,20 @@ export async function finalizeUpload(params: {
 }
 
 export async function getSourcePdfForProcessing(jobId: string): Promise<{ url: string; buffer?: Buffer }> {
+  // First read the job to check if upload is finalized
+  const job = await readJob(jobId);
+  const hasFinalizedUpload = Boolean(job.sourceBlobUrl) && Boolean(job.sourcePathname);
+  if (!hasFinalizedUpload) {
+    throw new UploadNotFinalizedError(jobId);
+  }
+
   if (shouldUseBlobStorage()) {
-    const blobUrl = await getSourcePdfUrl(jobId);
-    if (!blobUrl) {
-      throw new UploadNotFinalizedError(jobId);
-    }
     // For Python processing, we need to download the blob
     const buffer = await getSourcePdfBuffer(jobId);
     if (!buffer) {
       throw new UploadNotFinalizedError(jobId);
     }
-    return { url: blobUrl, buffer };
+    return { url: job.sourceBlobUrl!, buffer };
   }
 
   // Fallback to local filesystem

@@ -28,6 +28,7 @@
 - [x] 添加 finalize-upload 路由修复 analyze 409 错误
 - [x] 前端添加上传锁防止重复调用
 - [x] 前端添加 6 步处理流程可视化
+- [x] 修复 analyze 返回 upload_not_finalized 但 source 已存在的误判问题
 
 ### Pending
 - [ ] Vercel Preview 部署验证主流程（上传 -> 处理 -> 预览 -> 下载）
@@ -52,6 +53,10 @@
 
 | 时间 | 文件 | 修改类型 | 说明 |
 |------|------|----------|------|
+| 2026-04-27 | lib/jobs/service.ts | modify | analyzeJobV1 和 processJob 改用 sourceBlobUrl && sourcePathname 判断上传是否完成 |
+| 2026-04-27 | lib/jobs/repository.ts | modify | getSourcePdfForProcessing 改用 sourceBlobUrl && sourcePathname 判断上传是否完成 |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | upload_not_finalized 错误返回添加诊断字段（status, hasSourceBlobUrl, hasSourcePathname, sourcePathname） |
+| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | upload_not_finalized 错误返回添加诊断字段 |
 | 2026-04-27 | app/api/jobs/[jobId]/finalize-upload/route.ts | create | 新的 finalize-upload API 路由，将 blob URL 写入 job manifest |
 | 2026-04-27 | app/api/jobs/[jobId]/debug/route.ts | create | 调试路由，返回 job 状态和 blob 元数据 |
 | 2026-04-27 | components/tool/upload-hero.tsx | modify | 添加 6 步处理流程可视化；调用 finalize-upload 后再调用 analyze；上传锁防止重复 |
