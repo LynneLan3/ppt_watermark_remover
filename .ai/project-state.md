@@ -50,6 +50,7 @@
 | 2026-04-27 | lib/storage/job-paths.ts | modify | getJobsRoot() 改为使用 os.tmpdir() 替代 process.cwd()，修复 Vercel 不可写问题 |
 | 2026-04-27 | .ai/devlog/2026-04-27-fix-deployment-blockers.md | create | 记录上线阻断问题修复过程 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新当前状态为上线阻断修复完成 |
+| 2026-04-27 | next.config.ts | modify | 移除 turbopack.root: process.cwd() 配置，修复 Vercel NFT tracing 错误导致构建失败 |
 
 ---
 

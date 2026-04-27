@@ -3,7 +3,11 @@
     "allow": [
       "Bash(pnpm lint *)",
       "Bash(pnpm build *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(pnpm install *)",
+      "Bash(tee /tmp/local-build.log)"
     ]
   }
 }
