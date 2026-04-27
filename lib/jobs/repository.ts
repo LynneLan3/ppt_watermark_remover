@@ -6,13 +6,14 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises"
 import {
   deleteJobBlobs,
   getSourcePdfBuffer,
-  getSourcePdfUrl,
+  getJobManifestPathname,
   JobNotFoundError,
   listJobIds as listBlobJobIds,
   readJob as readJobFromBlob,
   saveSourcePdf,
   UploadNotFinalizedError,
   writeJob as writeJobToBlob,
+  hasBlobReadWriteToken,
   isBlobStorageEnabled,
 } from "@/lib/blob-storage/job-store";
 import { resolveJobPaths, type JobPaths, getJobsRoot } from "@/lib/storage/job-paths";
@@ -44,10 +45,47 @@ const ALLOWED_TRANSITIONS: Record<JobStatus, JobStatus[]> = {
 
 // Determine if we should use blob storage
 function shouldUseBlobStorage(): boolean {
+  ensureStorageConfigured();
   return isBlobStorageEnabled();
 }
 
+export class StorageNotConfiguredError extends Error {
+  constructor() {
+    super("STORAGE_NOT_CONFIGURED");
+    this.name = "StorageNotConfiguredError";
+  }
+}
+
+export type StorageBackend = "blob" | "local";
+
+export function resolveStorageBackend(): StorageBackend {
+  if (process.env.VERCEL) {
+    return "blob";
+  }
+  return isBlobStorageEnabled() ? "blob" : "local";
+}
+
+export function getStorageDiagnostics(jobId: string): {
+  storageBackend: StorageBackend;
+  hasBlobToken: boolean;
+  expectedManifestPath: string;
+} {
+  return {
+    storageBackend: resolveStorageBackend(),
+    hasBlobToken: hasBlobReadWriteToken(),
+    expectedManifestPath:
+      resolveStorageBackend() === "blob" ? getJobManifestPathname(jobId) : resolveJobPaths(jobId).metadataPath,
+  };
+}
+
+function ensureStorageConfigured(): void {
+  if (process.env.VERCEL && !hasBlobReadWriteToken()) {
+    throw new StorageNotConfiguredError();
+  }
+}
+
 export async function createJob(retentionSeconds = DEFAULT_RETENTION_SECONDS): Promise<JobRecord> {
+  const effectiveRetentionSeconds = Math.max(retentionSeconds, DEFAULT_RETENTION_SECONDS);
   const jobId = randomUUID();
   const now = new Date();
   const job: JobRecord = {
@@ -55,8 +93,8 @@ export async function createJob(retentionSeconds = DEFAULT_RETENTION_SECONDS): P
     status: "created",
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),
-    expiresAt: new Date(now.getTime() + retentionSeconds * 1000).toISOString(),
-    retentionSeconds,
+    expiresAt: new Date(now.getTime() + effectiveRetentionSeconds * 1000).toISOString(),
+    retentionSeconds: effectiveRetentionSeconds,
   };
 
   if (shouldUseBlobStorage()) {

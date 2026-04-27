@@ -1,6 +1,6 @@
 import { jobError, jobOk, mapRepositoryError } from "@/lib/jobs/api";
 import { analyzeJobV1 } from "@/lib/jobs/service";
-import { JobNotFoundError, UploadNotFinalizedError, readJob } from "@/lib/jobs/repository";
+import { JobNotFoundError, UploadNotFinalizedError, getStorageDiagnostics, readJob } from "@/lib/jobs/repository";
 
 export const runtime = "nodejs";
 
@@ -59,11 +59,19 @@ export async function POST(_request: Request, { params }: Params) {
 
     // Handle specific error types
     if (error instanceof JobNotFoundError) {
-      return jobError({
-        httpStatus: 404,
-        code: "job_not_found",
-        message: `Job not found: ${error.jobId}`,
-      });
+      const diagnostics = getStorageDiagnostics(error.jobId);
+      return Response.json(
+        {
+          success: false,
+          code: "job_not_found",
+          jobId: error.jobId,
+          storageBackend: diagnostics.storageBackend,
+          hasBlobToken: diagnostics.hasBlobToken,
+          expectedManifestPath: diagnostics.expectedManifestPath,
+          message: "Job not found, expired, or already deleted.",
+        },
+        { status: 404 },
+      );
     }
 
     if (error instanceof UploadNotFinalizedError) {
@@ -92,6 +100,21 @@ export async function POST(_request: Request, { params }: Params) {
     }
 
     const mapped = mapRepositoryError(error);
+    if (mapped.code === "job_not_found" && jobId) {
+      const diagnostics = getStorageDiagnostics(jobId);
+      return Response.json(
+        {
+          success: false,
+          code: "job_not_found",
+          jobId,
+          storageBackend: diagnostics.storageBackend,
+          hasBlobToken: diagnostics.hasBlobToken,
+          expectedManifestPath: diagnostics.expectedManifestPath,
+          message: "Job not found, expired, or already deleted.",
+        },
+        { status: 404 },
+      );
+    }
     return jobError({
       httpStatus: mapped.httpStatus,
       code: mapped.code === "internal_error" ? "analysis_failed" : mapped.code,

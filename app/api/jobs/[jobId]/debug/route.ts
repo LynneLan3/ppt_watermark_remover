@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { readJob } from "@/lib/jobs/repository";
+import { getStorageDiagnostics, readJob } from "@/lib/jobs/repository";
 import { JobNotFoundError } from "@/lib/blob-storage/job-store";
 
 export const runtime = "nodejs";
@@ -10,13 +10,19 @@ type Params = {
 };
 
 export async function GET(_request: Request, { params }: Params) {
+  const { jobId } = await params;
+  const diagnostics = getStorageDiagnostics(jobId);
+
   try {
-    const { jobId } = await params;
     const job = await readJob(jobId);
 
     return NextResponse.json({
       ok: true,
       jobId,
+      storageBackend: diagnostics.storageBackend,
+      hasBlobToken: diagnostics.hasBlobToken,
+      expectedManifestPath: diagnostics.expectedManifestPath,
+      jobManifestExists: true,
       status: job.status,
       hasSourceBlobUrl: !!job.sourceBlobUrl,
       hasSourcePathname: !!job.sourcePathname,
@@ -35,9 +41,30 @@ export async function GET(_request: Request, { params }: Params) {
         {
           ok: false,
           code: "job_not_found",
-          message: `Job not found: ${error.jobId}`,
+          jobId: error.jobId,
+          storageBackend: diagnostics.storageBackend,
+          hasBlobToken: diagnostics.hasBlobToken,
+          expectedManifestPath: diagnostics.expectedManifestPath,
+          jobManifestExists: false,
+          message: "Job not found, expired, or already deleted.",
         },
         { status: 404 },
+      );
+    }
+
+    if (error instanceof Error && error.message === "STORAGE_NOT_CONFIGURED") {
+      return NextResponse.json(
+        {
+          ok: false,
+          code: "STORAGE_NOT_CONFIGURED",
+          jobId,
+          storageBackend: diagnostics.storageBackend,
+          hasBlobToken: diagnostics.hasBlobToken,
+          expectedManifestPath: diagnostics.expectedManifestPath,
+          jobManifestExists: false,
+          message: "Storage is not configured for this environment.",
+        },
+        { status: 500 },
       );
     }
 

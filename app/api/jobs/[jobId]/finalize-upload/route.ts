@@ -1,5 +1,7 @@
-import { jobError, jobOk, mapRepositoryError } from "@/lib/jobs/api";
-import { readJob, writeJobMetadata } from "@/lib/jobs/repository";
+import { NextResponse } from "next/server";
+
+import { jobError, mapRepositoryError } from "@/lib/jobs/api";
+import { getStorageDiagnostics, readJob, writeJobMetadata } from "@/lib/jobs/repository";
 import { JobNotFoundError } from "@/lib/blob-storage/job-store";
 
 export const runtime = "nodejs";
@@ -25,6 +27,7 @@ export async function POST(request: Request, { params }: Params) {
   try {
     const { jobId: paramJobId } = await params;
     jobId = paramJobId;
+    const diagnostics = getStorageDiagnostics(jobId);
 
     console.log({
       level: "info",
@@ -37,13 +40,6 @@ export async function POST(request: Request, { params }: Params) {
 
     // Read job
     const job = await readJob(jobId);
-    if (!job) {
-      return jobError({
-        httpStatus: 404,
-        code: "job_not_found",
-        message: `Job not found: ${jobId}`,
-      });
-    }
 
     // Get blob URL and pathname from request
     const sourceBlobUrl = body.sourceBlobUrl || body.url;
@@ -77,6 +73,16 @@ export async function POST(request: Request, { params }: Params) {
     };
 
     await writeJobMetadata(updatedJob);
+    const readBack = await readJob(jobId);
+    const hasReadBackBlob = Boolean(readBack.sourceBlobUrl);
+    const hasReadBackPathname = Boolean(readBack.sourcePathname);
+    if (!hasReadBackBlob || !hasReadBackPathname || readBack.status !== "uploaded") {
+      return jobError({
+        httpStatus: 500,
+        code: "FINALIZE_WRITE_FAILED",
+        message: "Failed to verify finalized upload manifest write.",
+      });
+    }
 
     console.log({
       level: "info",
@@ -89,16 +95,25 @@ export async function POST(request: Request, { params }: Params) {
       timestamp: new Date().toISOString(),
     });
 
-    return jobOk(
-      "Upload finalized.",
-      {
+    return NextResponse.json({
+      success: true,
+      code: "ok",
+      message: "Upload finalized.",
+      ok: true,
+      jobId,
+      status: "uploaded",
+      hasSourceBlobUrl: true,
+      hasSourcePathname: true,
+      manifestPath: diagnostics.expectedManifestPath,
+      data: {
         jobId,
         status: "uploaded",
         hasSourceBlobUrl: true,
         hasSourcePathname: true,
+        manifestPath: diagnostics.expectedManifestPath,
       },
-      updatedJob,
-    );
+      job: readBack,
+    });
   } catch (error) {
     const durationMs = Date.now() - startTime;
 
@@ -116,7 +131,8 @@ export async function POST(request: Request, { params }: Params) {
       return jobError({
         httpStatus: 404,
         code: "job_not_found",
-        message: `Job not found: ${jobId}`,
+        message: "Job not found, expired, or already deleted.",
+        job: undefined,
       });
     }
 

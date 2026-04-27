@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { JobApiResponse, JobErrorCode, JobRecord } from "@/lib/jobs/types";
-import { JobNotFoundError, UploadNotFinalizedError } from "@/lib/jobs/repository";
+import { JobNotFoundError, StorageNotConfiguredError, UploadNotFinalizedError } from "@/lib/jobs/repository";
 
 export function jobOk<T>(message: string, data?: T, job?: JobRecord) {
   return NextResponse.json<JobApiResponse<T>>({
@@ -52,6 +52,14 @@ export function mapRepositoryError(error: unknown): {
       code: "upload_not_finalized",
       message: `Upload not finalized for job: ${error.jobId}`,
       httpStatus: 409,
+    };
+  }
+
+  if (error instanceof StorageNotConfiguredError || message === "STORAGE_NOT_CONFIGURED") {
+    return {
+      code: "STORAGE_NOT_CONFIGURED",
+      message: "Storage is not configured for this environment.",
+      httpStatus: 500,
     };
   }
 

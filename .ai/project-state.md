@@ -9,7 +9,7 @@
 
 - **项目名称**: NotebookLM Watermark Remover
 - **当前阶段**: Stage 2 - Beta 上线准备（免费预览确认模式）
-- **当前重点**: 修复上线阻断问题：build 失败、Vercel 临时目录不可写
+- **当前重点**: 修复 Preview 链路 job_not_found：统一 jobId 链路、repository 存储后端与 manifest 路径
 - **算法策略**: 默认 `stable-light-complex-v5`，禁用 v6 micro polish experimental path
 
 ---
@@ -29,9 +29,13 @@
 - [x] 前端添加上传锁防止重复调用
 - [x] 前端添加 6 步处理流程可视化
 - [x] 修复 analyze 返回 upload_not_finalized 但 source 已存在的误判问题
+- [x] 修复 Preview analyze=job_not_found：补齐 jobId 全链路追踪与 finalize 写后回读校验
+- [x] 拆分上传路由，消除同一链路双 `upload-token` 请求混淆（`/upload-token` + `/upload-source`）
+- [x] 增加 Vercel 存储强约束：`VERCEL` 且无 `BLOB_READ_WRITE_TOKEN` 返回 `STORAGE_NOT_CONFIGURED`
+- [x] 增强 analyze/debug 的 job_not_found 诊断字段（storageBackend、hasBlobToken、expectedManifestPath）
 
 ### Pending
-- [ ] Vercel Preview 部署验证主流程（上传 -> 处理 -> 预览 -> 下载）
+- [ ] Vercel Preview 部署验证主流程（create -> upload-token -> upload-source -> finalize-upload -> analyze -> process）
 - [ ] 验证下载后 markDownloaded 状态更新
 
 ### Blocked
@@ -46,6 +50,7 @@
 | `pnpm lint` | pass | pass | 🟢 达标 |
 | `pnpm build` | pass（含 Turbopack tracing warnings） | pass | 🟢 达标 |
 | 正式用户流程 | 首屏上传 -> Remove -> 全屏 processing -> 双栏同步预览 -> 门控下载 | 可用 | 🟢 本地通过 |
+| 上传链路一致性 | create/upload/finalize/analyze/process 使用同一 jobId 与同一路径 | 一致 | 🟢 本地代码校验通过 |
 
 ---
 
@@ -65,6 +70,16 @@
 | 2026-04-27 | lib/jobs/types.ts | modify | 添加 blob_path_conflict 和 upload_not_finalized 错误码 |
 | 2026-04-27 | lib/jobs/api.ts | modify | 添加 blob_path_conflict 错误映射 |
 | 2026-04-27 | app/api/jobs/upload-token/route.ts | modify | 捕获 Blob already exists 错误返回 409 blob_path_conflict；错误消息脱敏处理 |
+| 2026-04-27 | app/api/jobs/upload-source/route.ts | create | 新增上传源文件路由，分离 upload-token 与实际文件上传 |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | 增加 jobId 全链路 debug step、currentJobRef/currentFileKeyRef、防重复上传与 upload-source 调用 |
+| 2026-04-27 | app/api/jobs/[jobId]/finalize-upload/route.ts | modify | 强制 readJob 存在校验、写后回读校验、返回 manifestPath 与 FINALIZE_WRITE_FAILED |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | job_not_found 响应增加 storage 诊断字段 |
+| 2026-04-27 | app/api/jobs/[jobId]/debug/route.ts | modify | job 存在/不存在都返回 storage 诊断字段和 expectedManifestPath |
+| 2026-04-27 | lib/jobs/repository.ts | modify | 增加 VERCEL+无 token 的 STORAGE_NOT_CONFIGURED、storage diagnostics、最小 20 分钟 TTL 保证 |
+| 2026-04-27 | lib/jobs/api.ts | modify | 增加 STORAGE_NOT_CONFIGURED 错误映射 |
+| 2026-04-27 | lib/blob-storage/job-store.ts | modify | 导出 manifest path 与 blob token 检查方法，统一路径诊断 |
+| 2026-04-27 | lib/jobs/types.ts | modify | 增加 FINALIZE_WRITE_FAILED / STORAGE_NOT_CONFIGURED 错误码 |
+| 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |
 | 2026-04-27 | AGENTS.md | modify | 更新为 Stage 2 Beta，明确允许范围和禁止事项 |
 | 2026-04-27 | docs/prd.md | modify | 更新为 Stage 2 Beta 目标和成功标准 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |

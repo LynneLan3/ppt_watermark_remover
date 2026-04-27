@@ -494,6 +494,8 @@ export type JobErrorCode =
   | "processed_file_missing"
   | "process_report_incomplete"
   | "download_unavailable"
+  | "STORAGE_NOT_CONFIGURED"
+  | "FINALIZE_WRITE_FAILED"
   | "internal_error";
 
 export type JobApiResponse<T> = {

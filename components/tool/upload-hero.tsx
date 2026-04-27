@@ -78,6 +78,8 @@ export function UploadHero({ content }: UploadHeroProps) {
   const [debugQueryEnabled, setDebugQueryEnabled] = useState(false);
   const pipelineRunIdRef = useRef(0);
   const uploadingRef = useRef(false);
+  const currentJobRef = useRef<string | null>(null);
+  const currentFileKeyRef = useRef<string | null>(null);
 
   const fileSizeText = useMemo(() => {
     if (!selectedFile) {
@@ -215,6 +217,8 @@ export function UploadHero({ content }: UploadHeroProps) {
   };
 
   const resetJobState = () => {
+    currentJobRef.current = null;
+    currentFileKeyRef.current = null;
     setJob(null);
     setProcessReport(null);
     setCurrentPage(1);
@@ -260,6 +264,7 @@ export function UploadHero({ content }: UploadHeroProps) {
 
     setWorkflowState("processing");
     setProcessingStage("uploading");
+    currentFileKeyRef.current = getFileKey(file);
   };
 
   const handleSelectFile = (list: FileList | null) => {
@@ -283,7 +288,12 @@ export function UploadHero({ content }: UploadHeroProps) {
       return;
     }
 
-    // Set uploading lock
+    const incomingFileKey = getFileKey(file);
+    if (currentFileKeyRef.current === incomingFileKey && currentJobRef.current) {
+      setNoticeMessage("This file is already queued in the current upload flow.");
+      return;
+    }
+
     uploadingRef.current = true;
 
     // Reset and start new upload pipeline
@@ -323,21 +333,26 @@ export function UploadHero({ content }: UploadHeroProps) {
       // Step 1: Create job
       updateStep("create job", "running");
       setProcessingStage("uploading");
-      const createResp = await fetch("/api/jobs/create", { method: "POST" });
-      const created = (await createResp.json()) as JobApiResponse<{ jobId: string }>;
-      if (!createResp.ok || !created.success || !created.data?.jobId) {
-        updateStep("create job", "failed", created.message);
-        throw new Error(created.message || "create job failed");
-      }
+      const jobId =
+        currentJobRef.current ||
+        (await (async () => {
+          const createResp = await fetch("/api/jobs/create", { method: "POST" });
+          const created = (await createResp.json()) as JobApiResponse<{ jobId: string }>;
+          if (!createResp.ok || !created.success || !created.data?.jobId) {
+            updateStep("create job", "failed", created.message);
+            throw new Error(created.message || "create job failed");
+          }
+          return created.data.jobId;
+        })());
 
-      const jobId = created.data.jobId;
+      currentJobRef.current = jobId;
       if (isStale()) {
         return;
       }
-      setJob(created.job ?? null);
-      updateStep("create job", "ok");
+      updateStep("create job", "ok", `createJob returned jobId=${jobId}`);
 
       // Step 2: Get upload token
+      updateStep("blob upload", "running", `upload-token using jobId=${jobId}`);
       const tokenResp = await fetch("/api/jobs/upload-token", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -354,7 +369,7 @@ export function UploadHero({ content }: UploadHeroProps) {
       uploadForm.set("jobId", jobId);
       uploadForm.set("uploadToken", tokenResult.data.uploadToken);
       uploadForm.set("file", file);
-      const uploadResp = await fetch("/api/jobs/upload-token", {
+      const uploadResp = await fetch("/api/jobs/upload-source", {
         method: "POST",
         body: uploadForm,
       });
@@ -374,7 +389,11 @@ export function UploadHero({ content }: UploadHeroProps) {
       if (isStale()) {
         return;
       }
-      updateStep("blob upload", "ok");
+      updateStep(
+        "blob upload",
+        "ok",
+        `Blob upload returned url=${sourceBlobUrl ? "yes" : "no"}, pathname=${sourcePathname ?? "missing"}`,
+      );
 
       // Step 4: Finalize upload - CRITICAL for analyze to work
       updateStep("finalize upload", "running");
@@ -392,8 +411,11 @@ export function UploadHero({ content }: UploadHeroProps) {
         }),
       });
       const finalizeResult = (await finalizeResp.json()) as JobApiResponse<{
+        jobId?: string;
+        status?: string;
         hasSourceBlobUrl?: boolean;
         hasSourcePathname?: boolean;
+        manifestPath?: string;
       }>;
 
       if (!finalizeResp.ok || !finalizeResult.success) {
@@ -401,11 +423,15 @@ export function UploadHero({ content }: UploadHeroProps) {
         throw new Error(finalizeResult.message || "UPLOAD_FINALIZE_FAILED");
       }
 
-      updateStep("finalize upload", "ok");
+      updateStep(
+        "finalize upload",
+        "ok",
+        `finalize-upload URL jobId=${jobId}; response jobId=${finalizeResult.data?.jobId ?? "missing"}`,
+      );
       setJob(finalizeResult.job ?? null);
 
       // Step 5: Analyze
-      updateStep("analyze", "running");
+      updateStep("analyze", "running", `analyze URL jobId=${jobId}`);
       setProcessingStage("analyzing");
       const analyzeResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/analyze`, {
         method: "POST",
@@ -895,9 +921,11 @@ export function UploadHero({ content }: UploadHeroProps) {
                         {step.status === "failed" && " ✗"}
                         {step.status === "running" && " ..."}
                       </span>
-                      {step.message && step.status === "failed" && (
-                        <span className="text-rose-600">: {step.message}</span>
-                      )}
+                      {step.message ? (
+                        <span className={step.status === "failed" ? "text-rose-600" : "text-slate-500"}>
+                          : {step.message}
+                        </span>
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -986,6 +1014,10 @@ function clampNumber(value: number, min: number, max: number): number {
     return min;
   }
   return Math.min(max, Math.max(min, Math.trunc(value)));
+}
+
+function getFileKey(file: File): string {
+  return `${file.name}:${file.size}:${file.lastModified}`;
 }
 
 async function readPdfPageCountFromFile(file: File): Promise<number> {

@@ -6,7 +6,7 @@ import type { JobRecord } from "@/lib/jobs/types";
 
 const BLOB_JOBS_PREFIX = "jobs/";
 
-function getJobManifestPathname(jobId: string): string {
+export function getJobManifestPathname(jobId: string): string {
   return `${BLOB_JOBS_PREFIX}${jobId}/job.json`;
 }
 
@@ -195,5 +195,9 @@ export async function listJobIds(): Promise<string[]> {
 }
 
 export function isBlobStorageEnabled(): boolean {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+export function hasBlobReadWriteToken(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
