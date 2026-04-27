@@ -30,6 +30,10 @@
 - [x] 前端添加 6 步处理流程可视化
 - [x] 修复 analyze 返回 upload_not_finalized 但 source 已存在的误判问题
 - [x] 修复 Preview analyze=job_not_found：补齐 jobId 全链路追踪与 finalize 写后回读校验
+- [x] 修复 private Blob source.pdf 读取方式，使用 @vercel/blob SDK
+- [x] 添加 sourcePdfExists 检查到 debug endpoint
+- [x] 修复 analyze 错误码映射，区分 job_not_found / source_pdf_not_found / source_pdf_read_failed
+- [x] 添加 SourcePdfNotFoundError 和 SourcePdfReadFailedError 错误类型
 - [x] 拆分上传路由，消除同一链路双 `upload-token` 请求混淆（`/upload-token` + `/upload-source`）
 - [x] 增加 Vercel 存储强约束：`VERCEL` 且无 `BLOB_READ_WRITE_TOKEN` 返回 `STORAGE_NOT_CONFIGURED`
 - [x] 增强 analyze/debug 的 job_not_found 诊断字段（storageBackend、hasBlobToken、expectedManifestPath）
@@ -58,8 +62,12 @@
 
 | 时间 | 文件 | 修改类型 | 说明 |
 |------|------|----------|------|
-| 2026-04-27 | lib/jobs/service.ts | modify | analyzeJobV1 和 processJob 改用 sourceBlobUrl && sourcePathname 判断上传是否完成 |
-| 2026-04-27 | lib/jobs/repository.ts | modify | getSourcePdfForProcessing 改用 sourceBlobUrl && sourcePathname 判断上传是否完成 |
+| 2026-04-27 | lib/blob-storage/job-store.ts | modify | 添加 sourcePdfExists 检查；添加 SourcePdfNotFoundError 和 SourcePdfReadFailedError 错误类型；修复 getSourcePdfBuffer 抛出具体错误而非返回 null |
+| 2026-04-27 | lib/jobs/repository.ts | modify | 导出新的错误类型和 sourcePdfExists；更新 getSourcePdfForProcessing 抛出具体错误 |
+| 2026-04-27 | lib/jobs/types.ts | modify | 添加 source_pdf_not_found 和 source_pdf_read_failed 错误码 |
+| 2026-04-27 | lib/jobs/service.ts | modify | analyzeJobV1 正确处理 SourcePdfNotFoundError 和 SourcePdfReadFailedError；不再检查 buffer 是否为 null |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | 添加 SourcePdfNotFoundError 和 SourcePdfReadFailedError 的错误处理映射 |
+| 2026-04-27 | app/api/jobs/[jobId]/debug/route.ts | modify | 添加 sourcePdfExists 检查和更多诊断字段 |
 | 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | upload_not_finalized 错误返回添加诊断字段（status, hasSourceBlobUrl, hasSourcePathname, sourcePathname） |
 | 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | upload_not_finalized 错误返回添加诊断字段 |
 | 2026-04-27 | app/api/jobs/[jobId]/finalize-upload/route.ts | create | 新的 finalize-upload API 路由，将 blob URL 写入 job manifest |

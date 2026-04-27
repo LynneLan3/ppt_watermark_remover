@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getStorageDiagnostics, readJob } from "@/lib/jobs/repository";
+import { getStorageDiagnostics, readJob, sourcePdfExists } from "@/lib/jobs/repository";
 import { JobNotFoundError } from "@/lib/blob-storage/job-store";
 
 export const runtime = "nodejs";
@@ -15,6 +15,8 @@ export async function GET(_request: Request, { params }: Params) {
 
   try {
     const job = await readJob(jobId);
+    const hasSourcePathname = !!job.sourcePathname;
+    const sourcePdfExistsResult = hasSourcePathname ? await sourcePdfExists(jobId) : false;
 
     return NextResponse.json({
       ok: true,
@@ -23,14 +25,17 @@ export async function GET(_request: Request, { params }: Params) {
       hasBlobToken: diagnostics.hasBlobToken,
       expectedManifestPath: diagnostics.expectedManifestPath,
       jobManifestExists: true,
+      sourcePdfExists: sourcePdfExistsResult,
       status: job.status,
+      errorCode: job.failureCode || null,
+      errorMessage: job.failureMessage || null,
       hasSourceBlobUrl: !!job.sourceBlobUrl,
-      hasSourcePathname: !!job.sourcePathname,
+      hasSourcePathname: hasSourcePathname,
+      sourcePathname: job.sourcePathname || null,
       sourceBlobUrl: job.sourceBlobUrl ? `${job.sourceBlobUrl.substring(0, 50)}...` : null,
-      sourcePathname: job.sourcePathname,
-      sourceFilename: job.sourceFilename,
-      sourceSize: job.sourceSize,
-      sourceContentType: job.sourceContentType,
+      sourceFilename: job.sourceFilename || null,
+      sourceSize: job.sourceSize || null,
+      sourceContentType: job.sourceContentType || null,
       createdAt: job.createdAt,
       updatedAt: job.updatedAt,
       expiresAt: job.expiresAt,

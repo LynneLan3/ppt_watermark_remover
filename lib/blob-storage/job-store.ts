@@ -32,6 +32,30 @@ export class UploadNotFinalizedError extends Error {
   }
 }
 
+export class SourcePdfNotFoundError extends Error {
+  readonly jobId: string;
+  readonly pathname: string;
+  constructor(jobId: string, pathname: string) {
+    super(`Source PDF not found: ${pathname}`);
+    this.name = "SourcePdfNotFoundError";
+    this.jobId = jobId;
+    this.pathname = pathname;
+  }
+}
+
+export class SourcePdfReadFailedError extends Error {
+  readonly jobId: string;
+  readonly pathname: string;
+  readonly cause: Error | undefined;
+  constructor(jobId: string, pathname: string, cause?: Error) {
+    super(`Failed to read source PDF: ${pathname}${cause ? ` - ${cause.message}` : ""}`);
+    this.name = "SourcePdfReadFailedError";
+    this.jobId = jobId;
+    this.pathname = pathname;
+    this.cause = cause;
+  }
+}
+
 async function streamToText(stream: ReadableStream<Uint8Array>): Promise<string> {
   const reader = stream.getReader();
   const chunks: Uint8Array[] = [];
@@ -129,6 +153,16 @@ export async function saveSourcePdf(
   return blobResult;
 }
 
+export async function sourcePdfExists(jobId: string): Promise<boolean> {
+  const pathname = getSourcePdfPathname(jobId);
+  try {
+    const info = await head(pathname);
+    return info !== null;
+  } catch {
+    return false;
+  }
+}
+
 export async function getSourcePdfUrl(jobId: string): Promise<string | null> {
   const pathname = getSourcePdfPathname(jobId);
   try {
@@ -139,12 +173,15 @@ export async function getSourcePdfUrl(jobId: string): Promise<string | null> {
   }
 }
 
-export async function getSourcePdfBuffer(jobId: string): Promise<Buffer | null> {
+export async function getSourcePdfBuffer(jobId: string): Promise<Buffer> {
   const pathname = getSourcePdfPathname(jobId);
   try {
     const response = await get(pathname, { access: "private" });
-    if (!response || response.statusCode !== 200) {
-      return null;
+    if (!response) {
+      throw new SourcePdfNotFoundError(jobId, pathname);
+    }
+    if (response.statusCode !== 200) {
+      throw new SourcePdfReadFailedError(jobId, pathname, new Error(`HTTP ${response.statusCode}`));
     }
     const reader = response.stream.getReader();
     const chunks: Uint8Array[] = [];
@@ -161,8 +198,19 @@ export async function getSourcePdfBuffer(jobId: string): Promise<Buffer | null> 
       offset += chunk.length;
     }
     return Buffer.from(result);
-  } catch {
-    return null;
+  } catch (error) {
+    if (error instanceof SourcePdfNotFoundError || error instanceof SourcePdfReadFailedError) {
+      throw error;
+    }
+    // Check if it's a "not found" error
+    if (error instanceof Error) {
+      const message = error.message.toLowerCase();
+      if (message.includes("not found") || message.includes("blob not found")) {
+        throw new SourcePdfNotFoundError(jobId, pathname);
+      }
+      throw new SourcePdfReadFailedError(jobId, pathname, error);
+    }
+    throw new SourcePdfReadFailedError(jobId, pathname, new Error("Unknown error"));
   }
 }
 

@@ -11,6 +11,9 @@ import {
   listJobIds as listBlobJobIds,
   readJob as readJobFromBlob,
   saveSourcePdf,
+  sourcePdfExists,
+  SourcePdfNotFoundError,
+  SourcePdfReadFailedError,
   UploadNotFinalizedError,
   writeJob as writeJobToBlob,
   hasBlobReadWriteToken,
@@ -235,7 +238,7 @@ export async function finalizeUpload(params: {
   return updated;
 }
 
-export async function getSourcePdfForProcessing(jobId: string): Promise<{ url: string; buffer?: Buffer }> {
+export async function getSourcePdfForProcessing(jobId: string): Promise<{ url: string; buffer: Buffer }> {
   // First read the job to check if upload is finalized
   const job = await readJob(jobId);
   const hasFinalizedUpload = Boolean(job.sourceBlobUrl) && Boolean(job.sourcePathname);
@@ -245,10 +248,8 @@ export async function getSourcePdfForProcessing(jobId: string): Promise<{ url: s
 
   if (shouldUseBlobStorage()) {
     // For Python processing, we need to download the blob
+    // getSourcePdfBuffer now throws SourcePdfNotFoundError or SourcePdfReadFailedError
     const buffer = await getSourcePdfBuffer(jobId);
-    if (!buffer) {
-      throw new UploadNotFinalizedError(jobId);
-    }
     return { url: job.sourceBlobUrl!, buffer };
   }
 
@@ -257,8 +258,11 @@ export async function getSourcePdfForProcessing(jobId: string): Promise<{ url: s
   try {
     const buffer = await readFile(paths.sourcePdfPath);
     return { url: `file://${paths.sourcePdfPath}`, buffer };
-  } catch {
-    throw new UploadNotFinalizedError(jobId);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("ENOENT")) {
+      throw new SourcePdfNotFoundError(jobId, paths.sourcePdfPath);
+    }
+    throw new SourcePdfReadFailedError(jobId, paths.sourcePdfPath, error instanceof Error ? error : undefined);
   }
 }
 
@@ -575,7 +579,13 @@ export function resolvePaths(jobId: string): JobPaths {
 }
 
 // Re-export errors for use in API routes
-export { JobNotFoundError, UploadNotFinalizedError };
+export {
+  JobNotFoundError,
+  UploadNotFinalizedError,
+  SourcePdfNotFoundError,
+  SourcePdfReadFailedError,
+  sourcePdfExists,
+};
 
 function countRawCandidates(rawAnalysis: unknown): number {
   if (!rawAnalysis || typeof rawAnalysis !== "object") {

@@ -488,6 +488,8 @@ export type JobErrorCode =
   | "upload_token_expired"
   | "unsupported_format"
   | "analysis_failed"
+  | "source_pdf_not_found"
+  | "source_pdf_read_failed"
   | "process_failed"
   | "python_process_failed"
   | "page_count_mismatch"

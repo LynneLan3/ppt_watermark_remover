@@ -26,6 +26,8 @@ import {
   verifyUploadToken,
   getSourcePdfForProcessing,
   UploadNotFinalizedError,
+  SourcePdfNotFoundError,
+  SourcePdfReadFailedError,
 } from "@/lib/jobs/repository";
 import type {
   JobErrorCode,
@@ -114,14 +116,8 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
     inputPdfPath = job.sourcePathname.replace("file://", "");
   } else if (job.sourceBlobUrl) {
     // Blob storage mode - download to temp file for Python processing
+    // getSourcePdfForProcessing throws SourcePdfNotFoundError or SourcePdfReadFailedError on failure
     const sourceResult = await getSourcePdfForProcessing(jobId);
-    if (!sourceResult.buffer) {
-      await transitionJobStatus(jobId, "failed", {
-        code: "upload_not_finalized",
-        message: "Source PDF buffer could not be retrieved",
-      });
-      throw new UploadNotFinalizedError(jobId);
-    }
 
     // Write to temp file for Python processing
     const tempDir = join(tmpdir(), "notebooklm-jobs", jobId);
@@ -189,6 +185,20 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
       throw new Error(extractResult.stderr || "python extract page commands failed");
     }
   } catch (error) {
+    // Don't wrap source PDF errors - let them propagate with correct error codes
+    if (error instanceof SourcePdfNotFoundError || error instanceof SourcePdfReadFailedError) {
+      // Mark job as failed but re-throw the original error
+      const currentJob = await readJob(jobId);
+      if (currentJob.status !== "failed") {
+        const code = error instanceof SourcePdfNotFoundError ? "source_pdf_not_found" : "source_pdf_read_failed";
+        await transitionJobStatus(jobId, "failed", {
+          code,
+          message: error.message,
+        });
+      }
+      throw error;
+    }
+
     // Ensure job is marked as failed on any error
     const errorMessage = error instanceof Error ? error.message : "Analysis failed";
     // Only update status if not already failed (to avoid overwriting specific error codes)

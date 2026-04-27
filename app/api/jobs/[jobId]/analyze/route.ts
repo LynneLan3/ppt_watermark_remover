@@ -1,6 +1,13 @@
 import { jobError, jobOk, mapRepositoryError } from "@/lib/jobs/api";
 import { analyzeJobV1 } from "@/lib/jobs/service";
-import { JobNotFoundError, UploadNotFinalizedError, getStorageDiagnostics, readJob } from "@/lib/jobs/repository";
+import {
+  JobNotFoundError,
+  UploadNotFinalizedError,
+  SourcePdfNotFoundError,
+  SourcePdfReadFailedError,
+  getStorageDiagnostics,
+  readJob,
+} from "@/lib/jobs/repository";
 
 export const runtime = "nodejs";
 
@@ -97,6 +104,32 @@ export async function POST(_request: Request, { params }: Params) {
         message: `Upload not finalized for job: ${error.jobId}`,
         ...diagnosticInfo,
       });
+    }
+
+    if (error instanceof SourcePdfNotFoundError) {
+      return Response.json(
+        {
+          success: false,
+          code: "source_pdf_not_found",
+          jobId: error.jobId,
+          sourcePathname: error.pathname,
+          message: `Source PDF not found: ${error.pathname}`,
+        },
+        { status: 404 },
+      );
+    }
+
+    if (error instanceof SourcePdfReadFailedError) {
+      return Response.json(
+        {
+          success: false,
+          code: "source_pdf_read_failed",
+          jobId: error.jobId,
+          sourcePathname: error.pathname,
+          message: `Failed to read source PDF: ${error.pathname}`,
+        },
+        { status: 500 },
+      );
     }
 
     const mapped = mapRepositoryError(error);
