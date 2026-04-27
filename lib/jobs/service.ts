@@ -1,8 +1,9 @@
 import "server-only";
 
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { access, constants, readFile, writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { spawn } from "node:child_process";
 
 import { PDFDocument } from "pdf-lib";
 
@@ -40,10 +41,12 @@ import type {
   QualityMetrics,
 } from "@/lib/jobs/types";
 import { runPythonCommand } from "@/lib/server/python-runner/process";
+import type { PythonRunnerResult } from "@/lib/server/python-runner/types";
 import { getStorageAdapter } from "@/lib/storage/local-adapter";
 import { validateUploadedPdf } from "@/lib/storage/upload";
 import { isBlobStorageEnabled } from "@/lib/blob-storage/job-store";
 import { readSourcePdfBuffer } from "@/lib/blob-storage/source-reader";
+import { analyzePdfWithJsFallback, type JsAnalyzeFallbackResult } from "@/lib/jobs/js-analyze-fallback";
 
 const DEFAULT_ALGORITHM_PROFILE = "stable-light-complex-v5";
 
@@ -58,6 +61,48 @@ class ProcessJobFailure extends Error {
     this.name = "ProcessJobFailure";
   }
 }
+
+export type AnalyzePhase =
+  | "resolve_source_input"
+  | "read_source_pdf_from_blob"
+  | "validate_pdf_buffer"
+  | "run_pdf_analyzer"
+  | "parse_analyzer_output"
+  | "write_analysis_result"
+  | "patch_job_ready_for_review";
+
+export type AnalyzeFailureCode =
+  | "source_pdf_not_found"
+  | "source_pdf_read_failed"
+  | "pdf_buffer_empty"
+  | "pdf_analyzer_runtime_missing"
+  | "pdf_analyzer_script_missing"
+  | "pdf_analyzer_dependency_missing"
+  | "pdf_analyzer_failed"
+  | "pdf_analyzer_output_invalid"
+  | "analysis_write_failed"
+  | "analyze_failed";
+
+export class AnalyzePhaseError extends Error {
+  readonly code: AnalyzeFailureCode;
+  readonly phase: AnalyzePhase;
+  readonly details?: Record<string, unknown>;
+
+  constructor(code: AnalyzeFailureCode, phase: AnalyzePhase, message: string, details?: Record<string, unknown>) {
+    super(message);
+    this.name = "AnalyzePhaseError";
+    this.code = code;
+    this.phase = phase;
+    this.details = details;
+  }
+}
+
+export type AnalyzeTraceItem = {
+  phase: AnalyzePhase;
+  message: string;
+  ok: boolean;
+  meta?: Record<string, unknown>;
+};
 
 export function getWatermarkAlgorithmProfile(): string {
   return process.env.WATERMARK_ALGORITHM_PROFILE || DEFAULT_ALGORITHM_PROFILE;
@@ -243,23 +288,97 @@ export async function analyzeJobV1Stateless(params: {
   jobId: string;
   sourcePathname?: string;
   sourceBlobUrl?: string;
+  enableJsFallback?: boolean;
 }): Promise<{
   job: JobRecord | null;
   review: JobReviewPayload;
   sourcePathname: string;
   sourceBlobUrl: string;
   analysisPath: string;
+  analyzer: "python" | "js-fallback";
+  analyzerFallbackReason?: string;
+  trace: AnalyzeTraceItem[];
+  pdfBufferBytes: number;
+  runtimeCheck: {
+    python3Available: boolean;
+    pythonAvailable: boolean;
+    analyzerScriptExists: boolean;
+    extractScriptExists: boolean;
+    dependencyCheck: "ok" | "missing" | "skipped";
+    dependencyMessage?: string;
+  };
+  lastRunnerResult?: PythonRunnerResult;
+  analysisObject: unknown;
 }> {
   const { jobId } = params;
   const paths = resolvePaths(jobId);
   const previousReview = await readReviewPayload(jobId);
+  const trace: AnalyzeTraceItem[] = [];
+  const enableJsFallback = params.enableJsFallback ?? false;
+  const runtimeCheck: {
+    python3Available: boolean;
+    pythonAvailable: boolean;
+    analyzerScriptExists: boolean;
+    extractScriptExists: boolean;
+    dependencyCheck: "skipped" | "ok" | "missing";
+    dependencyMessage?: string;
+  } = {
+    python3Available: false,
+    pythonAvailable: false,
+    analyzerScriptExists: false,
+    extractScriptExists: false,
+    dependencyCheck: "skipped",
+    dependencyMessage: undefined,
+  };
+  let lastRunnerResult: PythonRunnerResult | undefined;
 
   const sourcePathname = params.sourcePathname ?? "";
   const sourceBlobUrl = params.sourceBlobUrl ?? "";
+  trace.push({
+    phase: "resolve_source_input",
+    message: "Source input resolved.",
+    ok: true,
+    meta: {
+      hasSourcePathname: Boolean(sourcePathname),
+      hasSourceBlobUrl: Boolean(sourceBlobUrl),
+    },
+  });
 
-  const { buffer } = await readSourcePdfBuffer({
-    sourcePathname,
-    sourceBlobUrl,
+  let buffer: Buffer;
+  try {
+    const source = await readSourcePdfBuffer({
+      sourcePathname,
+      sourceBlobUrl,
+    });
+    buffer = source.buffer;
+    trace.push({
+      phase: "read_source_pdf_from_blob",
+      message: "Source PDF read from blob.",
+      ok: true,
+      meta: {
+        bytes: buffer.byteLength,
+      },
+    });
+  } catch (error) {
+    if (error instanceof SourcePdfNotFoundError) {
+      throw new AnalyzePhaseError("source_pdf_not_found", "read_source_pdf_from_blob", error.message);
+    }
+    if (error instanceof SourcePdfReadFailedError) {
+      throw new AnalyzePhaseError("source_pdf_read_failed", "read_source_pdf_from_blob", error.message);
+    }
+    throw new AnalyzePhaseError("analyze_failed", "read_source_pdf_from_blob", "Failed to read source PDF.");
+  }
+
+  if (!buffer || buffer.byteLength <= 0) {
+    throw new AnalyzePhaseError("pdf_buffer_empty", "validate_pdf_buffer", "Source PDF buffer is empty.", {
+      pdfBufferBytes: buffer?.byteLength ?? 0,
+    });
+  }
+  trace.push({
+    phase: "validate_pdf_buffer",
+    message: "PDF buffer validated.",
+    ok: true,
+    meta: { bytes: buffer.byteLength },
   });
 
   const tempDir = join(tmpdir(), "notebooklm-jobs", `${jobId}-analyze`);
@@ -268,6 +387,9 @@ export async function analyzeJobV1Stateless(params: {
   await writeFile(inputPdfPath, buffer);
 
   let persistedJob: JobRecord | null = null;
+  let analysisObject: unknown = null;
+  let analyzer: "python" | "js-fallback" = "python";
+  let analyzerFallbackReason: string | undefined;
   try {
     try {
       const existing = await readJob(jobId);
@@ -288,48 +410,131 @@ export async function analyzeJobV1Stateless(params: {
       // Stateless mode: missing manifest should not block analysis.
     }
 
+    const analyzerScriptPath = "engine/python/cli.py";
+    const extractScriptPath = "python/extract_page_commands.py";
+    runtimeCheck.python3Available = await isPythonBinaryAvailable("python3");
+    runtimeCheck.pythonAvailable = await isPythonBinaryAvailable("python");
+    runtimeCheck.analyzerScriptExists = await fileExistsForScript(analyzerScriptPath);
+    runtimeCheck.extractScriptExists = await fileExistsForScript(extractScriptPath);
+    const dependencyCheck = await checkPythonDependencies();
+    runtimeCheck.dependencyCheck = dependencyCheck.ok ? "ok" : "missing";
+    runtimeCheck.dependencyMessage = dependencyCheck.message;
+
+    trace.push({
+      phase: "run_pdf_analyzer",
+      message: "Analyzer runtime check complete.",
+      ok: true,
+      meta: {
+        ...runtimeCheck,
+      },
+    });
+
+    if (!runtimeCheck.python3Available && !runtimeCheck.pythonAvailable) {
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_runtime_missing",
+        "run_pdf_analyzer",
+        "Python runtime is unavailable.",
+        {
+          ...runtimeCheck,
+          pdfBufferBytes: buffer.byteLength,
+        },
+      );
+    }
+    if (!runtimeCheck.analyzerScriptExists || !runtimeCheck.extractScriptExists) {
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_script_missing",
+        "run_pdf_analyzer",
+        "Analyzer script is missing.",
+        {
+          analyzerScriptExists: runtimeCheck.analyzerScriptExists,
+          extractScriptExists: runtimeCheck.extractScriptExists,
+          pdfBufferBytes: buffer.byteLength,
+        },
+      );
+    }
+    if (runtimeCheck.dependencyCheck === "missing") {
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_dependency_missing",
+        "run_pdf_analyzer",
+        runtimeCheck.dependencyMessage || "Python analyzer dependency missing.",
+        {
+          dependencyMessage: runtimeCheck.dependencyMessage,
+          pdfBufferBytes: buffer.byteLength,
+        },
+      );
+    }
+
     const analyzeResult = await runPythonCommand({
       commandName: "analyze",
-      args: [
-        "engine/python/cli.py",
-        "analyze",
-        "--input",
-        inputPdfPath,
-        "--output",
-        paths.analysisRawPath,
-      ],
+      args: [analyzerScriptPath, "analyze", "--input", inputPdfPath, "--output", paths.analysisRawPath],
       options: {
         timeoutMs: 45_000,
       },
     });
+    lastRunnerResult = analyzeResult;
     if (!analyzeResult.ok) {
-      throw new Error(analyzeResult.stderr || "python analyze failed");
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_failed",
+        "run_pdf_analyzer",
+        analyzeResult.stderr || "python analyze failed",
+        {
+          exitCode: analyzeResult.exitCode,
+          stderr: analyzeResult.stderr,
+          stdout: analyzeResult.stdout,
+        },
+      );
     }
 
     const extractResult = await runPythonCommand({
       commandName: "extract-commands",
-      args: [
-        "python/extract_page_commands.py",
-        "--input",
-        inputPdfPath,
-        "--output",
-        paths.pageCommandsPath,
-      ],
+      args: [extractScriptPath, "--input", inputPdfPath, "--output", paths.pageCommandsPath],
       options: {
         timeoutMs: 45_000,
       },
     });
+    lastRunnerResult = extractResult;
     if (!extractResult.ok) {
-      throw new Error(extractResult.stderr || "python extract page commands failed");
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_failed",
+        "run_pdf_analyzer",
+        extractResult.stderr || "python extract page commands failed",
+        {
+          exitCode: extractResult.exitCode,
+          stderr: extractResult.stderr,
+          stdout: extractResult.stdout,
+        },
+      );
     }
 
-    const rawAnalysis = await getStorageAdapter().readJson<unknown>(paths.analysisRawPath);
-    const pageCommandsPayload = await getStorageAdapter().readJson<unknown>(paths.pageCommandsPath);
+    let rawAnalysis: unknown;
+    let pageCommandsPayload: unknown;
+    try {
+      rawAnalysis = await getStorageAdapter().readJson<unknown>(paths.analysisRawPath);
+      pageCommandsPayload = await getStorageAdapter().readJson<unknown>(paths.pageCommandsPath);
+    } catch (error) {
+      throw new AnalyzePhaseError(
+        "pdf_analyzer_output_invalid",
+        "parse_analyzer_output",
+        error instanceof Error ? error.message : "Invalid analyzer output.",
+        {
+          stderr: lastRunnerResult?.stderr,
+          stdout: lastRunnerResult?.stdout,
+          exitCode: lastRunnerResult?.exitCode,
+        },
+      );
+    }
+    trace.push({
+      phase: "parse_analyzer_output",
+      message: "Analyzer output parsed.",
+      ok: true,
+    });
+
     const { candidates, reviewPayload } = buildAnalyzeV1Review({
       rawAnalysis,
       pageCommandsRaw: pageCommandsPayload,
       previousMetrics: previousReview?.qualityMetrics ?? null,
     });
+    analysisObject = rawAnalysis;
 
     try {
       persistedJob = await persistAnalyzeOutputs({
@@ -339,10 +544,37 @@ export async function analyzeJobV1Stateless(params: {
         candidates,
         reviewPayload,
       });
+      trace.push({
+        phase: "write_analysis_result",
+        message: "Analysis result persisted.",
+        ok: true,
+      });
     } catch (error) {
-      console.warn("[analyzeJobV1Stateless] persistAnalyzeOutputs failed (continuing)", {
+      throw new AnalyzePhaseError(
+        "analysis_write_failed",
+        "write_analysis_result",
+        error instanceof Error ? error.message : "Failed to write analysis result.",
+      );
+    }
+
+    try {
+      if (persistedJob) {
+        await writeJobMetadata(persistedJob);
+      }
+      trace.push({
+        phase: "patch_job_ready_for_review",
+        message: "Job patch completed.",
+        ok: true,
+      });
+    } catch (error) {
+      console.warn("[analyzeJobV1Stateless] patch job failed (continuing)", {
         jobId,
         error: error instanceof Error ? error.message : "unknown",
+      });
+      trace.push({
+        phase: "patch_job_ready_for_review",
+        message: "Job patch failed but analysis succeeded.",
+        ok: false,
       });
     }
 
@@ -352,6 +584,110 @@ export async function analyzeJobV1Stateless(params: {
       sourcePathname,
       sourceBlobUrl,
       analysisPath: paths.analysisRawPath,
+      analyzer,
+      analyzerFallbackReason,
+      trace,
+      pdfBufferBytes: buffer.byteLength,
+      runtimeCheck,
+      lastRunnerResult,
+      analysisObject,
+    };
+  } catch (error) {
+    const maybePhaseError = error instanceof AnalyzePhaseError ? error : null;
+    const fallbackEligibleCode = maybePhaseError?.code;
+    const shouldFallbackToJs =
+      enableJsFallback &&
+      (fallbackEligibleCode === "pdf_analyzer_runtime_missing" ||
+        fallbackEligibleCode === "pdf_analyzer_script_missing" ||
+        fallbackEligibleCode === "pdf_analyzer_dependency_missing");
+
+    if (!shouldFallbackToJs) {
+      if (error instanceof AnalyzePhaseError) {
+        throw new AnalyzePhaseError(error.code, error.phase, error.message, {
+          ...(error.details ?? {}),
+          trace,
+          runtimeCheck,
+          pdfBufferBytes: buffer.byteLength,
+        });
+      }
+      throw error;
+    }
+
+    const fallbackReason =
+      fallbackEligibleCode === "pdf_analyzer_runtime_missing"
+        ? "python_runtime_missing"
+        : fallbackEligibleCode === "pdf_analyzer_script_missing"
+          ? "python_script_missing"
+          : "python_dependency_missing";
+    analyzer = "js-fallback";
+    analyzerFallbackReason = fallbackReason;
+    const jsFallback = await analyzePdfWithJsFallback(buffer) as JsAnalyzeFallbackResult;
+
+    const fallbackReview = buildFallbackReviewPayload(jsFallback.pageCount);
+    analysisObject = jsFallback;
+    trace.push({
+      phase: "run_pdf_analyzer",
+      message: `Python analyzer unavailable, fallback to JS analyzer (${fallbackReason}).`,
+      ok: false,
+      meta: {
+        fallbackReason,
+      },
+    });
+    try {
+      await getStorageAdapter().writeJson(paths.analysisRawPath, jsFallback);
+      await getStorageAdapter().writeJson(paths.pageCommandsPath, { pageCommands: [] });
+      await getStorageAdapter().writeJson(paths.candidatesPath, []);
+      await getStorageAdapter().writeJson(paths.reviewPayloadPath, fallbackReview);
+      trace.push({
+        phase: "write_analysis_result",
+        message: "Fallback analysis result persisted.",
+        ok: true,
+      });
+    } catch (writeError) {
+      throw new AnalyzePhaseError(
+        "analysis_write_failed",
+        "write_analysis_result",
+        writeError instanceof Error ? writeError.message : "Failed to write JS fallback analysis.",
+      );
+    }
+
+    try {
+      const existing = await readJob(jobId);
+      const updated: JobRecord = {
+        ...existing,
+        status: "ready_for_review",
+        sourcePathname: sourcePathname || existing.sourcePathname,
+        sourceBlobUrl: sourceBlobUrl || existing.sourceBlobUrl,
+        updatedAt: new Date().toISOString(),
+      };
+      await writeJobMetadata(updated);
+      persistedJob = updated;
+      trace.push({
+        phase: "patch_job_ready_for_review",
+        message: "Job patched after JS fallback.",
+        ok: true,
+      });
+    } catch {
+      trace.push({
+        phase: "patch_job_ready_for_review",
+        message: "Job patch skipped after JS fallback.",
+        ok: false,
+      });
+    }
+
+    return {
+      job: persistedJob,
+      review: fallbackReview,
+      sourcePathname,
+      sourceBlobUrl,
+      analysisPath: paths.analysisRawPath,
+      analyzer,
+      analyzerFallbackReason,
+      trace,
+      pdfBufferBytes: buffer.byteLength,
+      runtimeCheck,
+      lastRunnerResult,
+      analysisObject,
     };
   } finally {
     try {
@@ -734,6 +1070,8 @@ export async function processJobStateless(params: {
   reportPath: string;
   outputBlobUrl: string | null;
   reportBlobUrl: string | null;
+  processMode: "raster_repair_v1" | "object_level_v2" | "passthrough-fallback";
+  warning?: string;
 }> {
   const { jobId } = params;
   const paths = resolvePaths(jobId);
@@ -754,6 +1092,8 @@ export async function processJobStateless(params: {
   let outputBlobUrl: string | null = null;
   let reportBlobUrl: string | null = null;
   let persistedJob: JobRecord | null = null;
+  let effectiveProcessMode: "raster_repair_v1" | "object_level_v2" | "passthrough-fallback" = processMode;
+  let warning: string | undefined;
 
   try {
     if (params.analysisPath) {
@@ -829,7 +1169,29 @@ export async function processJobStateless(params: {
       },
     });
     if (!result.ok) {
-      throw new Error(result.stderr || "python process failed");
+      const isPreviewLike =
+        process.env.ENABLE_JOB_DEBUG === "1" ||
+        process.env.VERCEL_ENV === "preview" ||
+        process.env.NODE_ENV !== "production";
+      const runtimeOrDependencyIssue =
+        result.stderr.toLowerCase().includes("no module named") ||
+        result.stderr.toLowerCase().includes("command not found") ||
+        result.stderr.toLowerCase().includes("not found") ||
+        result.stderr.toLowerCase().includes("python");
+      if (isPreviewLike && runtimeOrDependencyIssue) {
+        await writeFile(paths.processedPdfPath, buffer);
+        await getStorageAdapter().writeJson(paths.processReportPath, {
+          ok: true,
+          processMode: "passthrough-fallback",
+          warning: "Python processor unavailable in preview; returned original PDF.",
+          inputPageCount: await readPdfPageCount(inputPdfPath),
+          outputPageCount: await readPdfPageCount(inputPdfPath),
+        });
+        effectiveProcessMode = "passthrough-fallback";
+        warning = "Python processor unavailable in preview; returned original PDF.";
+      } else {
+        throw new Error(result.stderr || "python process failed");
+      }
     }
 
     const processedExists = await fileExists(paths.processedPdfPath);
@@ -883,6 +1245,8 @@ export async function processJobStateless(params: {
       reportPath: paths.processReportPath,
       outputBlobUrl,
       reportBlobUrl,
+      processMode: effectiveProcessMode,
+      warning,
     };
   } finally {
     try {
@@ -913,6 +1277,131 @@ export async function prepareDownload(jobId: string): Promise<{ job: JobRecord; 
 export async function deleteStage2Job(jobId: string): Promise<void> {
   await expireJob(jobId);
   await deleteJob(jobId);
+}
+
+function buildFallbackReviewPayload(pageCount: number): JobReviewPayload {
+  const safePages = Math.max(pageCount, 1);
+  return {
+    generatedAt: new Date().toISOString(),
+    supportedCount: 0,
+    unsupportedCount: 0,
+    candidates: [],
+    unsupportedReasons: {},
+    notes: [
+      "js-fallback analyzer used",
+      "python analyzer unavailable in preview runtime",
+    ],
+    documentMode: "raster_page",
+    recommendedProcessMode: "raster_repair_v1",
+    watermarkRegionHint: "right_bottom",
+    pageImageLikeRatio: 1,
+    repeatedWatermarkPages: Array.from({ length: safePages }, (_, i) => i + 1),
+    logoPositionStats: {
+      rightBottom: safePages,
+      rightBottomRatio: 1,
+      unknown: 0,
+    },
+    rasterPageAnalysis: {
+      pageCount: safePages,
+      imageLikePageCount: safePages,
+      imageLikeRatio: 1,
+      repeatedBottomRightMarkPages: safePages,
+      repeatedBottomRightMarkRatio: 1,
+      watermarkRegionHint: "right_bottom",
+      recommendedProcessMode: "raster_repair_v1",
+      fullPageRasterSignalCount: safePages,
+      pageImageLikeRatio: 1,
+      repeatedWatermarkPages: Array.from({ length: safePages }, (_, i) => i + 1),
+      logoPositionStats: {
+        rightBottom: safePages,
+        rightBottomRatio: 1,
+        unknown: 0,
+      },
+    },
+    qualityMetrics: {
+      candidateCount: 0,
+      anchorCount: 0,
+      reliableAnchorCount: 0,
+      reliableAnchorRate: 0,
+      attemptedOperationCount: 0,
+      appliedOperationCount: 0,
+      noInstructionRemovedCount: 0,
+      partialHitCandidateCount: 0,
+      removalSuccessRate: 0,
+      vectorAttemptedOperationCount: 0,
+      vectorAppliedOperationCount: 0,
+      vectorNoInstructionRemovedCount: 0,
+      vectorRemovalSuccessRate: 0,
+      vectorSpanShapeMismatchCount: 0,
+      vectorGraphicsDepthMismatchCount: 0,
+      vectorMissingPathSegmentCount: 0,
+      vectorMissingPaintSegmentCount: 0,
+      vectorRequiredPaintOperatorMissingCount: 0,
+      vectorSignaturePrefixMismatchCount: 0,
+      vectorSignatureOperatorSequenceMismatchCount: 0,
+      vectorSignatureBBoxMismatchCount: 0,
+      vectorDeleteRemovedZeroCommandsCount: 0,
+      vectorResidualPathLeftCount: 0,
+      vectorResidualPaintLeftCount: 0,
+    },
+    executionPayload: {
+      pageCommandCount: 0,
+    },
+  };
+}
+
+async function fileExistsForScript(path: string): Promise<boolean> {
+  try {
+    await access(path, constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function isPythonBinaryAvailable(binary: "python3" | "python"): Promise<boolean> {
+  return new Promise<boolean>((resolve) => {
+    const child = spawn(binary, ["--version"], {
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.on("error", () => resolve(false));
+    child.on("close", (code) => resolve(code === 0));
+  });
+}
+
+async function checkPythonDependencies(): Promise<{ ok: boolean; message?: string }> {
+  return new Promise<{ ok: boolean; message?: string }>((resolve) => {
+    const child = spawn(
+      "python3",
+      [
+        "-c",
+        "import pikepdf; import fitz; print('ok')",
+      ],
+      {
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+    let stderr = "";
+    child.stderr.on("data", (chunk: Buffer) => {
+      stderr += chunk.toString("utf-8");
+    });
+    child.on("error", (error) => {
+      resolve({
+        ok: false,
+        message: error.message,
+      });
+    });
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve({ ok: true });
+        return;
+      }
+      resolve({
+        ok: false,
+        message: stderr.trim() || "Missing python dependency.",
+      });
+    });
+  });
 }
 
 async function readExistingProcessMetrics(reportPath: string): Promise<QualityMetrics | null> {

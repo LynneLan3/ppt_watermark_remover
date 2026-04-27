@@ -84,6 +84,8 @@ export async function POST(request: Request, { params }: Params) {
         processReportPath: result.reportPath,
         processOutputBlobUrl: result.outputBlobUrl,
         processReportBlobUrl: result.reportBlobUrl,
+        processMode: result.processMode,
+        warning: result.warning ?? null,
         jobManifestExists,
       },
     });

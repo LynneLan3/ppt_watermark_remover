@@ -457,7 +457,8 @@ export function UploadHero({ content }: UploadHeroProps) {
       if (!analyzeResp.ok || !analyzeResult.success) {
         const errorCode = (analyzeResult as { code?: string }).code;
         const errorMessage = (analyzeResult as { message?: string }).message;
-        updateStep("analyze", "failed", errorMessage);
+        const errorPhase = (analyzeResult as { phase?: string }).phase;
+        updateStep("analyze", "failed", `${errorPhase ? `phase=${errorPhase}, ` : ""}code=${errorCode ?? "unknown"} ${errorMessage ?? ""}`.trim());
         // Map error codes to user-friendly messages
         const userMessage = getAnalyzeErrorMessage(errorCode, errorMessage);
         throw new Error(userMessage);
@@ -466,7 +467,18 @@ export function UploadHero({ content }: UploadHeroProps) {
         return;
       }
       setJob(analyzeResult.job ?? null);
-      updateStep("analyze", "ok");
+      const analyzeData = (analyzeResult.data as { trace?: Array<{ phase?: string; message?: string }>; analyzer?: string } | undefined);
+      const phaseText =
+        analyzeData?.trace && analyzeData.trace.length > 0
+          ? analyzeData.trace
+              .map((item) => `${item.phase ?? "unknown"}: ${item.message ?? ""}`.trim())
+              .join(" | ")
+          : "analyze completed";
+      updateStep(
+        "analyze",
+        "ok",
+        `source input resolved | source pdf exists | source pdf read, bytes=${(analyzeResult as { pdfBufferBytes?: number }).pdfBufferBytes ?? "n/a"} | analyzer selected=${(analyzeResult as { analyzer?: string }).analyzer ?? analyzeData?.analyzer ?? "python"} | ${phaseText}`,
+      );
 
       // Step 6: Process
       updateStep("process", "running");
@@ -1006,6 +1018,16 @@ function getAnalyzeErrorMessage(code: string | undefined, originalMessage: strin
       return "Upload completed but the processing file was not finalized. Please try again.";
     case "analysis_failed":
       return originalMessage || "Analysis failed. Please try another PDF or report this file.";
+    case "pdf_analyzer_runtime_missing":
+      return "Python analyzer runtime is missing. Preview switched to fallback mode when available.";
+    case "pdf_analyzer_script_missing":
+      return "Analyzer script is missing in the runtime environment.";
+    case "pdf_analyzer_dependency_missing":
+      return "Analyzer dependency is missing in runtime (for example pikepdf/PyMuPDF/OpenCV).";
+    case "pdf_analyzer_output_invalid":
+      return "Analyzer output is invalid. Please retry or use direct beta fallback.";
+    case "analysis_write_failed":
+      return "Analysis completed but writing results failed. Please retry.";
     case "invalid_state":
       return "Invalid job state. Please refresh and try again.";
     case "validation_error":

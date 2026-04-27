@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "manual-review:clean": "node scripts/manual-review-clean.mjs",
+    "analyze:debug": "node scripts/debug-analyze.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

@@ -9,7 +9,7 @@
 
 - **项目名称**: NotebookLM Watermark Remover
 - **当前阶段**: Stage 2 - Beta 上线准备（免费预览确认模式）
-- **当前重点**: Stateless Analyze/Process 改造：analyze/process 不再强依赖 readJob(jobId)
+- **当前重点**: 修复 Preview analyze 内部失败：阶段化诊断 + Python 兼容检查 + JS/Passthrough fallback
 - **算法策略**: 默认 `stable-light-complex-v5`，禁用 v6 micro polish experimental path
 
 ---
@@ -41,6 +41,12 @@
 - [x] 完成 Stateless Process：body source 优先，manifest 写回改为 best-effort
 - [x] 新增 upload-and-analyze Beta fallback（4MB 单路由）
 - [x] preview/download 增加 blob 直读 fallback，降低 manifest 不可读对用户链路影响
+- [x] analyze 按阶段拆分（resolve/read/validate/run/parse/write/patch）并输出 phase/code
+- [x] analyze 失败响应增加 runtime/error 诊断字段（Preview/ENABLE_JOB_DEBUG=1 展开）
+- [x] analyze 增加 Python runtime/script/dependency 检查，精确错误码返回
+- [x] Preview 自动 JS analyze fallback（python runtime/script/dependency 异常时）
+- [x] process 增加 Preview passthrough-fallback（Python 不可用时返回原 PDF）
+- [x] 新增本地复现脚本：`pnpm analyze:debug -- <path-to-pdf>`
 
 ### Pending
 - [ ] Vercel Preview 部署验证主流程（create -> upload-token -> upload-source -> finalize-upload -> analyze -> process）
@@ -60,6 +66,7 @@
 | 正式用户流程 | 首屏上传 -> Remove -> 全屏 processing -> 双栏同步预览 -> 门控下载 | 可用 | 🟢 本地通过 |
 | 上传链路一致性 | create/upload/finalize/analyze/process 使用同一 jobId 与同一路径 | 一致 | 🟢 本地代码校验通过 |
 | Stateless 容错 | manifest 读失败时 analyze/process 可继续（需 body source） | 启用 | 🟢 本地代码校验通过 |
+| Analyze 诊断可观测性 | analyze 失败返回 phase/code/runtime/error 结构化字段 | 启用 | 🟢 本地代码校验通过 |
 
 ---
 
@@ -104,6 +111,13 @@
 | 2026-04-27 | app/api/jobs/[jobId]/finalize-upload/route.ts | modify | finalize 响应增加 sourcePathname/sourceBlobUrl 供后续无状态调用 |
 | 2026-04-27 | lib/jobs/types.ts | modify | 增加 source_pdf_not_found/source_pdf_read_failed/pdf_analyze_failed/analyze_failed 错误码 |
 | 2026-04-27 | lib/jobs/api.ts | modify | 增加 source 读取和 analyze 失败的错误映射 |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | analyze 阶段化错误码与安全诊断字段；Preview 自动启用 JS fallback |
+| 2026-04-27 | lib/jobs/service.ts | modify | analyze 阶段 trace、Python runtime/script/dependency 检查、JS fallback；process passthrough-fallback |
+| 2026-04-27 | lib/jobs/js-analyze-fallback.ts | create | 新增纯 JS analyze fallback，读取页数并返回最小 analysis |
+| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | process stateless 响应增加 processMode/warning，支持 passthrough-fallback 输出 |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | View processing steps 显示 analyze 阶段细节、失败 phase/code |
+| 2026-04-27 | scripts/debug-analyze.mjs | create | 本地 analyze 诊断脚本（bytes/analyzer/python/script/dependency） |
+| 2026-04-27 | package.json | modify | 新增 `analyze:debug` 脚本命令 |
 | 2026-04-27 | AGENTS.md | modify | 更新为 Stage 2 Beta，明确允许范围和禁止事项 |
 | 2026-04-27 | docs/prd.md | modify | 更新为 Stage 2 Beta 目标和成功标准 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |
