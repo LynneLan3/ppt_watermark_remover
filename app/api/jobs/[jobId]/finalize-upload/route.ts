@@ -105,12 +105,16 @@ export async function POST(request: Request, { params }: Params) {
       hasSourceBlobUrl: true,
       hasSourcePathname: true,
       manifestPath: diagnostics.expectedManifestPath,
+      sourcePathname: readBack.sourcePathname ?? sourcePathname,
+      sourceBlobUrl: readBack.sourceBlobUrl ?? sourceBlobUrl,
       data: {
         jobId,
         status: "uploaded",
         hasSourceBlobUrl: true,
         hasSourcePathname: true,
         manifestPath: diagnostics.expectedManifestPath,
+        sourcePathname: readBack.sourcePathname ?? sourcePathname,
+        sourceBlobUrl: readBack.sourceBlobUrl ?? sourceBlobUrl,
       },
       job: readBack,
     });

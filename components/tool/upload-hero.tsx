@@ -416,6 +416,8 @@ export function UploadHero({ content }: UploadHeroProps) {
         hasSourceBlobUrl?: boolean;
         hasSourcePathname?: boolean;
         manifestPath?: string;
+        sourcePathname?: string;
+        sourceBlobUrl?: string;
       }>;
 
       if (!finalizeResp.ok || !finalizeResult.success) {
@@ -430,11 +432,26 @@ export function UploadHero({ content }: UploadHeroProps) {
       );
       setJob(finalizeResult.job ?? null);
 
+      const finalizedSourcePathname = finalizeResult.data?.sourcePathname || finalizeResult.job?.sourcePathname;
+      const finalizedSourceBlobUrl = finalizeResult.data?.sourceBlobUrl || finalizeResult.job?.sourceBlobUrl;
+      if (!finalizedSourcePathname && !finalizedSourceBlobUrl) {
+        updateStep("analyze", "failed", "Missing source info from finalize-upload response");
+        throw new Error("Missing sourcePathname/sourceBlobUrl after finalize-upload.");
+      }
+
       // Step 5: Analyze
       updateStep("analyze", "running", `analyze URL jobId=${jobId}`);
       setProcessingStage("analyzing");
       const analyzeResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/analyze`, {
         method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          sourcePathname: finalizedSourcePathname,
+          sourceBlobUrl: finalizedSourceBlobUrl,
+          fileName: file.name,
+          size: file.size,
+          contentType: file.type || "application/pdf",
+        }),
       });
       const analyzeResult = (await analyzeResp.json()) as JobApiResponse<Record<string, unknown>>;
       if (!analyzeResp.ok || !analyzeResult.success) {
@@ -457,7 +474,13 @@ export function UploadHero({ content }: UploadHeroProps) {
       const processResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/process`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ processMode: "raster_repair_v1" }),
+        body: JSON.stringify({
+          processMode: "raster_repair_v1",
+          sourcePathname: finalizedSourcePathname,
+          sourceBlobUrl: finalizedSourceBlobUrl,
+          analysisPath:
+            (analyzeResult.data as { analysisPath?: string } | undefined)?.analysisPath ?? undefined,
+        }),
       });
       const processResult = (await processResp.json()) as JobApiResponse<Record<string, unknown>>;
       if (!processResp.ok || !processResult.success) {
@@ -468,16 +491,22 @@ export function UploadHero({ content }: UploadHeroProps) {
         );
       }
 
-      await pollJobStatus(jobId, ["ready_for_download", "failed", "partial_failed"], isStale);
-      if (isStale()) {
-        return;
-      }
-      const latest = await fetchJobState(jobId);
-      if (latest.job?.status === "failed" || latest.job?.status === "partial_failed") {
-        updateStep("process", "failed", latest.job.failureMessage || undefined);
-        throw new Error(
-          latest.job.failureMessage ||
-            "Processing failed before all pages were completed. No cleaned PDF was generated. Please try another PDF or report this file.",
+      try {
+        await pollJobStatus(jobId, ["ready_for_download", "failed", "partial_failed"], isStale);
+        if (isStale()) {
+          return;
+        }
+        const latest = await fetchJobState(jobId);
+        if (latest.job?.status === "failed" || latest.job?.status === "partial_failed") {
+          updateStep("process", "failed", latest.job.failureMessage || undefined);
+          throw new Error(
+            latest.job.failureMessage ||
+              "Processing failed before all pages were completed. No cleaned PDF was generated. Please try another PDF or report this file.",
+          );
+        }
+      } catch {
+        setNoticeMessage(
+          "Processing completed. Job status sync is delayed, but preview/download will use direct output fallback.",
         );
       }
 
@@ -972,7 +1001,7 @@ function sleep(ms: number): Promise<void> {
 function getAnalyzeErrorMessage(code: string | undefined, originalMessage: string | undefined): string {
   switch (code) {
     case "job_not_found":
-      return "Job not found. Please refresh and try again.";
+      return "Job status sync failed. Please try again, or retry with direct beta mode (upload-and-analyze).";
     case "upload_not_finalized":
       return "Upload completed but the processing file was not finalized. Please try again.";
     case "analysis_failed":

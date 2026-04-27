@@ -9,7 +9,7 @@
 
 - **项目名称**: NotebookLM Watermark Remover
 - **当前阶段**: Stage 2 - Beta 上线准备（免费预览确认模式）
-- **当前重点**: 修复 Preview 链路 job_not_found：统一 jobId 链路、repository 存储后端与 manifest 路径
+- **当前重点**: Stateless Analyze/Process 改造：analyze/process 不再强依赖 readJob(jobId)
 - **算法策略**: 默认 `stable-light-complex-v5`，禁用 v6 micro polish experimental path
 
 ---
@@ -37,6 +37,10 @@
 - [x] 拆分上传路由，消除同一链路双 `upload-token` 请求混淆（`/upload-token` + `/upload-source`）
 - [x] 增加 Vercel 存储强约束：`VERCEL` 且无 `BLOB_READ_WRITE_TOKEN` 返回 `STORAGE_NOT_CONFIGURED`
 - [x] 增强 analyze/debug 的 job_not_found 诊断字段（storageBackend、hasBlobToken、expectedManifestPath）
+- [x] 完成 Stateless Analyze：body sourcePathname/sourceBlobUrl 优先，manifest 仅 fallback
+- [x] 完成 Stateless Process：body source 优先，manifest 写回改为 best-effort
+- [x] 新增 upload-and-analyze Beta fallback（4MB 单路由）
+- [x] preview/download 增加 blob 直读 fallback，降低 manifest 不可读对用户链路影响
 
 ### Pending
 - [ ] Vercel Preview 部署验证主流程（create -> upload-token -> upload-source -> finalize-upload -> analyze -> process）
@@ -55,6 +59,7 @@
 | `pnpm build` | pass（含 Turbopack tracing warnings） | pass | 🟢 达标 |
 | 正式用户流程 | 首屏上传 -> Remove -> 全屏 processing -> 双栏同步预览 -> 门控下载 | 可用 | 🟢 本地通过 |
 | 上传链路一致性 | create/upload/finalize/analyze/process 使用同一 jobId 与同一路径 | 一致 | 🟢 本地代码校验通过 |
+| Stateless 容错 | manifest 读失败时 analyze/process 可继续（需 body source） | 启用 | 🟢 本地代码校验通过 |
 
 ---
 
@@ -88,6 +93,17 @@
 | 2026-04-27 | lib/blob-storage/job-store.ts | modify | 导出 manifest path 与 blob token 检查方法，统一路径诊断 |
 | 2026-04-27 | lib/jobs/types.ts | modify | 增加 FINALIZE_WRITE_FAILED / STORAGE_NOT_CONFIGURED 错误码 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | 改为 body source 优先的 Stateless analyze；新增 source_pdf_not_found/source_pdf_read_failed/pdf_analyze_failed/analyze_failed 错误映射 |
+| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | 增加 Stateless process fallback，manifest 失败时仍可继续处理 |
+| 2026-04-27 | lib/jobs/service.ts | modify | 新增 analyzeJobV1Stateless/processJobStateless，manifest 写回 best-effort |
+| 2026-04-27 | lib/blob-storage/source-reader.ts | create | 新增基于 Vercel Blob SDK 的 private source.pdf 读取 helper |
+| 2026-04-27 | app/api/jobs/upload-and-analyze/route.ts | create | 新增 4MB 限制的单路由 Beta fallback |
+| 2026-04-27 | app/api/jobs/[jobId]/preview/route.ts | modify | 增加 `jobs/{jobId}/processed.pdf` Blob 直读 fallback |
+| 2026-04-27 | app/api/jobs/[jobId]/download/route.ts | modify | 增加 `jobs/{jobId}/processed.pdf` Blob 直读 fallback |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | analyze/process 调用强制携带 finalize 返回 source 信息；process 状态同步失败时容错进入预览 |
+| 2026-04-27 | app/api/jobs/[jobId]/finalize-upload/route.ts | modify | finalize 响应增加 sourcePathname/sourceBlobUrl 供后续无状态调用 |
+| 2026-04-27 | lib/jobs/types.ts | modify | 增加 source_pdf_not_found/source_pdf_read_failed/pdf_analyze_failed/analyze_failed 错误码 |
+| 2026-04-27 | lib/jobs/api.ts | modify | 增加 source 读取和 analyze 失败的错误映射 |
 | 2026-04-27 | AGENTS.md | modify | 更新为 Stage 2 Beta，明确允许范围和禁止事项 |
 | 2026-04-27 | docs/prd.md | modify | 更新为 Stage 2 Beta 目标和成功标准 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |

@@ -172,6 +172,27 @@ export function mapRepositoryError(error: unknown): {
       httpStatus: 409,
     };
   }
+  if (lower.includes("source_pdf_not_found")) {
+    return {
+      code: "source_pdf_not_found",
+      message: "Source PDF blob not found.",
+      httpStatus: 404,
+    };
+  }
+  if (lower.includes("source_pdf_read_failed")) {
+    return {
+      code: "source_pdf_read_failed",
+      message: "Failed to read source PDF blob.",
+      httpStatus: 500,
+    };
+  }
+  if (lower.includes("pdf analyze failed") || lower.includes("python analyze failed")) {
+    return {
+      code: "pdf_analyze_failed",
+      message: "PDF analyze failed.",
+      httpStatus: 422,
+    };
+  }
   return {
     code: "internal_error",
     message,

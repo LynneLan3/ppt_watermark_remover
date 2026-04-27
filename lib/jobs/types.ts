@@ -496,6 +496,10 @@ export type JobErrorCode =
   | "processed_file_missing"
   | "process_report_incomplete"
   | "download_unavailable"
+  | "source_pdf_not_found"
+  | "source_pdf_read_failed"
+  | "pdf_analyze_failed"
+  | "analyze_failed"
   | "STORAGE_NOT_CONFIGURED"
   | "FINALIZE_WRITE_FAILED"
   | "internal_error";

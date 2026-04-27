@@ -24,6 +24,7 @@ import {
   setUploadToken,
   transitionJobStatus,
   verifyUploadToken,
+  writeJobMetadata,
   getSourcePdfForProcessing,
   UploadNotFinalizedError,
   SourcePdfNotFoundError,
@@ -42,6 +43,7 @@ import { runPythonCommand } from "@/lib/server/python-runner/process";
 import { getStorageAdapter } from "@/lib/storage/local-adapter";
 import { validateUploadedPdf } from "@/lib/storage/upload";
 import { isBlobStorageEnabled } from "@/lib/blob-storage/job-store";
+import { readSourcePdfBuffer } from "@/lib/blob-storage/source-reader";
 
 const DEFAULT_ALGORITHM_PROFILE = "stable-light-complex-v5";
 
@@ -235,6 +237,130 @@ export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; rev
     job: updated,
     review: reviewPayload,
   };
+}
+
+export async function analyzeJobV1Stateless(params: {
+  jobId: string;
+  sourcePathname?: string;
+  sourceBlobUrl?: string;
+}): Promise<{
+  job: JobRecord | null;
+  review: JobReviewPayload;
+  sourcePathname: string;
+  sourceBlobUrl: string;
+  analysisPath: string;
+}> {
+  const { jobId } = params;
+  const paths = resolvePaths(jobId);
+  const previousReview = await readReviewPayload(jobId);
+
+  const sourcePathname = params.sourcePathname ?? "";
+  const sourceBlobUrl = params.sourceBlobUrl ?? "";
+
+  const { buffer } = await readSourcePdfBuffer({
+    sourcePathname,
+    sourceBlobUrl,
+  });
+
+  const tempDir = join(tmpdir(), "notebooklm-jobs", `${jobId}-analyze`);
+  await mkdir(tempDir, { recursive: true });
+  const inputPdfPath = join(tempDir, "source.pdf");
+  await writeFile(inputPdfPath, buffer);
+
+  let persistedJob: JobRecord | null = null;
+  try {
+    try {
+      const existing = await readJob(jobId);
+      const updated: JobRecord = {
+        ...existing,
+        sourcePathname: sourcePathname || existing.sourcePathname,
+        sourceBlobUrl: sourceBlobUrl || existing.sourceBlobUrl,
+        status: existing.status === "created" ? "uploaded" : existing.status,
+        updatedAt: new Date().toISOString(),
+      };
+      await writeJobMetadata(updated);
+      try {
+        await transitionJobStatus(jobId, "analyzing");
+      } catch {
+        // Stateless mode: status transition failure should not block analysis.
+      }
+    } catch {
+      // Stateless mode: missing manifest should not block analysis.
+    }
+
+    const analyzeResult = await runPythonCommand({
+      commandName: "analyze",
+      args: [
+        "engine/python/cli.py",
+        "analyze",
+        "--input",
+        inputPdfPath,
+        "--output",
+        paths.analysisRawPath,
+      ],
+      options: {
+        timeoutMs: 45_000,
+      },
+    });
+    if (!analyzeResult.ok) {
+      throw new Error(analyzeResult.stderr || "python analyze failed");
+    }
+
+    const extractResult = await runPythonCommand({
+      commandName: "extract-commands",
+      args: [
+        "python/extract_page_commands.py",
+        "--input",
+        inputPdfPath,
+        "--output",
+        paths.pageCommandsPath,
+      ],
+      options: {
+        timeoutMs: 45_000,
+      },
+    });
+    if (!extractResult.ok) {
+      throw new Error(extractResult.stderr || "python extract page commands failed");
+    }
+
+    const rawAnalysis = await getStorageAdapter().readJson<unknown>(paths.analysisRawPath);
+    const pageCommandsPayload = await getStorageAdapter().readJson<unknown>(paths.pageCommandsPath);
+    const { candidates, reviewPayload } = buildAnalyzeV1Review({
+      rawAnalysis,
+      pageCommandsRaw: pageCommandsPayload,
+      previousMetrics: previousReview?.qualityMetrics ?? null,
+    });
+
+    try {
+      persistedJob = await persistAnalyzeOutputs({
+        jobId,
+        rawAnalysis,
+        pageCommands: pageCommandsPayload,
+        candidates,
+        reviewPayload,
+      });
+    } catch (error) {
+      console.warn("[analyzeJobV1Stateless] persistAnalyzeOutputs failed (continuing)", {
+        jobId,
+        error: error instanceof Error ? error.message : "unknown",
+      });
+    }
+
+    return {
+      job: persistedJob,
+      review: reviewPayload,
+      sourcePathname,
+      sourceBlobUrl,
+      analysisPath: paths.analysisRawPath,
+    };
+  } finally {
+    try {
+      const { rm } = await import("node:fs/promises");
+      await rm(tempDir, { recursive: true, force: true });
+    } catch {
+      // ignore cleanup failure
+    }
+  }
 }
 
 export async function getJobWithReview(jobId: string): Promise<{
@@ -591,6 +717,179 @@ export async function processJob(
     // Cleanup temp file if it was created
     if (cleanupTempFile) {
       await cleanupTempFile();
+    }
+  }
+}
+
+export async function processJobStateless(params: {
+  jobId: string;
+  sourcePathname?: string;
+  sourceBlobUrl?: string;
+  processMode?: "object_level_v2" | "raster_repair_v1";
+  analysisPath?: string;
+  analysis?: Record<string, unknown>;
+}): Promise<{
+  job: JobRecord | null;
+  outputPath: string;
+  reportPath: string;
+  outputBlobUrl: string | null;
+  reportBlobUrl: string | null;
+}> {
+  const { jobId } = params;
+  const paths = resolvePaths(jobId);
+  const processMode = params.processMode ?? "raster_repair_v1";
+
+  const sourcePathname = params.sourcePathname ?? "";
+  const sourceBlobUrl = params.sourceBlobUrl ?? "";
+  const { buffer } = await readSourcePdfBuffer({
+    sourcePathname,
+    sourceBlobUrl,
+  });
+
+  const tempDir = join(tmpdir(), "notebooklm-jobs", `${jobId}-process`);
+  await mkdir(tempDir, { recursive: true });
+  const inputPdfPath = join(tempDir, "source.pdf");
+  await writeFile(inputPdfPath, buffer);
+
+  let outputBlobUrl: string | null = null;
+  let reportBlobUrl: string | null = null;
+  let persistedJob: JobRecord | null = null;
+
+  try {
+    if (params.analysisPath) {
+      // Keep provided metadata for debug and replay in stateless mode.
+      await getStorageAdapter().writeJson(paths.analysisRawPath, {
+        analysisPath: params.analysisPath,
+      });
+    } else if (params.analysis) {
+      await getStorageAdapter().writeJson(paths.analysisRawPath, params.analysis);
+    }
+
+    const requestPayload = {
+      jobId,
+      sourcePdfPath: inputPdfPath,
+      outputPdfPath: paths.processedPdfPath,
+      reportPath: paths.processReportPath,
+      executionMapPath: paths.executionMapPath,
+      processDebugPath: paths.processDebugPath,
+      processDebugSummaryPath: paths.processDebugSummaryPath,
+      regressionReplayPlanPath: paths.regressionReplayPlanPath,
+      regressionSuiteManifestPath: paths.regressionSuiteManifestPath,
+      pageCommandsPath: paths.pageCommandsPath,
+      selection: [],
+      candidates: [],
+      processMode,
+      algorithmProfile: getWatermarkAlgorithmProfile(),
+      rasterProcessConfig:
+        processMode === "raster_repair_v1"
+          ? {
+              watermarkRegionHint: "right_bottom",
+              roi: {
+                widthRatio: 0.16,
+                heightRatio: 0.08,
+              },
+              renderScale: 2.5,
+              enableSeamMicroPolish: false,
+            }
+          : undefined,
+      previousMetrics: null,
+    };
+    await getStorageAdapter().writeJson(paths.processRequestPath, requestPayload);
+
+    const commandArgs =
+      processMode === "raster_repair_v1"
+        ? [
+            "python/process_raster_watermark_v1.py",
+            "--request",
+            paths.processRequestPath,
+            "--input",
+            inputPdfPath,
+            "--output",
+            paths.processedPdfPath,
+            "--report",
+            paths.processReportPath,
+          ]
+        : [
+            "python/process_pdf_v2.py",
+            "--request",
+            paths.processRequestPath,
+            "--input",
+            inputPdfPath,
+            "--output",
+            paths.processedPdfPath,
+            "--report",
+            paths.processReportPath,
+          ];
+
+    const result = await runPythonCommand({
+      commandName: processMode === "raster_repair_v1" ? "process-raster-v1" : "process-v2",
+      args: commandArgs,
+      options: {
+        timeoutMs: processMode === "raster_repair_v1" ? 180_000 : 90_000,
+      },
+    });
+    if (!result.ok) {
+      throw new Error(result.stderr || "python process failed");
+    }
+
+    const processedExists = await fileExists(paths.processedPdfPath);
+    if (!processedExists) {
+      throw new Error("processed output missing");
+    }
+
+    if (isBlobStorageEnabled()) {
+      const { put } = await import("@vercel/blob");
+      const outputBytes = await readFile(paths.processedPdfPath);
+      const reportBytes = await readFile(paths.processReportPath);
+      const outputBlob = await put(`jobs/${jobId}/processed.pdf`, outputBytes, {
+        access: "private",
+        contentType: "application/pdf",
+        allowOverwrite: true,
+      });
+      const reportBlob = await put(`jobs/${jobId}/process-report.json`, reportBytes, {
+        access: "private",
+        contentType: "application/json",
+        allowOverwrite: true,
+      });
+      outputBlobUrl = outputBlob.url;
+      reportBlobUrl = reportBlob.url;
+    }
+
+    try {
+      const job = await readJob(jobId);
+      const updated: JobRecord = {
+        ...job,
+        sourcePathname: sourcePathname || job.sourcePathname,
+        sourceBlobUrl: sourceBlobUrl || job.sourceBlobUrl,
+        status: "ready_for_download",
+        processOutputPath: paths.processedPdfPath,
+        processReportPath: paths.processReportPath,
+        processOutputBlobUrl: outputBlobUrl ?? job.processOutputBlobUrl,
+        processReportBlobUrl: reportBlobUrl ?? job.processReportBlobUrl,
+        updatedAt: new Date().toISOString(),
+      };
+      await writeJobMetadata(updated);
+      persistedJob = updated;
+    } catch (error) {
+      console.warn("[processJobStateless] patch job failed (continuing)", {
+        jobId,
+        error: error instanceof Error ? error.message : "unknown",
+      });
+    }
+
+    return {
+      job: persistedJob,
+      outputPath: paths.processedPdfPath,
+      reportPath: paths.processReportPath,
+      outputBlobUrl,
+      reportBlobUrl,
+    };
+  } finally {
+    try {
+      const { rm } = await import("node:fs/promises");
+      await rm(tempDir, { recursive: true, force: true });
+    } catch {
+      // ignore cleanup failure
     }
   }
 }

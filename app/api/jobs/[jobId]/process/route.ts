@@ -1,6 +1,9 @@
-import { jobError, jobOk, mapRepositoryError } from "@/lib/jobs/api";
-import { processJob } from "@/lib/jobs/service";
-import { JobNotFoundError, UploadNotFinalizedError, readJob } from "@/lib/jobs/repository";
+import { NextResponse } from "next/server";
+
+import { jobError, mapRepositoryError } from "@/lib/jobs/api";
+import { processJob, processJobStateless } from "@/lib/jobs/service";
+import { readJob } from "@/lib/jobs/repository";
+import { SourcePdfNotFoundError, SourcePdfReadFailedError } from "@/lib/blob-storage/source-reader";
 
 export const runtime = "nodejs";
 
@@ -10,108 +13,152 @@ type Params = {
 
 type ProcessRequest = {
   processMode?: "object_level_v2" | "raster_repair_v1";
+  sourcePathname?: string;
+  sourceBlobUrl?: string;
+  analysisPath?: string;
+  analysis?: Record<string, unknown>;
 };
 
 export async function POST(request: Request, { params }: Params) {
   const startTime = Date.now();
-  let jobId: string | undefined;
+  const { jobId } = await params;
+  const body = (await request.json().catch(() => ({}))) as ProcessRequest;
+
+  const processMode =
+    body.processMode === "object_level_v2" || body.processMode === "raster_repair_v1"
+      ? body.processMode
+      : undefined;
+
+  const debugMode = process.env.NODE_ENV !== "production" || new URL(request.url).searchParams.get("debug") === "1";
+  if (processMode === "object_level_v2" && !debugMode) {
+    return jobError({
+      httpStatus: 400,
+      code: "validation_error",
+      message: "object-level processing is only available in debug mode.",
+    });
+  }
+
+  const hasBodySourcePathname = Boolean(body.sourcePathname);
+  const hasBodySourceBlobUrl = Boolean(body.sourceBlobUrl);
+  const canRunStateless = hasBodySourcePathname || hasBodySourceBlobUrl;
 
   try {
-    const { jobId: paramJobId } = await params;
-    jobId = paramJobId;
-
-    console.log({
-      level: "info",
-      phase: "process_start",
-      jobId,
-      timestamp: new Date().toISOString(),
-    });
-
-    const body = (await request.json().catch(() => ({}))) as ProcessRequest;
-    const processMode =
-      body.processMode === "object_level_v2" || body.processMode === "raster_repair_v1"
-        ? body.processMode
-        : undefined;
-    const debugMode =
-      process.env.NODE_ENV !== "production" || new URL(request.url).searchParams.get("debug") === "1";
-    if (processMode === "object_level_v2" && !debugMode) {
-      return jobError({
-        httpStatus: 400,
-        code: "validation_error",
-        message: "object-level processing is only available in debug mode.",
+    if (!canRunStateless) {
+      const job = await processJob(jobId, { processMode });
+      return NextResponse.json({
+        success: true,
+        code: "ok",
+        message: "Process completed. Output is ready for download.",
+        job,
+        data: {
+          nextStep: `GET /api/jobs/${jobId}/download`,
+        },
       });
     }
 
-    const job = await processJob(jobId, { processMode });
+    let jobManifestExists = false;
+    try {
+      await readJob(jobId);
+      jobManifestExists = true;
+    } catch {
+      jobManifestExists = false;
+    }
 
-    console.log({
-      level: "info",
-      phase: "process_complete",
+    const result = await processJobStateless({
       jobId,
-      status: job.status,
-      durationMs: Date.now() - startTime,
-      timestamp: new Date().toISOString(),
+      processMode,
+      sourcePathname: body.sourcePathname,
+      sourceBlobUrl: body.sourceBlobUrl,
+      analysisPath: body.analysisPath,
+      analysis: body.analysis,
     });
 
-    return jobOk(
-      "Process completed. Output is ready for download.",
-      {
+    return NextResponse.json({
+      success: true,
+      code: "ok",
+      message: "Process completed. Output is ready for download.",
+      job: result.job ?? undefined,
+      data: {
         nextStep: `GET /api/jobs/${jobId}/download`,
+        processOutputPath: result.outputPath,
+        processReportPath: result.reportPath,
+        processOutputBlobUrl: result.outputBlobUrl,
+        processReportBlobUrl: result.reportBlobUrl,
+        jobManifestExists,
       },
-      job,
-    );
+    });
   } catch (error) {
-    const durationMs = Date.now() - startTime;
-
-    console.error({
-      level: "error",
-      phase: "process_error",
-      jobId,
-      error: error instanceof Error ? error.message : "unknown error",
-      errorType: error?.constructor?.name,
-      durationMs,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Handle specific error types
-    if (error instanceof JobNotFoundError) {
+    if (!canRunStateless) {
+      const mapped = mapRepositoryError(error);
       return jobError({
-        httpStatus: 404,
-        code: "job_not_found",
-        message: `Job not found: ${error.jobId}`,
+        httpStatus: mapped.httpStatus,
+        code: mapped.code === "internal_error" ? "process_failed" : mapped.code,
+        message: mapped.message,
       });
     }
 
-    if (error instanceof UploadNotFinalizedError) {
-      // Fetch job for diagnostic info
-      let diagnosticInfo: Record<string, unknown> = {};
-      if (jobId) {
-        try {
-          const job = await readJob(jobId);
-          diagnosticInfo = {
+    let jobManifestExists = false;
+    try {
+      await readJob(jobId);
+      jobManifestExists = true;
+    } catch {
+      jobManifestExists = false;
+    }
+
+    try {
+      throw error;
+    } catch (fallbackError) {
+      const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : "unknown";
+      console.error({
+        level: "error",
+        phase: "process_error_stateless",
+        jobId,
+        error: fallbackMessage,
+        errorType: fallbackError?.constructor?.name,
+        durationMs: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (fallbackError instanceof SourcePdfNotFoundError) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: "source_pdf_not_found",
             jobId,
-            status: job.status,
-            hasSourceBlobUrl: Boolean(job.sourceBlobUrl),
-            hasSourcePathname: Boolean(job.sourcePathname),
-            sourcePathname: job.sourcePathname || null,
-          };
-        } catch {
-          // Ignore diagnostic fetch errors
-        }
+            hasBodySourcePathname,
+            hasBodySourceBlobUrl,
+            sourcePathname: body.sourcePathname ?? null,
+            jobManifestExists,
+            sourcePdfExists: false,
+            message: "Source PDF blob not found.",
+          },
+          { status: 404 },
+        );
       }
+
+      if (fallbackError instanceof SourcePdfReadFailedError) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: "source_pdf_read_failed",
+            jobId,
+            hasBodySourcePathname,
+            hasBodySourceBlobUrl,
+            sourcePathname: body.sourcePathname ?? null,
+            jobManifestExists,
+            sourcePdfExists: true,
+            message: "Failed to read source PDF from private blob storage.",
+          },
+          { status: 500 },
+        );
+      }
+
+      const mapped = mapRepositoryError(fallbackError);
       return jobError({
-        httpStatus: 409,
-        code: "upload_not_finalized",
-        message: `Upload not finalized for job: ${error.jobId}`,
-        ...diagnosticInfo,
+        httpStatus: mapped.httpStatus,
+        code: mapped.code === "internal_error" ? "process_failed" : mapped.code,
+        message: mapped.message,
       });
     }
-
-    const mapped = mapRepositoryError(error);
-    return jobError({
-      httpStatus: mapped.httpStatus,
-      code: mapped.code === "internal_error" ? "process_failed" : mapped.code,
-      message: mapped.message,
-    });
   }
 }
