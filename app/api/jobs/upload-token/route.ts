@@ -137,7 +137,9 @@ async function handleMultipartUpload(request: Request, startTime: number) {
       {
         jobId: job.jobId,
         sourceFilename: job.sourceFilename,
-        nextStep: `POST /api/jobs/${job.jobId}/analyze`,
+        sourceBlobUrl: job.sourceBlobUrl,
+        sourcePathname: job.sourcePathname,
+        nextStep: `POST /api/jobs/${job.jobId}/finalize-upload`,
       },
       job,
     );

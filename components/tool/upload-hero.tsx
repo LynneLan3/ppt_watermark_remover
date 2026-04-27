@@ -20,7 +20,13 @@ type FeedbackType =
 
 type WorkflowState = "idle" | "processing" | "ready_for_download" | "failed";
 
-type ProcessingStage = "uploading" | "analyzing" | "removing" | "preparing";
+type ProcessingStage = "uploading" | "finalizing" | "analyzing" | "removing" | "preparing";
+
+type ProcessingStep = {
+  name: string;
+  status: "pending" | "running" | "ok" | "failed";
+  message?: string;
+};
 
 const FEEDBACK_OPTIONS: Array<{ value: FeedbackType; label: string }> = [
   { value: "looks_good", label: "Looks good" },
@@ -32,6 +38,7 @@ const FEEDBACK_OPTIONS: Array<{ value: FeedbackType; label: string }> = [
 
 const STAGE_TEXT: Record<ProcessingStage, string> = {
   uploading: "Uploading your PDF...",
+  finalizing: "Finalizing upload...",
   analyzing: "Preparing cleanup...",
   removing: "Removing NotebookLM watermark...",
   preparing: "Preparing preview...",
@@ -51,6 +58,13 @@ export function UploadHero({ content }: UploadHeroProps) {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
+  const [processingSteps, setProcessingSteps] = useState<ProcessingStep[]>([
+    { name: "create job", status: "pending" },
+    { name: "blob upload", status: "pending" },
+    { name: "finalize upload", status: "pending" },
+    { name: "analyze", status: "pending" },
+    { name: "process", status: "pending" },
+  ]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [sourcePageCount, setSourcePageCount] = useState<number | null>(null);
@@ -209,6 +223,43 @@ export function UploadHero({ content }: UploadHeroProps) {
     setProcessedPreviewError(null);
     setProcessedPageCount(null);
     setFeedbackNote("");
+    setProcessingSteps([
+      { name: "create job", status: "pending" },
+      { name: "blob upload", status: "pending" },
+      { name: "finalize upload", status: "pending" },
+      { name: "analyze", status: "pending" },
+      { name: "process", status: "pending" },
+    ]);
+  };
+
+  const updateStep = (stepName: string, status: ProcessingStep["status"], message?: string) => {
+    setProcessingSteps((prev) =>
+      prev.map((step) => (step.name === stepName ? { ...step, status, message } : step)),
+    );
+  };
+
+  const resetAndStartUpload = (file: File) => {
+    // Reset all states before starting new upload
+    resetJobState();
+    setErrorMessage(null);
+    setNoticeMessage(null);
+    setProcessedPdfUrl(null);
+    setProcessedPreviewReady(false);
+    setProcessedPreviewError(null);
+    setProcessedPageCount(null);
+    setSelectedFile(file);
+    setSourcePageCount(null);
+
+    const nextOriginalUrl = URL.createObjectURL(file);
+    setOriginalPdfUrl((current) => {
+      if (current) {
+        URL.revokeObjectURL(current);
+      }
+      return nextOriginalUrl;
+    });
+
+    setWorkflowState("processing");
+    setProcessingStage("uploading");
   };
 
   const handleSelectFile = (list: FileList | null) => {
@@ -235,21 +286,9 @@ export function UploadHero({ content }: UploadHeroProps) {
     // Set uploading lock
     uploadingRef.current = true;
 
-    setSelectedFile(file);
-    setSourcePageCount(null);
-    const nextOriginalUrl = URL.createObjectURL(file);
-    setOriginalPdfUrl((current) => {
-      if (current) {
-        URL.revokeObjectURL(current);
-      }
-      return nextOriginalUrl;
-    });
+    // Reset and start new upload pipeline
+    resetAndStartUpload(file);
 
-    resetJobState();
-    setErrorMessage(null);
-    setNoticeMessage(null);
-    setWorkflowState("processing");
-    setProcessingStage("uploading");
     const runId = pipelineRunIdRef.current + 1;
     pipelineRunIdRef.current = runId;
     void runProcessingPipeline(file, runId).finally(() => {
@@ -281,10 +320,13 @@ export function UploadHero({ content }: UploadHeroProps) {
     const isStale = () => runId !== pipelineRunIdRef.current;
 
     try {
+      // Step 1: Create job
+      updateStep("create job", "running");
       setProcessingStage("uploading");
       const createResp = await fetch("/api/jobs/create", { method: "POST" });
       const created = (await createResp.json()) as JobApiResponse<{ jobId: string }>;
       if (!createResp.ok || !created.success || !created.data?.jobId) {
+        updateStep("create job", "failed", created.message);
         throw new Error(created.message || "create job failed");
       }
 
@@ -293,7 +335,9 @@ export function UploadHero({ content }: UploadHeroProps) {
         return;
       }
       setJob(created.job ?? null);
+      updateStep("create job", "ok");
 
+      // Step 2: Get upload token
       const tokenResp = await fetch("/api/jobs/upload-token", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -304,6 +348,8 @@ export function UploadHero({ content }: UploadHeroProps) {
         throw new Error(tokenResult.message || "issue upload token failed");
       }
 
+      // Step 3: Upload to Blob
+      updateStep("blob upload", "running");
       const uploadForm = new FormData();
       uploadForm.set("jobId", jobId);
       uploadForm.set("uploadToken", tokenResult.data.uploadToken);
@@ -312,16 +358,54 @@ export function UploadHero({ content }: UploadHeroProps) {
         method: "POST",
         body: uploadForm,
       });
-      const uploaded = (await uploadResp.json()) as JobApiResponse<Record<string, unknown>>;
+      const uploaded = (await uploadResp.json()) as JobApiResponse<{
+        sourceBlobUrl?: string;
+        sourcePathname?: string;
+      }>;
       if (!uploadResp.ok || !uploaded.success) {
+        updateStep("blob upload", "failed", uploaded.message);
         throw new Error(uploaded.message || "upload failed");
       }
+
+      // Get blob info from response
+      const sourceBlobUrl = uploaded.data?.sourceBlobUrl;
+      const sourcePathname = uploaded.data?.sourcePathname;
 
       if (isStale()) {
         return;
       }
-      setJob(uploaded.job ?? tokenResult.job ?? created.job ?? null);
+      updateStep("blob upload", "ok");
 
+      // Step 4: Finalize upload - CRITICAL for analyze to work
+      updateStep("finalize upload", "running");
+      setProcessingStage("finalizing");
+
+      const finalizeResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/finalize-upload`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          sourceBlobUrl: sourceBlobUrl,
+          sourcePathname: sourcePathname,
+          fileName: file.name,
+          size: file.size,
+          contentType: file.type || "application/pdf",
+        }),
+      });
+      const finalizeResult = (await finalizeResp.json()) as JobApiResponse<{
+        hasSourceBlobUrl?: boolean;
+        hasSourcePathname?: boolean;
+      }>;
+
+      if (!finalizeResp.ok || !finalizeResult.success) {
+        updateStep("finalize upload", "failed", finalizeResult.message);
+        throw new Error(finalizeResult.message || "UPLOAD_FINALIZE_FAILED");
+      }
+
+      updateStep("finalize upload", "ok");
+      setJob(finalizeResult.job ?? null);
+
+      // Step 5: Analyze
+      updateStep("analyze", "running");
       setProcessingStage("analyzing");
       const analyzeResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/analyze`, {
         method: "POST",
@@ -330,6 +414,7 @@ export function UploadHero({ content }: UploadHeroProps) {
       if (!analyzeResp.ok || !analyzeResult.success) {
         const errorCode = (analyzeResult as { code?: string }).code;
         const errorMessage = (analyzeResult as { message?: string }).message;
+        updateStep("analyze", "failed", errorMessage);
         // Map error codes to user-friendly messages
         const userMessage = getAnalyzeErrorMessage(errorCode, errorMessage);
         throw new Error(userMessage);
@@ -338,7 +423,10 @@ export function UploadHero({ content }: UploadHeroProps) {
         return;
       }
       setJob(analyzeResult.job ?? null);
+      updateStep("analyze", "ok");
 
+      // Step 6: Process
+      updateStep("process", "running");
       setProcessingStage("removing");
       const processResp = await fetch(`/api/jobs/${encodeURIComponent(jobId)}/process`, {
         method: "POST",
@@ -347,6 +435,7 @@ export function UploadHero({ content }: UploadHeroProps) {
       });
       const processResult = (await processResp.json()) as JobApiResponse<Record<string, unknown>>;
       if (!processResp.ok || !processResult.success) {
+        updateStep("process", "failed", (processResult as { message?: string }).message);
         throw new Error(
           (processResult as { message?: string }).message ||
             "Processing failed before all pages were completed. No cleaned PDF was generated. Please try another PDF or report this file.",
@@ -359,12 +448,14 @@ export function UploadHero({ content }: UploadHeroProps) {
       }
       const latest = await fetchJobState(jobId);
       if (latest.job?.status === "failed" || latest.job?.status === "partial_failed") {
+        updateStep("process", "failed", latest.job.failureMessage || undefined);
         throw new Error(
           latest.job.failureMessage ||
             "Processing failed before all pages were completed. No cleaned PDF was generated. Please try another PDF or report this file.",
         );
       }
 
+      updateStep("process", "ok");
       setProcessingStage("preparing");
       setProcessedPdfUrl(`/api/jobs/${encodeURIComponent(jobId)}/preview`);
       setNoticeMessage("Preview is ready. Review both sides page by page before downloading.");
@@ -771,32 +862,74 @@ export function UploadHero({ content }: UploadHeroProps) {
           </div>
 
           {isInternalReviewVisible ? (
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">Page feedback</p>
-              <p className="mt-1 text-xs text-slate-600">
-                Review every page before download. Complex diagrams or dense backgrounds may leave slight residue.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {FEEDBACK_OPTIONS.map((item) => (
-                  <button
-                    key={item.value}
-                    type="button"
-                    onClick={() => handleFeedback(item.value)}
-                    disabled={!canGiveFeedback}
-                    className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {item.label}
-                  </button>
-                ))}
+            <>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-sm font-semibold text-slate-900">Processing steps</p>
+                <div className="mt-2 space-y-1">
+                  {processingSteps.map((step) => (
+                    <div key={step.name} className="flex items-center gap-2 text-xs">
+                      <span
+                        className={`inline-block h-2 w-2 rounded-full ${
+                          step.status === "ok"
+                            ? "bg-emerald-500"
+                            : step.status === "failed"
+                              ? "bg-rose-500"
+                              : step.status === "running"
+                                ? "bg-amber-400 animate-pulse"
+                                : "bg-slate-300"
+                        }`}
+                      />
+                      <span
+                        className={`${
+                          step.status === "ok"
+                            ? "text-emerald-700"
+                            : step.status === "failed"
+                              ? "text-rose-700"
+                              : step.status === "running"
+                                ? "text-amber-700"
+                                : "text-slate-500"
+                        }`}
+                      >
+                        {step.name}
+                        {step.status === "ok" && " ✓"}
+                        {step.status === "failed" && " ✗"}
+                        {step.status === "running" && " ..."}
+                      </span>
+                      {step.message && step.status === "failed" && (
+                        <span className="text-rose-600">: {step.message}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <textarea
-                value={feedbackNote}
-                onChange={(event) => setFeedbackNote(event.target.value)}
-                placeholder="Optional note for this page"
-                className="mt-3 w-full rounded-md border border-slate-300 px-3 py-2 text-xs text-slate-700"
-                rows={2}
-              />
-            </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-sm font-semibold text-slate-900">Page feedback</p>
+                <p className="mt-1 text-xs text-slate-600">
+                  Review every page before download. Complex diagrams or dense backgrounds may leave slight residue.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {FEEDBACK_OPTIONS.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() => handleFeedback(item.value)}
+                      disabled={!canGiveFeedback}
+                      className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={feedbackNote}
+                  onChange={(event) => setFeedbackNote(event.target.value)}
+                  placeholder="Optional note for this page"
+                  className="mt-3 w-full rounded-md border border-slate-300 px-3 py-2 text-xs text-slate-700"
+                  rows={2}
+                />
+              </div>
+            </>
           ) : null}
         </div>
       ) : null}
@@ -813,7 +946,7 @@ function getAnalyzeErrorMessage(code: string | undefined, originalMessage: strin
     case "job_not_found":
       return "Job not found. Please refresh and try again.";
     case "upload_not_finalized":
-      return "Upload not complete. Please try uploading again.";
+      return "Upload completed but the processing file was not finalized. Please try again.";
     case "analysis_failed":
       return originalMessage || "Analysis failed. Please try another PDF or report this file.";
     case "invalid_state":
