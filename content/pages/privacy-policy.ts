@@ -9,15 +9,16 @@ export type PrivacyPolicyContent = {
 
 export const privacyPolicyContent: PrivacyPolicyContent = {
   title: "Privacy Policy",
-  lastUpdated: "April 20, 2026",
+  lastUpdated: "April 25, 2026",
   intro:
     "This Privacy Policy describes how NotebookLM Watermark Remover handles information for the temporary upload, preview-first workflow, and related website pages.",
   sections: [
     {
       title: "Service Scope",
       paragraphs: [
-        "NotebookLM Watermark Remover provides a focused cleanup workflow for exported presentation files.",
+        "NotebookLM Watermark Remover provides a focused cleanup workflow for NotebookLM PDF exports.",
         "Current product behavior is upload -> temporary processing -> preview -> download -> deletion after download or short expiry.",
+        "Current Beta limits: PDF only, up to 50MB, and up to 30 pages per file.",
       ],
     },
     {
@@ -64,8 +65,8 @@ export const privacyPolicyContent: PrivacyPolicyContent = {
     {
       title: "Security and Risk Notice",
       paragraphs: [
-        "We use reasonable safeguards for temporary processing workflows, but no online service can promise 100% security or zero risk.",
-        "Users should apply their own judgment when handling sensitive materials and avoid relying on absolute security guarantees.",
+        "We use reasonable safeguards for temporary processing workflows, but no online service can promise complete security or zero risk.",
+        "Complex diagrams, dense backgrounds, and unsupported structures may leave slight residue after processing, so review every page before downloading.",
       ],
     },
     {

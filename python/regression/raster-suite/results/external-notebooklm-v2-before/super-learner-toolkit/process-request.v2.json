@@ -1,0 +1,13 @@
+{
+  "rasterProcessConfig": {
+    "roi": {
+      "widthRatio": 0.16,
+      "heightRatio": 0.08
+    },
+    "renderScale": 2.5,
+    "watermarkRegionHint": "right_bottom"
+  },
+  "processDebugPath": "python/regression/raster-suite/results/external-notebooklm-v2-before/super-learner-toolkit/process-debug.v1.json",
+  "selection": [],
+  "previousMetrics": null
+}

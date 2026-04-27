@@ -1,26 +1,29 @@
 # AGENTS.md
 
 ## Project
-This repository is for PPTWatermarkRemover, an early-stage temporary-processing PDF cleanup product with supporting marketing and SEO pages.
+This repository is for NotebookLM Watermark Remover, a productized PDF-first NotebookLM cleanup tool with supporting marketing and SEO pages.
 
 ## Current Stage
-Stage 3+ pivot is active: temporary server-side processing is the primary product path.
+Stage 2 is active: productized NotebookLM cleanup workflow with temporary processing is the primary path.
 
 Core path:
 - upload PDF
 - temporary job storage
 - server-side analyze
-- candidate review
-- server-side apply
+- preview cleaned result
+- confirm cleanup action
 - cleaned artifact download
 - delete after download or short expiry
 
 ## Current Goals
 Build:
-- temporary server-side upload flow and cleanup artifacts
+- temporary upload with short-lived retention
+- auto delete after download or short expiry
+- real upload -> analysis -> preview -> confirm -> download workflow
+- PDF-first cleanup support for NotebookLM exports
 - explicit supported-vs-unsupported object-level cleanup behavior
-- legal/trust copy aligned to temporary retention and deletion
-- marketing pages and SEO pages aligned with real product behavior
+- legal/trust copy aligned with temporary retention and deletion
+- marketing pages and SEO pages aligned with actual product behavior
 
 ## Required Stack
 - Next.js App Router
@@ -59,6 +62,47 @@ Build:
 - Do not log raw document contents.
 - Do not claim universal cleanup success; fail safely for unsupported structures.
 
+## Project Fact Recording Rules (MUST FOLLOW)
+
+> These rules ensure project facts are properly recorded for SOP evolution.
+
+### 1. project-state.md Updates
+After every AI code modification, you MUST update `.ai/project-state.md`:
+- Add the modified file to "最近修改" table
+- Update "当前工作项" status
+- Update "关键指标" if test results changed
+
+### 2. devlog Creation
+After completing a clear task, you MUST create or update `.ai/devlog/YYYY-MM-DD-task-name.md`:
+- **任务目标**: One sentence description
+- **修改文件列表**: File path, type (create/modify/delete), brief description
+- **每个文件修改说明**: Before/after code snippets and reasons
+- **测试命令**: Exact commands to run
+- **测试结果**: Pass/fail, metrics before/after comparison
+- **未解决问题**: List any issues remaining
+- **下一步建议**: Specific next steps
+- **SOP 候选规则**: Any learnings that could become SOP
+
+### 3. Separation of Concerns
+- **Facts**: What happened, what was changed, test results (record in devlog)
+- **Judgments**: Why it was done this way, trade-offs (record in devlog)
+- **Recommendations**: What to do next (record in devlog)
+- **SOP Candidates**: Potential rules for future projects (record in sop-candidates.md)
+
+### 4. SOP Upgrade Restriction
+- NEVER write candidate rules directly to Obsidian SOP main document
+- Only verified facts can be upgraded to SOP
+- Single occurrence → record as issue/note
+- Repeated twice+ → consider for checklist
+- Project-critical → consider for SOP
+
+### 5. File Locations
+- `.ai/project-state.md` - Current project status
+- `.ai/devlog/` - Daily task records
+- `.ai/sop-candidates.md` - Potential SOP rules (verified before upgrade)
+- `.ai/decisions.md` - Key decision history
+- `.ai/regression-notes/` - Regression test results and analysis
+
 ## Initial Page Scope
 Only these pages should be considered first:
 - /
@@ -81,6 +125,9 @@ Only these pages should be considered first:
 - auth/account system
 - permanent document archive
 - queue infrastructure unless clearly required
+- billing
+- dashboard
+- PPTX upload/cleanup support (not in Stage 2 scope)
 
 ## Done When
 A task is complete only when:
@@ -90,3 +137,5 @@ A task is complete only when:
 - there are no obvious hydration issues
 - pnpm lint passes
 - pnpm build passes
+- `.ai/project-state.md` is updated
+- `.ai/devlog/` entry is created (for significant changes)

@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 /temp
+/tmp/manual-review
 
 # debug
 npm-debug.log*

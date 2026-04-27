@@ -62,11 +62,11 @@ export type GammaSeoAssistPageContent = {
 export const gammaSeoAssistPageContent: GammaSeoAssistPageContent = {
   hero: {
     eyebrow: "Gamma Watermark Remover",
-    title: "Gamma Watermark Remover for exported slide cleanup",
+    title: "Gamma Watermark Remover for exported PDF cleanup",
     description:
       "Searching for a gamma watermark remover? Gamma is one common export source in presentation workflows. This page explains why exports may still need cleanup and how preview-first flow helps.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Go to uploader",
     },
     secondaryCta: {
@@ -151,19 +151,19 @@ export const gammaSeoAssistPageContent: GammaSeoAssistPageContent = {
       "Preview-first flow helps users validate output before download instead of committing to manual edits blindly.",
     steps: [
       {
-        title: "1) Upload exported file",
+        title: "1) Upload exported PDF",
         description:
-          "Upload the Gamma export in temporary mode to begin cleanup review.",
+          "Upload the Gamma PDF export in temporary mode to begin cleanup review.",
       },
       {
-        title: "2) Preview cleaned result",
+        title: "2) Analyze and preview",
         description:
-          "Check whether the cleanup result looks correct before taking final action.",
+          "Review analysis output and preview before taking final action.",
       },
       {
-        title: "3) Download cleaned file",
+        title: "3) Confirm and download",
         description:
-          "Download only after preview confirms the result meets your sharing needs.",
+          "Confirm cleanup and download only when preview meets your sharing needs.",
       },
     ],
   },
@@ -208,7 +208,7 @@ export const gammaSeoAssistPageContent: GammaSeoAssistPageContent = {
     description:
       "Use preview-first cleanup flow, then decide whether to download cleaned output.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Upload and preview",
     },
     secondaryCta: {

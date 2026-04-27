@@ -8,9 +8,9 @@ import { notebooklmSeoPageContent } from "@/content/pages/notebooklm-watermark-r
 
 export const metadata: Metadata = {
   title:
-    "NotebookLM Watermark Remover | NotebookLM Export Cleanup for PDF and PPTX",
+    "NotebookLM Watermark Remover | PDF-first NotebookLM Export Cleanup",
   description:
-    "NotebookLM watermark remover landing page for export cleanup workflows. Learn common PDF/PPTX use cases, why manual cleanup is slow, and how to upload, preview, and download cleaned files.",
+    "NotebookLM watermark remover landing page for PDF-first export cleanup workflows. Learn why manual cleanup is slow and how upload-analysis-preview-confirm-download works with temporary retention and auto delete.",
 };
 
 export default function NotebooklmWatermarkRemoverPage() {

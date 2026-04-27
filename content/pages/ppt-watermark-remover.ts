@@ -62,11 +62,11 @@ export type PptSeoPageContent = {
 export const pptSeoPageContent: PptSeoPageContent = {
   hero: {
     eyebrow: "PPT Watermark Remover",
-    title: "PPT Watermark Remover for PPT, PPTX, and presentation exports",
+    title: "PPT Watermark Remover for PDF-first presentation exports",
     description:
-      "Need a PPT watermark remover? This page focuses on general presentation cleanup intent across PPT and PPTX workflows, with a practical upload, preview, and download process.",
+      "Need a PPT watermark remover? This page focuses on PDF-first presentation cleanup intent with upload, analysis, preview, confirmation, and download.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Try the tool",
     },
     secondaryCta: {
@@ -92,7 +92,7 @@ export const pptSeoPageContent: PptSeoPageContent = {
       {
         title: "Repeat-task reduction",
         description:
-          "Avoid redoing the same visual cleanup every time a new PPT or PPTX export is generated.",
+          "Avoid redoing the same visual cleanup every time a new PDF export is generated.",
       },
       {
         title: "More consistent presentation quality",
@@ -174,7 +174,7 @@ export const pptSeoPageContent: PptSeoPageContent = {
       {
         question: "Does it support PPTX files?",
         answer:
-          "Yes, the page intent covers PPT and PPTX presentation cleanup workflows, with support depending on export structure.",
+          "Not yet. Current Stage 2 support is PDF-first; PPTX is out of scope for now.",
       },
       {
         question: "Can I preview before download?",
@@ -203,7 +203,7 @@ export const pptSeoPageContent: PptSeoPageContent = {
     description:
       "Start with upload and preview, then download cleaned file when the output matches your expectations.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Upload and preview",
     },
     secondaryCta: {

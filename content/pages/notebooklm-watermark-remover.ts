@@ -62,11 +62,11 @@ export type NotebooklmSeoPageContent = {
 export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
   hero: {
     eyebrow: "NotebookLM Watermark Remover",
-    title: "NotebookLM Watermark Remover for PDF and PPTX exports",
+    title: "NotebookLM Watermark Remover for PDF-first exports",
     description:
-      "Looking for a NotebookLM watermark remover? This page explains how post-export cleanup works for common NotebookLM PDF and PPTX sharing workflows, with upload, preview, and download steps.",
+      "Looking for a NotebookLM watermark remover? This page explains PDF-first post-export cleanup with a real upload, analysis, preview, confirmation, and download workflow.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Try the tool",
     },
     secondaryCta: {
@@ -122,16 +122,16 @@ export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
           "Instructors and creators often clean exports before publishing or presenting.",
       },
       {
-        title: "Cross-format workflow (PDF and PPTX)",
+        title: "PDF-first workflow",
         description:
-          "Many users move between PDF sharing and PPTX revision, so cleanup expectations apply to both formats.",
+          "Stage 2 currently focuses on NotebookLM PDF exports. PPTX support is planned later.",
       },
     ],
   },
   whyManualCleanupSlow: {
     title: "Why manual cleanup is slow",
     intro:
-      "Manually removing repeated marks from PDF or PPTX files is usually more time-consuming than expected.",
+      "Manually removing repeated marks from exported PDFs is usually more time-consuming than expected.",
     items: [
       {
         title: "Repetitive page-by-page edits",
@@ -163,7 +163,7 @@ export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
       {
         title: "2) Preview cleaned result",
         description:
-          "Review the preview first so you can confirm expected cleanup before any download.",
+          "Review preview output and confirm cleanup before any download.",
       },
       {
         title: "3) Download cleaned file",
@@ -183,9 +183,9 @@ export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
           "It is designed for NotebookLM export cleanup workflows and prioritizes supported PDF cases where reliable preview and cleanup can be provided.",
       },
       {
-        question: "Does it support PPTX files?",
+        question: "Does it support PPTX files now?",
         answer:
-          "The product direction includes NotebookLM PDF and PPTX sharing scenarios. Current handling may vary by structure and support status.",
+          "Not yet. Stage 2 is PDF-first only. PPTX support is currently out of scope.",
       },
       {
         question: "Can I preview the cleaned result first?",
@@ -200,7 +200,7 @@ export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
       {
         question: "Are files stored permanently?",
         answer:
-          "No. The workflow emphasizes temporary upload with auto delete behavior rather than permanent storage.",
+          "No. Files are temporary and deleted after download or short expiry.",
       },
       {
         question: "Is this affiliated with Google or NotebookLM?",
@@ -214,7 +214,7 @@ export const notebooklmSeoPageContent: NotebooklmSeoPageContent = {
     description:
       "Start with upload and preview, then download cleaned file when the result looks right.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Upload and preview",
     },
     secondaryCta: {

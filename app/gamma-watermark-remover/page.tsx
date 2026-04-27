@@ -7,9 +7,9 @@ import { homeToolContent } from "@/content/pages/home-tool";
 import { gammaSeoAssistPageContent } from "@/content/pages/gamma-watermark-remover";
 
 export const metadata: Metadata = {
-  title: "Gamma Watermark Remover | Preview-First Gamma Export Cleanup",
+  title: "Gamma Watermark Remover | PDF-first Preview Cleanup",
   description:
-    "Gamma watermark remover page for exported slide cleanup. Learn why manual editing is slow and how a preview-first workflow helps before downloading cleaned files.",
+    "Gamma watermark remover page for exported PDF cleanup. Learn why manual editing is slow and how a preview-first confirm-download workflow helps.",
 };
 
 export default function GammaWatermarkRemoverPage() {

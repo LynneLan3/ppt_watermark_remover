@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "manual-review:clean": "node scripts/manual-review-clean.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

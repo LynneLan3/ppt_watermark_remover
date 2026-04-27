@@ -8,9 +8,9 @@ import { removeWatermarkHowToPageContent } from "@/content/pages/remove-watermar
 
 export const metadata: Metadata = {
   title:
-    "Remove Watermark from PowerPoint | Preview-First Cleanup Guide",
+    "Remove Watermark from PowerPoint | PDF-first Preview Workflow Guide",
   description:
-    "Remove watermark from PowerPoint guide page focused on manual cleanup pain, common export watermark cases, and a simpler preview-first upload workflow.",
+    "Remove watermark from PowerPoint guide page focused on manual cleanup pain, common export watermark cases, and a PDF-first preview-confirm-download workflow.",
 };
 
 export default function RemoveWatermarkFromPowerpointPage() {

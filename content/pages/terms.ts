@@ -9,7 +9,7 @@ export type TermsContent = {
 
 export const termsContent: TermsContent = {
   title: "Terms of Use",
-  lastUpdated: "April 20, 2026",
+  lastUpdated: "April 25, 2026",
   intro:
     "These Terms of Use govern access to and use of the NotebookLM Watermark Remover website.",
   sections: [
@@ -23,7 +23,8 @@ export const termsContent: TermsContent = {
     {
       title: "Current Service Stage",
       paragraphs: [
-        "NotebookLM Watermark Remover currently provides a temporary upload, preview-first cleanup workflow for exported presentation files.",
+        "NotebookLM Watermark Remover currently provides a temporary upload, preview-first cleanup workflow for NotebookLM PDF exports.",
+        "Current Beta limits include PDF only, up to 50MB file size, and up to 30 pages per file.",
         "The product remains early-stage/beta and is continuously evolving.",
         "We do not provide account-based storage, paid plans, or permanent document library functionality at this stage.",
       ],
@@ -55,6 +56,7 @@ export const termsContent: TermsContent = {
       paragraphs: [
         "The site is provided on an as-is and as-available basis without warranties of any kind, to the extent permitted by law.",
         "We do not warrant that every exported file structure is supported or that cleanup succeeds for every file.",
+        "Complex diagrams or dense backgrounds may leave slight residue; users should review every page before download.",
       ],
     },
     {

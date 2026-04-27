@@ -129,7 +129,7 @@ export const homePageContent: HomePageContent = {
     ],
     note: "Current status: early temporary-processing beta. No permanent archive is intended.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Upload and preview",
     },
     secondaryCta: {
@@ -166,7 +166,7 @@ export const homePageContent: HomePageContent = {
       {
         title: "NotebookLM Watermark Remover",
         description:
-          "See how to clean NotebookLM-generated slide exports with fewer manual edits across PPTX and PDF outputs.",
+          "See how to clean NotebookLM-generated exports with fewer manual edits in a PDF-first workflow.",
         href: "/notebooklm-watermark-remover",
         anchorText: "Clean NotebookLM slide exports",
       },
@@ -274,7 +274,7 @@ export const homePageContent: HomePageContent = {
       {
         question: "What formats are you planning to support?",
         answer:
-          "We are prioritizing presentation-related exports, including PPT, PPTX, and PDF use cases common in AI-generated slide workflows.",
+          "Stage 2 is currently PDF-first for NotebookLM export cleanup. PPTX support is not included yet.",
       },
       {
         question: "Is this for personal and business use?",

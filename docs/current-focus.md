@@ -5,7 +5,7 @@ Stage 4 pivot: temporary server-side PDF processing is now the primary workflow.
 
 ## Current priorities
 1. Keep existing SEO landing pages stable
-2. Keep `/app/upload` stable as upload -> analyze -> apply -> download
+2. Keep homepage upload panel stable as upload -> analyze -> apply -> download
 3. Prioritize independently identifiable objects (logos, headers, footers, brand marks)
 4. Maintain temporary job storage + deletion behavior and clear trust messaging
 

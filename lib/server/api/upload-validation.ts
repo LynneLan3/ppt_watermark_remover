@@ -1,17 +1,20 @@
 import "server-only";
 
+import { PDFDocument } from "pdf-lib";
+
 import type { TempJobErrorCode } from "@/lib/server/jobs/types";
 
-export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
+export const MAX_UPLOAD_PAGES = 30;
 const PDF_MIME_TYPES = new Set(["application/pdf"]);
 
-export function validatePdfUpload(file: File): {
+export async function validatePdfUpload(file: File): Promise<{
   ok: true;
 } | {
   ok: false;
   code: TempJobErrorCode;
   message: string;
-} {
+}> {
   if (!file.name.toLowerCase().endsWith(".pdf")) {
     return {
       ok: false,
@@ -38,6 +41,24 @@ export function validatePdfUpload(file: File): {
       ok: false,
       code: "validation_error",
       message: "Invalid file MIME type. Please upload a standard PDF file.",
+    };
+  }
+  try {
+    const pdfBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(pdfBuffer);
+    const pageCount = pdf.getPageCount();
+    if (pageCount > MAX_UPLOAD_PAGES) {
+      return {
+        ok: false,
+        code: "validation_error",
+        message: `PDF has ${pageCount} pages. Current Beta supports up to ${MAX_UPLOAD_PAGES} pages per file.`,
+      };
+    }
+  } catch {
+    return {
+      ok: false,
+      code: "validation_error",
+      message: "Failed to parse PDF. Please upload a standard NotebookLM export PDF.",
     };
   }
   return { ok: true };

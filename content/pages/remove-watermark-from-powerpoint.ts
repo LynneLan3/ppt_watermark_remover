@@ -64,9 +64,9 @@ export const removeWatermarkHowToPageContent: RemoveWatermarkHowToPageContent = 
     eyebrow: "Remove Watermark from PowerPoint",
     title: "How to remove watermark from PowerPoint exports",
     description:
-      "Trying to remove watermark from PowerPoint files? This page focuses on practical how-to intent: where marks come from, why manual deletion is slow, and when a preview-first cleanup flow is easier.",
+      "Trying to remove watermark from PowerPoint files? This page focuses on practical how-to intent and a PDF-first preview-confirm-download cleanup flow.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Go to uploader",
     },
     secondaryCta: {
@@ -151,19 +151,19 @@ export const removeWatermarkHowToPageContent: RemoveWatermarkHowToPageContent = 
       "If manual cleanup is too slow, a preview-first flow can reduce rework by showing the outcome before final download.",
     steps: [
       {
-        title: "1) Upload exported presentation file",
+        title: "1) Upload exported PDF file",
         description:
-          "Start by uploading the exported file in temporary mode for cleanup review.",
+          "Start by uploading the exported PDF in temporary mode for cleanup review.",
       },
       {
-        title: "2) Preview cleaned result first",
+        title: "2) Analyze and preview",
         description:
-          "Check whether the cleanup outcome matches your expectation before downloading.",
+          "Check analysis output, then preview whether cleanup matches your expectation.",
       },
       {
-        title: "3) Download cleaned file",
+        title: "3) Confirm and download",
         description:
-          "Proceed to download only when preview confirms the result is suitable for sharing.",
+          "Confirm cleanup and download only when preview is suitable for sharing.",
       },
     ],
   },
@@ -192,9 +192,9 @@ export const removeWatermarkHowToPageContent: RemoveWatermarkHowToPageContent = 
           "No. It is a focused cleanup workflow, not a full slide editing suite.",
       },
       {
-        question: "Does it support exported presentation files?",
+        question: "Does it support direct PPTX uploads?",
         answer:
-          "Yes, it is built for exported presentation cleanup scenarios where repeated marks need post-export review.",
+          "Not yet. Current Stage 2 upload support is PDF-first only; PPTX support is planned later.",
       },
     ],
   },
@@ -203,7 +203,7 @@ export const removeWatermarkHowToPageContent: RemoveWatermarkHowToPageContent = 
     description:
       "Use a preview-first flow to reduce repetitive manual edits before final file sharing.",
     primaryCta: {
-      href: "/app/upload",
+      href: "/",
       label: "Upload and preview",
     },
     secondaryCta: {

@@ -1,0 +1,45 @@
+# Raster Regression Suite Summary
+
+- generatedAt: 2026-04-24T13:34:40.744042+00:00
+- manifestPath: python/regression/raster-suite/manifest.external-notebooklm.v1.json
+- executedPdfCases: 9 / 9
+- darkBaselineStable: None
+- darkBaselineStableByPages: False
+
+## Required Summaries
+
+- dark baseline: {'totalPages': 37, 'passedPages': 24, 'failedPages': 13, 'watermarkRemovalInsufficient': 0, 'damageTooHigh': 13, 'avgResidualWatermarkScore': 0.012382, 'avgDamageTextureDelta': 0.700313, 'avgSeamScore': 0.024395, 'avgSeam': 0.024395, 'avgBrightnessDelta': 0.017831, 'avgTrailingSeamBefore': 0.0, 'avgTrailingSeamAfter': 0.0, 'avgTrailingBrightnessBefore': 0.0, 'avgTrailingBrightnessAfter': 0.0, 'seamGuardTriggeredCount': 0, 'brightnessGuardTriggeredCount': 0, 'structureProtectionTriggeredCount': 0, 'seamRingAppliedCount': 0, 'seamRingAcceptedCount': 0, 'seamRingRollbackCount': 0, 'avgSeamRingBefore': 0.0, 'avgSeamRingAfter': 0.0, 'avgBrightnessRingBefore': 0.0, 'avgBrightnessRingAfter': 0.0, 'passPreservingRollbackCount': 0, 'v4PassedBecameFailedCount': 0}
+- light plain: {'totalPages': 0, 'passedPages': 0, 'failedPages': 0, 'watermarkRemovalInsufficient': 0, 'damageTooHigh': 0, 'avgResidualWatermarkScore': 0.0, 'avgDamageTextureDelta': 0.0, 'avgSeamScore': 0.0, 'avgSeam': 0.0, 'avgBrightnessDelta': 0.0, 'avgTrailingSeamBefore': 0.0, 'avgTrailingSeamAfter': 0.0, 'avgTrailingBrightnessBefore': 0.0, 'avgTrailingBrightnessAfter': 0.0, 'seamGuardTriggeredCount': 0, 'brightnessGuardTriggeredCount': 0, 'structureProtectionTriggeredCount': 0, 'seamRingAppliedCount': 0, 'seamRingAcceptedCount': 0, 'seamRingRollbackCount': 0, 'avgSeamRingBefore': 0.0, 'avgSeamRingAfter': 0.0, 'avgBrightnessRingBefore': 0.0, 'avgBrightnessRingAfter': 0.0, 'passPreservingRollbackCount': 0, 'v4PassedBecameFailedCount': 0}
+- light complex diagram: {'totalPages': 72, 'passedPages': 35, 'failedPages': 37, 'watermarkRemovalInsufficient': 29, 'damageTooHigh': 3, 'avgResidualWatermarkScore': 0.260465, 'avgDamageTextureDelta': 0.589718, 'avgSeamScore': 0.050482, 'avgSeam': 0.050482, 'avgBrightnessDelta': 0.038218, 'avgTrailingSeamBefore': 0.015169, 'avgTrailingSeamAfter': 0.050254, 'avgTrailingBrightnessBefore': 0.017134, 'avgTrailingBrightnessAfter': 0.017134, 'seamGuardTriggeredCount': 12, 'brightnessGuardTriggeredCount': 20, 'structureProtectionTriggeredCount': 43, 'seamRingAppliedCount': 72, 'seamRingAcceptedCount': 54, 'seamRingRollbackCount': 18, 'avgSeamRingBefore': 0.065519, 'avgSeamRingAfter': 0.055646, 'avgBrightnessRingBefore': 0.040757, 'avgBrightnessRingAfter': 0.03854, 'passPreservingRollbackCount': 1, 'v4PassedBecameFailedCount': 0}
+- full: {'totalPages': 114, 'passedPages': 59, 'failedPages': 55, 'watermarkRemovalInsufficient': 31, 'damageTooHigh': 18, 'avgResidualWatermarkScore': 0.192232, 'avgDamageTextureDelta': 0.680983, 'avgSeamScore': 0.044672, 'avgSeam': 0.044672, 'avgBrightnessDelta': 0.033195, 'avgTrailingSeamBefore': 0.015169, 'avgTrailingSeamAfter': 0.050254, 'avgTrailingBrightnessBefore': 0.017134, 'avgTrailingBrightnessAfter': 0.017134, 'seamGuardTriggeredCount': 12, 'brightnessGuardTriggeredCount': 20, 'structureProtectionTriggeredCount': 43, 'seamRingAppliedCount': 72, 'seamRingAcceptedCount': 54, 'seamRingRollbackCount': 18, 'avgSeamRingBefore': 0.065519, 'avgSeamRingAfter': 0.055646, 'avgBrightnessRingBefore': 0.040757, 'avgBrightnessRingAfter': 0.03854, 'passPreservingRollbackCount': 1, 'v4PassedBecameFailedCount': 0}
+
+## Baseline Comparison
+
+- comparisons: {'hasBaseline': True, 'darkBaselineRegressed': False, 'darkBaselineDelta': {'totalPages': 0, 'passedPages': 0, 'failedPages': 0, 'avgResidualWatermarkScore': 0.0, 'avgDamageTextureDelta': 0.0, 'avgSeamScore': 0.0, 'avgBrightnessDelta': 0.0, 'avgTrailingSeamBefore': 0.0, 'avgTrailingSeamAfter': 0.0, 'avgTrailingBrightnessBefore': 0.0, 'avgTrailingBrightnessAfter': 0.0, 'seamGuardTriggeredCount': 0, 'brightnessGuardTriggeredCount': 0, 'structureProtectionTriggeredCount': 0, 'seamRingAppliedCount': 0, 'seamRingAcceptedCount': 0, 'seamRingRollbackCount': 0, 'avgSeamRingBefore': 0.0, 'avgSeamRingAfter': 0.0, 'avgBrightnessRingBefore': 0.0, 'avgBrightnessRingAfter': 0.0, 'passPreservingRollbackCount': 0, 'v4PassedBecameFailedCount': 0}, 'lightComplexDelta': {'totalPages': 0, 'passedPages': 0, 'failedPages': 0, 'avgResidualWatermarkScore': 0.000359, 'avgDamageTextureDelta': -0.000325, 'avgSeamScore': -0.004446, 'avgBrightnessDelta': -0.002539, 'avgTrailingSeamBefore': 0.0, 'avgTrailingSeamAfter': 0.0, 'avgTrailingBrightnessBefore': 0.0, 'avgTrailingBrightnessAfter': 0.0, 'seamGuardTriggeredCount': 0, 'brightnessGuardTriggeredCount': 0, 'structureProtectionTriggeredCount': 0, 'seamRingAppliedCount': 72, 'seamRingAcceptedCount': 54, 'seamRingRollbackCount': 18, 'avgSeamRingBefore': 0.065519, 'avgSeamRingAfter': 0.055646, 'avgBrightnessRingBefore': 0.040757, 'avgBrightnessRingAfter': 0.03854, 'passPreservingRollbackCount': 1, 'v4PassedBecameFailedCount': 0}, 'lightPlainDelta': {'totalPages': 0, 'passedPages': 0, 'failedPages': 0, 'avgResidualWatermarkScore': 0.0, 'avgDamageTextureDelta': 0.0, 'avgSeamScore': 0.0, 'avgBrightnessDelta': 0.0, 'avgTrailingSeamBefore': 0.0, 'avgTrailingSeamAfter': 0.0, 'avgTrailingBrightnessBefore': 0.0, 'avgTrailingBrightnessAfter': 0.0, 'seamGuardTriggeredCount': 0, 'brightnessGuardTriggeredCount': 0, 'structureProtectionTriggeredCount': 0, 'seamRingAppliedCount': 0, 'seamRingAcceptedCount': 0, 'seamRingRollbackCount': 0, 'avgSeamRingBefore': 0.0, 'avgSeamRingAfter': 0.0, 'avgBrightnessRingBefore': 0.0, 'avgBrightnessRingAfter': 0.0, 'passPreservingRollbackCount': 0, 'v4PassedBecameFailedCount': 0}}
+
+## Per PDF
+
+| id | category | total pages | repaired pages | passed pages | failed pages | avg residual | avg damage texture | avg seam | avg brightness delta |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ai-solopreneur-os | external_unlabeled | 15 | 11 | 11 | 4 | 0.219442 | 0.460797 | 0.049220 | 0.048326 |
+| ai-super-individual-blueprint | external_unlabeled | 12 | 1 | 1 | 11 | 0.551248 | 0.416151 | 0.016056 | 0.019723 |
+| ai-era-super-individual-guide | external_unlabeled | 15 | 12 | 12 | 3 | 0.000226 | 0.740367 | 0.007274 | 0.005978 |
+| one-person-ai-empire | external_unlabeled | 10 | 8 | 8 | 2 | 0.055745 | 0.887587 | 0.019806 | 0.026465 |
+| super-learner-blueprint | external_unlabeled | 11 | 11 | 11 | 0 | 0.025244 | 0.482664 | 0.026367 | 0.021871 |
+| learning-os-blueprint | external_unlabeled | 12 | 2 | 2 | 10 | 0.000000 | 0.974455 | 0.012451 | 0.011494 |
+| mastery-blueprint | external_unlabeled | 12 | 6 | 6 | 6 | 0.405600 | 0.500650 | 0.032723 | 0.015033 |
+| super-learner-toolkit | external_unlabeled | 12 | 5 | 5 | 7 | 0.291245 | 0.752561 | 0.084046 | 0.042998 |
+| notebooklm-main | external_unlabeled | 15 | 3 | 3 | 12 | 0.279150 | 0.642583 | 0.144299 | 0.086020 |
+
+## Category Summary
+
+| category | pdf count | total pages | passed pages | failed pages | avg residual | avg damage texture | avg seam | avg brightness delta |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| external_unlabeled | 9 | 114 | 59 | 55 | 0.203100 | 0.650868 | 0.043582 | 0.030879 |
+
+## Detected Style Summary
+
+| detected style | pdf count | total pages | passed pages | failed pages | avg residual | avg damage texture | avg seam | avg brightness delta |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| dark_plain | 3 | 38 | 25 | 13 | 0.008490 | 0.732495 | 0.015364 | 0.013114 |
+| light_complex_diagram | 6 | 76 | 34 | 42 | 0.300405 | 0.610055 | 0.057692 | 0.039761 |

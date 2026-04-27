@@ -1,0 +1,718 @@
+{
+  "cases": [
+    {
+      "avgBrightnessDelta": 0.048457,
+      "avgDamageTextureDelta": 0.460372,
+      "avgResidualWatermarkScore": 0.219215,
+      "avgSeamScore": 0.04922,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 4,
+      "failedReasonCounts": {
+        "failed_visual_verification": 4
+      },
+      "failureCategoryCounts": {
+        "structure break": 3,
+        "watermark removal insufficient": 1
+      },
+      "id": "ai-solopreneur-os",
+      "label": "AI_Solopreneur_OS",
+      "pageStyleCounts": {
+        "light_complex_diagram": 15
+      },
+      "passedPages": 11,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI_Solopreneur_OS.pdf",
+      "repairedPages": 11,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.048457,
+          "avgDamageTextureDelta": 0.460372,
+          "avgResidualWatermarkScore": 0.219215,
+          "avgSeam": 0.04922,
+          "avgSeamScore": 0.04922,
+          "avgTrailingBrightnessAfter": 0.021977,
+          "avgTrailingBrightnessBefore": 0.021977,
+          "avgTrailingSeamAfter": 0.124342,
+          "avgTrailingSeamBefore": 0.02502,
+          "brightnessGuardTriggeredCount": 6,
+          "damageTooHigh": 0,
+          "failedPages": 4,
+          "passedPages": 11,
+          "seamGuardTriggeredCount": 2,
+          "structureProtectionTriggeredCount": 12,
+          "totalPages": 15,
+          "watermarkRemovalInsufficient": 1
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 15
+    },
+    {
+      "avgBrightnessDelta": 0.019686,
+      "avgDamageTextureDelta": 0.417614,
+      "avgResidualWatermarkScore": 0.550312,
+      "avgSeamScore": 0.016056,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 11,
+      "failedReasonCounts": {
+        "failed_visual_verification": 11
+      },
+      "failureCategoryCounts": {
+        "watermark removal insufficient": 11
+      },
+      "id": "ai-super-individual-blueprint",
+      "label": "AI_Super_Individual_Blueprint",
+      "pageStyleCounts": {
+        "light_complex_diagram": 12
+      },
+      "passedPages": 1,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI_Super_Individual_Blueprint.pdf",
+      "repairedPages": 1,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.019686,
+          "avgDamageTextureDelta": 0.417614,
+          "avgResidualWatermarkScore": 0.550312,
+          "avgSeam": 0.016056,
+          "avgSeamScore": 0.016056,
+          "avgTrailingBrightnessAfter": 0.012917,
+          "avgTrailingBrightnessBefore": 0.012917,
+          "avgTrailingSeamAfter": 0.029286,
+          "avgTrailingSeamBefore": 0.020382,
+          "brightnessGuardTriggeredCount": 1,
+          "damageTooHigh": 0,
+          "failedPages": 11,
+          "passedPages": 1,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 12,
+          "totalPages": 12,
+          "watermarkRemovalInsufficient": 11
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 12
+    },
+    {
+      "avgBrightnessDelta": 0.005978,
+      "avgDamageTextureDelta": 0.740367,
+      "avgResidualWatermarkScore": 0.000226,
+      "avgSeamScore": 0.007274,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "dark_plain",
+      "failedPages": 3,
+      "failedReasonCounts": {
+        "failed_visual_verification": 3
+      },
+      "failureCategoryCounts": {
+        "damage too high": 3
+      },
+      "id": "ai-era-super-individual-guide",
+      "label": "AI时代超级个体进化指南",
+      "pageStyleCounts": {
+        "dark_glow_panel": 4,
+        "dark_plain": 11
+      },
+      "passedPages": 12,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI时代超级个体进化指南.pdf",
+      "repairedPages": 12,
+      "status": "ok",
+      "styleSummaries": {
+        "dark_glow_panel": {
+          "avgBrightnessDelta": 0.014683,
+          "avgDamageTextureDelta": 0.921934,
+          "avgResidualWatermarkScore": 0.000847,
+          "avgSeam": 0.012259,
+          "avgSeamScore": 0.012259,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 3,
+          "failedPages": 3,
+          "passedPages": 1,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 4,
+          "watermarkRemovalInsufficient": 0
+        },
+        "dark_plain": {
+          "avgBrightnessDelta": 0.002812,
+          "avgDamageTextureDelta": 0.674342,
+          "avgResidualWatermarkScore": 0.0,
+          "avgSeam": 0.005461,
+          "avgSeamScore": 0.005461,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 0,
+          "failedPages": 0,
+          "passedPages": 11,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 11,
+          "watermarkRemovalInsufficient": 0
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 15
+    },
+    {
+      "avgBrightnessDelta": 0.028772,
+      "avgDamageTextureDelta": 0.8878,
+      "avgResidualWatermarkScore": 0.055746,
+      "avgSeamScore": 0.022101,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 2,
+      "failedReasonCounts": {
+        "failed_visual_verification": 2
+      },
+      "failureCategoryCounts": {
+        "damage too high": 1,
+        "structure break": 1
+      },
+      "id": "one-person-ai-empire",
+      "label": "One_Person_AI_Empire",
+      "pageStyleCounts": {
+        "light_complex_diagram": 10
+      },
+      "passedPages": 8,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/One_Person_AI_Empire.pdf",
+      "repairedPages": 8,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.028772,
+          "avgDamageTextureDelta": 0.8878,
+          "avgResidualWatermarkScore": 0.055746,
+          "avgSeam": 0.022101,
+          "avgSeamScore": 0.022101,
+          "avgTrailingBrightnessAfter": 0.035564,
+          "avgTrailingBrightnessBefore": 0.035564,
+          "avgTrailingSeamAfter": 0.050379,
+          "avgTrailingSeamBefore": 0.000861,
+          "brightnessGuardTriggeredCount": 2,
+          "damageTooHigh": 1,
+          "failedPages": 2,
+          "passedPages": 8,
+          "seamGuardTriggeredCount": 1,
+          "structureProtectionTriggeredCount": 1,
+          "totalPages": 10,
+          "watermarkRemovalInsufficient": 0
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 10
+    },
+    {
+      "avgBrightnessDelta": 0.021871,
+      "avgDamageTextureDelta": 0.482664,
+      "avgResidualWatermarkScore": 0.025244,
+      "avgSeamScore": 0.026367,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "dark_plain",
+      "failedPages": 0,
+      "failedReasonCounts": {},
+      "failureCategoryCounts": {},
+      "id": "super-learner-blueprint",
+      "label": "Super_Learner_Blueprint",
+      "pageStyleCounts": {
+        "dark_glow_panel": 2,
+        "dark_plain": 8,
+        "light_complex_diagram": 1
+      },
+      "passedPages": 11,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/Super_Learner_Blueprint.pdf",
+      "repairedPages": 11,
+      "status": "ok",
+      "styleSummaries": {
+        "dark_glow_panel": {
+          "avgBrightnessDelta": 0.045313,
+          "avgDamageTextureDelta": 0.46201,
+          "avgResidualWatermarkScore": 0.040329,
+          "avgSeam": 0.074342,
+          "avgSeamScore": 0.074342,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 0,
+          "failedPages": 0,
+          "passedPages": 2,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 2,
+          "watermarkRemovalInsufficient": 0
+        },
+        "dark_plain": {
+          "avgBrightnessDelta": 0.014853,
+          "avgDamageTextureDelta": 0.468822,
+          "avgResidualWatermarkScore": 0.020736,
+          "avgSeam": 0.01746,
+          "avgSeamScore": 0.01746,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 0,
+          "failedPages": 0,
+          "passedPages": 8,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 8,
+          "watermarkRemovalInsufficient": 0
+        },
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.031134,
+          "avgDamageTextureDelta": 0.634712,
+          "avgResidualWatermarkScore": 0.031135,
+          "avgSeam": 0.001669,
+          "avgSeamScore": 0.001669,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 0,
+          "failedPages": 0,
+          "passedPages": 1,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 1,
+          "watermarkRemovalInsufficient": 0
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 11
+    },
+    {
+      "avgBrightnessDelta": 0.011494,
+      "avgDamageTextureDelta": 0.974455,
+      "avgResidualWatermarkScore": 0.0,
+      "avgSeamScore": 0.012451,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "dark_plain",
+      "failedPages": 10,
+      "failedReasonCounts": {
+        "failed_visual_verification": 10
+      },
+      "failureCategoryCounts": {
+        "damage too high": 10
+      },
+      "id": "learning-os-blueprint",
+      "label": "The_Learning_OS_Blueprint",
+      "pageStyleCounts": {
+        "dark_plain": 12
+      },
+      "passedPages": 2,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Learning_OS_Blueprint.pdf",
+      "repairedPages": 2,
+      "status": "ok",
+      "styleSummaries": {
+        "dark_plain": {
+          "avgBrightnessDelta": 0.011494,
+          "avgDamageTextureDelta": 0.974455,
+          "avgResidualWatermarkScore": 0.0,
+          "avgSeam": 0.012451,
+          "avgSeamScore": 0.012451,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 10,
+          "failedPages": 10,
+          "passedPages": 2,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 12,
+          "watermarkRemovalInsufficient": 0
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 12
+    },
+    {
+      "avgBrightnessDelta": 0.015069,
+      "avgDamageTextureDelta": 0.500758,
+      "avgResidualWatermarkScore": 0.405338,
+      "avgSeamScore": 0.033343,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 6,
+      "failedReasonCounts": {
+        "failed_visual_verification": 6
+      },
+      "failureCategoryCounts": {
+        "watermark removal insufficient": 6
+      },
+      "id": "mastery-blueprint",
+      "label": "The_Mastery_Blueprint",
+      "pageStyleCounts": {
+        "light_complex_diagram": 10,
+        "light_gridline": 2
+      },
+      "passedPages": 6,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Mastery_Blueprint.pdf",
+      "repairedPages": 6,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.016779,
+          "avgDamageTextureDelta": 0.407901,
+          "avgResidualWatermarkScore": 0.325191,
+          "avgSeam": 0.03821,
+          "avgSeamScore": 0.03821,
+          "avgTrailingBrightnessAfter": 0.011944,
+          "avgTrailingBrightnessBefore": 0.011944,
+          "avgTrailingSeamAfter": 0.024319,
+          "avgTrailingSeamBefore": 0.024392,
+          "brightnessGuardTriggeredCount": 1,
+          "damageTooHigh": 0,
+          "failedPages": 4,
+          "passedPages": 6,
+          "seamGuardTriggeredCount": 1,
+          "structureProtectionTriggeredCount": 7,
+          "totalPages": 10,
+          "watermarkRemovalInsufficient": 4
+        },
+        "light_gridline": {
+          "avgBrightnessDelta": 0.006517,
+          "avgDamageTextureDelta": 0.965041,
+          "avgResidualWatermarkScore": 0.806076,
+          "avgSeam": 0.009007,
+          "avgSeamScore": 0.009007,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 0,
+          "failedPages": 2,
+          "passedPages": 0,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 2,
+          "watermarkRemovalInsufficient": 2
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 12
+    },
+    {
+      "avgBrightnessDelta": 0.042949,
+      "avgDamageTextureDelta": 0.753313,
+      "avgResidualWatermarkScore": 0.290557,
+      "avgSeamScore": 0.084734,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 7,
+      "failedReasonCounts": {
+        "failed_visual_verification": 7
+      },
+      "failureCategoryCounts": {
+        "damage too high": 1,
+        "structure break": 1,
+        "watermark removal insufficient": 5
+      },
+      "id": "super-learner-toolkit",
+      "label": "The_Super_Learner_Toolkit",
+      "pageStyleCounts": {
+        "light_complex_diagram": 12
+      },
+      "passedPages": 5,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Super_Learner_Toolkit.pdf",
+      "repairedPages": 5,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.042949,
+          "avgDamageTextureDelta": 0.753313,
+          "avgResidualWatermarkScore": 0.290557,
+          "avgSeam": 0.084734,
+          "avgSeamScore": 0.084734,
+          "avgTrailingBrightnessAfter": 0.011014,
+          "avgTrailingBrightnessBefore": 0.011014,
+          "avgTrailingSeamAfter": 0.049657,
+          "avgTrailingSeamBefore": 0.019756,
+          "brightnessGuardTriggeredCount": 4,
+          "damageTooHigh": 1,
+          "failedPages": 7,
+          "passedPages": 5,
+          "seamGuardTriggeredCount": 3,
+          "structureProtectionTriggeredCount": 8,
+          "totalPages": 12,
+          "watermarkRemovalInsufficient": 5
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 12
+    },
+    {
+      "avgBrightnessDelta": 0.098323,
+      "avgDamageTextureDelta": 0.642695,
+      "avgResidualWatermarkScore": 0.278867,
+      "avgSeamScore": 0.166217,
+      "category": "external_unlabeled",
+      "dominantDetectedStyle": "light_complex_diagram",
+      "failedPages": 12,
+      "failedReasonCounts": {
+        "failed_visual_verification": 12
+      },
+      "failureCategoryCounts": {
+        "damage too high": 3,
+        "structure break": 1,
+        "watermark removal insufficient": 8
+      },
+      "id": "notebooklm-main",
+      "label": "notebooklm",
+      "pageStyleCounts": {
+        "light_complex_diagram": 12,
+        "light_gridline": 3
+      },
+      "passedPages": 3,
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/notebooklm.pdf",
+      "repairedPages": 3,
+      "status": "ok",
+      "styleSummaries": {
+        "light_complex_diagram": {
+          "avgBrightnessDelta": 0.09752,
+          "avgDamageTextureDelta": 0.568588,
+          "avgResidualWatermarkScore": 0.348584,
+          "avgSeam": 0.172506,
+          "avgSeamScore": 0.172506,
+          "avgTrailingBrightnessAfter": 0.00939,
+          "avgTrailingBrightnessBefore": 0.00939,
+          "avgTrailingSeamAfter": 0.023539,
+          "avgTrailingSeamBefore": 0.000603,
+          "brightnessGuardTriggeredCount": 6,
+          "damageTooHigh": 1,
+          "failedPages": 9,
+          "passedPages": 3,
+          "seamGuardTriggeredCount": 5,
+          "structureProtectionTriggeredCount": 3,
+          "totalPages": 12,
+          "watermarkRemovalInsufficient": 8
+        },
+        "light_gridline": {
+          "avgBrightnessDelta": 0.101536,
+          "avgDamageTextureDelta": 0.939125,
+          "avgResidualWatermarkScore": 0.0,
+          "avgSeam": 0.141061,
+          "avgSeamScore": 0.141061,
+          "avgTrailingBrightnessAfter": 0.0,
+          "avgTrailingBrightnessBefore": 0.0,
+          "avgTrailingSeamAfter": 0.0,
+          "avgTrailingSeamBefore": 0.0,
+          "brightnessGuardTriggeredCount": 0,
+          "damageTooHigh": 2,
+          "failedPages": 3,
+          "passedPages": 0,
+          "seamGuardTriggeredCount": 0,
+          "structureProtectionTriggeredCount": 0,
+          "totalPages": 3,
+          "watermarkRemovalInsufficient": 0
+        }
+      },
+      "suiteRole": "light_complex_regression",
+      "totalPages": 15
+    }
+  ],
+  "comparisons": {
+    "darkBaselineDelta": {
+      "avgBrightnessDelta": 0.0,
+      "avgDamageTextureDelta": 0.0,
+      "avgResidualWatermarkScore": 0.0,
+      "avgSeamScore": 0.0,
+      "avgTrailingBrightnessAfter": 0.0,
+      "avgTrailingBrightnessBefore": 0.0,
+      "avgTrailingSeamAfter": 0.0,
+      "avgTrailingSeamBefore": 0.0,
+      "brightnessGuardTriggeredCount": 0,
+      "failedPages": 0,
+      "passedPages": 0,
+      "seamGuardTriggeredCount": 0,
+      "structureProtectionTriggeredCount": 0,
+      "totalPages": 0
+    },
+    "darkBaselineRegressed": false,
+    "hasBaseline": true,
+    "lightComplexDelta": {
+      "avgBrightnessDelta": 0.00074,
+      "avgDamageTextureDelta": -0.074294,
+      "avgResidualWatermarkScore": -0.01104,
+      "avgSeamScore": 0.005068,
+      "avgTrailingBrightnessAfter": 0.017134,
+      "avgTrailingBrightnessBefore": 0.017134,
+      "avgTrailingSeamAfter": 0.050254,
+      "avgTrailingSeamBefore": 0.015169,
+      "brightnessGuardTriggeredCount": 20,
+      "failedPages": 0,
+      "passedPages": 0,
+      "seamGuardTriggeredCount": 12,
+      "structureProtectionTriggeredCount": 43,
+      "totalPages": 0
+    },
+    "lightPlainDelta": {
+      "avgBrightnessDelta": 0.0,
+      "avgDamageTextureDelta": 0.0,
+      "avgResidualWatermarkScore": 0.0,
+      "avgSeamScore": 0.0,
+      "avgTrailingBrightnessAfter": 0.0,
+      "avgTrailingBrightnessBefore": 0.0,
+      "avgTrailingSeamAfter": 0.0,
+      "avgTrailingSeamBefore": 0.0,
+      "brightnessGuardTriggeredCount": 0,
+      "failedPages": 0,
+      "passedPages": 0,
+      "seamGuardTriggeredCount": 0,
+      "structureProtectionTriggeredCount": 0,
+      "totalPages": 0
+    }
+  },
+  "generatedAt": "2026-04-24T11:35:37.699078+00:00",
+  "manifestPath": "python/regression/raster-suite/manifest.external-notebooklm.v1.json",
+  "outputDir": "python/regression/raster-suite/results/external-notebooklm-v4-after",
+  "summary": {
+    "avgTrailingBrightnessAfter": 0.017134,
+    "avgTrailingBrightnessBefore": 0.017134,
+    "avgTrailingSeamAfter": 0.050254,
+    "avgTrailingSeamBefore": 0.015169,
+    "brightnessGuardTriggeredCount": 20,
+    "categorySummary": [
+      {
+        "avgBrightnessDelta": 0.032511,
+        "avgDamageTextureDelta": 0.651115,
+        "avgResidualWatermarkScore": 0.202834,
+        "avgSeamScore": 0.046418,
+        "category": "external_unlabeled",
+        "failedPages": 55,
+        "passedPages": 59,
+        "pdfCount": 9,
+        "repairedPages": 59,
+        "totalPages": 114
+      }
+    ],
+    "darkBaselineStable": null,
+    "darkBaselineStableByPages": false,
+    "darkBaselineSummary": {
+      "avgBrightnessDelta": 0.017831,
+      "avgDamageTextureDelta": 0.700313,
+      "avgResidualWatermarkScore": 0.012382,
+      "avgSeam": 0.024395,
+      "avgSeamScore": 0.024395,
+      "avgTrailingBrightnessAfter": 0.0,
+      "avgTrailingBrightnessBefore": 0.0,
+      "avgTrailingSeamAfter": 0.0,
+      "avgTrailingSeamBefore": 0.0,
+      "brightnessGuardTriggeredCount": 0,
+      "damageTooHigh": 13,
+      "failedPages": 13,
+      "passedPages": 24,
+      "seamGuardTriggeredCount": 0,
+      "structureProtectionTriggeredCount": 0,
+      "totalPages": 37,
+      "watermarkRemovalInsufficient": 0
+    },
+    "detectedStyleSummary": [
+      {
+        "avgBrightnessDelta": 0.013114,
+        "avgDamageTextureDelta": 0.732495,
+        "avgResidualWatermarkScore": 0.00849,
+        "avgSeamScore": 0.015364,
+        "detectedStyle": "dark_plain",
+        "failedPages": 13,
+        "passedPages": 25,
+        "pdfCount": 3,
+        "totalPages": 38
+      },
+      {
+        "avgBrightnessDelta": 0.042209,
+        "avgDamageTextureDelta": 0.610425,
+        "avgResidualWatermarkScore": 0.300006,
+        "avgSeamScore": 0.061945,
+        "detectedStyle": "light_complex_diagram",
+        "failedPages": 42,
+        "passedPages": 34,
+        "pdfCount": 6,
+        "totalPages": 76
+      }
+    ],
+    "executedPdfCases": 9,
+    "failureCategoryTotals": {
+      "damage too high": 18,
+      "structure break": 6,
+      "watermark removal insufficient": 31
+    },
+    "fullSummary": {
+      "avgBrightnessDelta": 0.034465,
+      "avgDamageTextureDelta": 0.681145,
+      "avgResidualWatermarkScore": 0.192052,
+      "avgSeam": 0.046895,
+      "avgSeamScore": 0.046895,
+      "avgTrailingBrightnessAfter": 0.017134,
+      "avgTrailingBrightnessBefore": 0.017134,
+      "avgTrailingSeamAfter": 0.050254,
+      "avgTrailingSeamBefore": 0.015169,
+      "brightnessGuardTriggeredCount": 20,
+      "damageTooHigh": 18,
+      "failedPages": 55,
+      "passedPages": 59,
+      "seamGuardTriggeredCount": 12,
+      "structureProtectionTriggeredCount": 43,
+      "totalPages": 114,
+      "watermarkRemovalInsufficient": 31
+    },
+    "lightComplexDiagramSummary": {
+      "avgBrightnessDelta": 0.040757,
+      "avgDamageTextureDelta": 0.590043,
+      "avgResidualWatermarkScore": 0.260106,
+      "avgSeam": 0.054928,
+      "avgSeamScore": 0.054928,
+      "avgTrailingBrightnessAfter": 0.017134,
+      "avgTrailingBrightnessBefore": 0.017134,
+      "avgTrailingSeamAfter": 0.050254,
+      "avgTrailingSeamBefore": 0.015169,
+      "brightnessGuardTriggeredCount": 20,
+      "damageTooHigh": 3,
+      "failedPages": 37,
+      "passedPages": 35,
+      "seamGuardTriggeredCount": 12,
+      "structureProtectionTriggeredCount": 43,
+      "totalPages": 72,
+      "watermarkRemovalInsufficient": 29
+    },
+    "lightPlainSummary": {
+      "avgBrightnessDelta": 0.0,
+      "avgDamageTextureDelta": 0.0,
+      "avgResidualWatermarkScore": 0.0,
+      "avgSeam": 0.0,
+      "avgSeamScore": 0.0,
+      "avgTrailingBrightnessAfter": 0.0,
+      "avgTrailingBrightnessBefore": 0.0,
+      "avgTrailingSeamAfter": 0.0,
+      "avgTrailingSeamBefore": 0.0,
+      "brightnessGuardTriggeredCount": 0,
+      "damageTooHigh": 0,
+      "failedPages": 0,
+      "passedPages": 0,
+      "seamGuardTriggeredCount": 0,
+      "structureProtectionTriggeredCount": 0,
+      "totalPages": 0,
+      "watermarkRemovalInsufficient": 0
+    },
+    "missingPdfCases": 0,
+    "processFailedCases": 0,
+    "seamGuardTriggeredCount": 12,
+    "structureProtectionTriggeredCount": 43,
+    "totalPdfCases": 9
+  }
+}

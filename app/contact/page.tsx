@@ -49,10 +49,10 @@ export default function ContactPage() {
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/app/upload"
+              href="/"
               className="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-800"
             >
-              Go to uploader
+              Try the tool
             </Link>
             <Link
               href="/"

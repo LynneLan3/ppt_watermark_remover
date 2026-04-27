@@ -1,0 +1,159 @@
+{
+  "generatedAt": "",
+  "items": [
+    {
+      "label": "notebooklm-main-seam-high-8",
+      "caseId": "notebooklm-main",
+      "page": 8,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.354248,
+      "seamV6": 0.354248,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": true,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "structure_dense_no_significant_gain",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-8/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-8/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-8/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-8/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "notebooklm-main-seam-high-5",
+      "caseId": "notebooklm-main",
+      "page": 5,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.352941,
+      "seamV6": 0.352941,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": true,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "structure_dense_no_significant_gain",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-5/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-5/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-5/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/notebooklm-main-seam-high-5/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "ai-super-individual-blueprint-focus",
+      "caseId": "ai-super-individual-blueprint",
+      "page": 2,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.055976,
+      "seamV6": 0.055976,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": true,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "structure_dense_no_significant_gain",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/ai-super-individual-blueprint-focus/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/ai-super-individual-blueprint-focus/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/ai-super-individual-blueprint-focus/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/ai-super-individual-blueprint-focus/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "super-learner-toolkit-light-complex",
+      "caseId": "super-learner-toolkit",
+      "page": 6,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.283244,
+      "seamV6": 0.283244,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": false,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "dry_run_no_acceptable",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/super-learner-toolkit-light-complex/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/super-learner-toolkit-light-complex/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/super-learner-toolkit-light-complex/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/super-learner-toolkit-light-complex/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "ai-solopreneur-structure-dense",
+      "caseId": "ai-solopreneur-os",
+      "page": 11,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.213925,
+      "seamV6": 0.213925,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": true,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "structure_dense_no_significant_gain",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/ai-solopreneur-structure-dense/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/ai-solopreneur-structure-dense/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/ai-solopreneur-structure-dense/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/ai-solopreneur-structure-dense/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "one-person-ai-empire-structure-dense",
+      "caseId": "one-person-ai-empire",
+      "page": 3,
+      "pageStyleClass": "light_complex_diagram",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.192157,
+      "seamV6": 0.192157,
+      "seamRingAcceptedV5": true,
+      "seamRingStructureDenseV5": true,
+      "seamMicroAttemptedV6": true,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "structure_dense_no_significant_gain",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/one-person-ai-empire-structure-dense/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/one-person-ai-empire-structure-dense/v6-result.png",
+        "seamRingOverlay": "python/regression/raster-suite/results/v6-manual-review/one-person-ai-empire-structure-dense/v6-seam-ring-overlay.png",
+        "seamMicroOverlay": "python/regression/raster-suite/results/v6-manual-review/one-person-ai-empire-structure-dense/v6-seam-micro-polish-overlay.png"
+      }
+    },
+    {
+      "label": "dark-baseline-reference",
+      "caseId": "ai-era-super-individual-guide",
+      "page": 10,
+      "pageStyleClass": "dark_glow_panel",
+      "v5Passed": false,
+      "v6Passed": false,
+      "seamV5": 0.009179,
+      "seamV6": 0.009179,
+      "seamRingAcceptedV5": false,
+      "seamRingStructureDenseV5": false,
+      "seamMicroAttemptedV6": false,
+      "seamMicroAcceptedV6": false,
+      "seamMicroRejectedReasonV6": "",
+      "v5v6ResultImageIdentical": true,
+      "files": {
+        "v5Result": "python/regression/raster-suite/results/v6-manual-review/dark-baseline-reference/v5-result.png",
+        "v6Result": "python/regression/raster-suite/results/v6-manual-review/dark-baseline-reference/v6-result.png",
+        "seamRingOverlay": "",
+        "seamMicroOverlay": ""
+      }
+    }
+  ]
+}

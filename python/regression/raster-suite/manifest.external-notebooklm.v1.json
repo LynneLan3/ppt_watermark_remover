@@ -1,0 +1,69 @@
+{
+  "suiteName": "external-notebooklm-corpus-v1",
+  "description": "Direct regression suite from /Users/lanling/validation-corpus/notebooklm",
+  "pdfs": [
+    {
+      "id": "ai-solopreneur-os",
+      "label": "AI_Solopreneur_OS",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI_Solopreneur_OS.pdf"
+    },
+    {
+      "id": "ai-super-individual-blueprint",
+      "label": "AI_Super_Individual_Blueprint",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI_Super_Individual_Blueprint.pdf"
+    },
+    {
+      "id": "ai-era-super-individual-guide",
+      "label": "AI时代超级个体进化指南",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/AI时代超级个体进化指南.pdf"
+    },
+    {
+      "id": "one-person-ai-empire",
+      "label": "One_Person_AI_Empire",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/One_Person_AI_Empire.pdf"
+    },
+    {
+      "id": "super-learner-blueprint",
+      "label": "Super_Learner_Blueprint",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/Super_Learner_Blueprint.pdf"
+    },
+    {
+      "id": "learning-os-blueprint",
+      "label": "The_Learning_OS_Blueprint",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Learning_OS_Blueprint.pdf"
+    },
+    {
+      "id": "mastery-blueprint",
+      "label": "The_Mastery_Blueprint",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Mastery_Blueprint.pdf"
+    },
+    {
+      "id": "super-learner-toolkit",
+      "label": "The_Super_Learner_Toolkit",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/The_Super_Learner_Toolkit.pdf"
+    },
+    {
+      "id": "notebooklm-main",
+      "label": "notebooklm",
+      "suiteRole": "light_complex_regression",
+      "category": "external_unlabeled",
+      "pdfPath": "/Users/lanling/validation-corpus/notebooklm/notebooklm.pdf"
+    }
+  ]
+}

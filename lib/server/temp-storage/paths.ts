@@ -1,11 +1,12 @@
 import "server-only";
 
+import os from "node:os";
 import path from "node:path";
 
 import type { TempJobPaths } from "@/lib/server/jobs/types";
 
 export function getTempJobsRoot(): string {
-  return path.join(process.cwd(), "temp", "jobs");
+  return path.join(os.tmpdir(), "notebooklm-remover", "jobs");
 }
 
 export function resolveJobPaths(jobId: string): TempJobPaths {

@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         message: "file is required",
       });
     }
-    const validation = validatePdfUpload(file);
+    const validation = await validatePdfUpload(file);
     if (!validation.ok) {
       return apiError({
         httpStatus: 400,

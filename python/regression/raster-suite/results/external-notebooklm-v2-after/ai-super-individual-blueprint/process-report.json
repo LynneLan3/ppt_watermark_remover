@@ -1,0 +1,2574 @@
+{
+  "appliedOperations": [],
+  "dominantTemplateId": "template_compact",
+  "failedCategoryCounts": {
+    "watermark removal insufficient": 12
+  },
+  "failedPageCount": 12,
+  "failedReasonCounts": {
+    "failed_visual_verification": 12
+  },
+  "inputPageCount": 12,
+  "metricsComparison": null,
+  "outputPageCount": 0,
+  "overallVisualSuccess": false,
+  "perPageResults": [
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.9387,
+      "brightnessDelta": 0.003315,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.99916,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.003315,
+      "damageSeamScore": 0.009161,
+      "damageTextureDelta": 0.428722,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000272,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 176,
+        "x": 3194,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 175,
+        "x": 3195,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.091454,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.319826,
+          "damageTextureDelta": 0.282005,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.249112,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.003315,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.009161,
+          "damageTextureDelta": 0.428722,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.787118,
+          "score": 0.49641,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.009254,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.00338,
+          "damageTextureDelta": 2.957447,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.780273,
+          "score": 0.998377,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 1,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-001-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.787118,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4471,
+      "templateSimilarityAfter": 0.99916,
+      "templateSimilarityBefore": 0.979167,
+      "textResidualScore": 0.962242,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002-analyze-overlay.png",
+      "blendMode": "selected:candidate_c_aggressive",
+      "brightGlyphResidualScore": 0.744029,
+      "brightnessDelta": 0.006352,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.74,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.006352,
+      "damageSeamScore": 0.027061,
+      "damageTextureDelta": 0.096732,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.003446,
+      "expandedMaskBox": {
+        "height": 111,
+        "width": 298,
+        "x": 3115,
+        "y": 1808
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_c_aggressive"
+      ],
+      "finalMaskBox": {
+        "height": 111,
+        "width": 298,
+        "x": 3115,
+        "y": 1808
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 177,
+        "x": 3193,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 180,
+        "x": 3190,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.091709,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.325926,
+          "damageTextureDelta": 0.277749,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.249013,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.018926,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.055976,
+          "damageTextureDelta": 0.060409,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.668867,
+          "score": 0.368124,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.006352,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.027061,
+          "damageTextureDelta": 0.096732,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.611945,
+          "score": 0.341313,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 0.667755,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.261364,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 2,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-002-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.611945,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 111,
+        "width": 298,
+        "x": 3115,
+        "y": 1808
+      },
+      "secondPassStrategy": "candidate_c_aggressive",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4476,
+      "templateSimilarityAfter": 0.74,
+      "templateSimilarityBefore": 0.988028,
+      "textResidualScore": 0.762259,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.933403,
+      "brightnessDelta": 0.007107,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 1.0,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.007107,
+      "damageSeamScore": 0.016753,
+      "damageTextureDelta": 0.457127,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000272,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 176,
+        "x": 3194,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 175,
+        "x": 3195,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.092412,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.32658,
+          "damageTextureDelta": 0.280257,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.249649,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.007107,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.016753,
+          "damageTextureDelta": 0.457127,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.785057,
+          "score": 0.502234,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.010705,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002192,
+          "damageTextureDelta": 2.893453,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.779646,
+          "score": 0.985226,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 3,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-003-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.785057,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4473,
+      "templateSimilarityAfter": 1.0,
+      "templateSimilarityBefore": 0.97954,
+      "textResidualScore": 0.963691,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.931139,
+      "brightnessDelta": 0.008715,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 1.0,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.008715,
+      "damageSeamScore": 0.0204,
+      "damageTextureDelta": 0.384002,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000272,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 177,
+        "x": 3193,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 180,
+        "x": 3190,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.093958,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.328322,
+          "damageTextureDelta": 0.285148,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.25096,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.008715,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.0204,
+          "damageTextureDelta": 0.384002,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.784016,
+          "score": 0.487634,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.011291,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002093,
+          "damageTextureDelta": 3.040183,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.778615,
+          "score": 1.014071,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 4,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-004-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.784016,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4477,
+      "templateSimilarityAfter": 1.0,
+      "templateSimilarityBefore": 0.9801,
+      "textResidualScore": 0.963691,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.931184,
+      "brightnessDelta": 0.00953,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 1.0,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.00953,
+      "damageSeamScore": 0.0224,
+      "damageTextureDelta": 0.410303,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000272,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 177,
+        "x": 3193,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 180,
+        "x": 3190,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.09519,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.327669,
+          "damageTextureDelta": 0.285343,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.25102,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.00953,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.0224,
+          "damageTextureDelta": 0.410303,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.784047,
+          "score": 0.493215,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.010719,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002264,
+          "damageTextureDelta": 2.795908,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.77836,
+          "score": 0.965058,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 5,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-005-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.784047,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4482,
+      "templateSimilarityAfter": 1.0,
+      "templateSimilarityBefore": 0.9801,
+      "textResidualScore": 0.963781,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.931184,
+      "brightnessDelta": 0.013157,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 1.0,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.013157,
+      "damageSeamScore": 0.025067,
+      "damageTextureDelta": 0.433844,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000317,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 177,
+        "x": 3193,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 15,
+        "width": 180,
+        "x": 3190,
+        "y": 1875
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.095641,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.327669,
+          "damageTextureDelta": 0.285487,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.282722,
+          "score": 0.251084,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.013157,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.025067,
+          "damageTextureDelta": 0.433844,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.784056,
+          "score": 0.498539,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.01057,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002152,
+          "damageTextureDelta": 2.643679,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.778004,
+          "score": 0.934402,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 10,
+        "width": 10,
+        "x": 3195,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 6,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-006-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.784056,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4482,
+      "templateSimilarityAfter": 1.0,
+      "templateSimilarityBefore": 0.979914,
+      "textResidualScore": 0.963781,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.926635,
+      "brightnessDelta": 0.011405,
+      "clampedDetectionBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "conservativeTemplateBox": {
+        "height": 65,
+        "width": 248,
+        "x": 3163,
+        "y": 1839
+      },
+      "cornerTemplateResidual": 0.969927,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.011405,
+      "damageSeamScore": 0.013763,
+      "damageTextureDelta": 0.277749,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.027604,
+        "width": 0.067442,
+        "x": 0.921221,
+        "y": 0.959896
+      },
+      "detectedWatermarkBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.0,
+      "expandedMaskBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "fringeBox": {
+        "height": 52,
+        "width": 220,
+        "x": 3178,
+        "y": 1843
+      },
+      "glyphBoundingBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.093137,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.097459,
+          "damageTextureDelta": 0.981618,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.803684,
+          "score": 0.633385,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.011405,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.013763,
+          "damageTextureDelta": 0.277749,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.764457,
+          "score": 0.455631,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.021903,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002484,
+          "damageTextureDelta": 1.178611,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.748916,
+          "score": 0.627209,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 22,
+        "width": 214,
+        "x": 3169,
+        "y": 1843
+      },
+      "mappedProcessBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "marginBottom": 24,
+      "marginRight": 39,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "union_mask",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 7,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-007-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003106,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.764457,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "mask_bbox",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4473,
+      "templateSimilarityAfter": 0.969927,
+      "templateSimilarityBefore": 0.94767,
+      "textResidualScore": 0.878522,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008-analyze-overlay.png",
+      "blendMode": "selected:candidate_a_conservative",
+      "brightGlyphResidualScore": 1.0,
+      "brightnessDelta": 0.059002,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 232,
+        "x": 3169,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 248,
+        "x": 3163,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.0,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.059002,
+      "damageSeamScore": 0.057684,
+      "damageTextureDelta": 0.980866,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.067442,
+        "x": 0.921221,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 232,
+        "x": 3169,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.0,
+      "expandedMaskBox": {
+        "height": 2,
+        "width": 44,
+        "x": 3169,
+        "y": 1838
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_a_conservative"
+      ],
+      "finalMaskBox": {
+        "height": 2,
+        "width": 44,
+        "x": 3169,
+        "y": 1838
+      },
+      "fringeBox": {
+        "height": 52,
+        "width": 214,
+        "x": 3169,
+        "y": 1838
+      },
+      "glyphBoundingBox": {
+        "height": 52,
+        "width": 214,
+        "x": 3169,
+        "y": 1838
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.059002,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.057684,
+          "damageTextureDelta": 0.980866,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.601818,
+          "score": 0.520761,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.011472,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.011645,
+          "damageTextureDelta": 1.518042,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.777571,
+          "score": 0.71026,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.005899,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002541,
+          "damageTextureDelta": 1.145586,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.778973,
+          "score": 0.63496,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 2,
+        "width": 44,
+        "x": 3169,
+        "y": 1838
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 232,
+        "x": 3169,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 39,
+      "maskAreaRatioWithinTemplate": 0.5,
+      "maskGenerationMode": "union_mask",
+      "maskHeightRatioWithinTemplate": 0.022727,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 8,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-008-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 7e-06,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.601818,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 2,
+        "width": 44,
+        "x": 3169,
+        "y": 1838
+      },
+      "secondPassStrategy": "candidate_a_conservative",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "mask_bbox",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.448,
+      "templateSimilarityAfter": 0.0,
+      "templateSimilarityBefore": 0.0,
+      "textResidualScore": 1.181818,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.855985,
+      "brightnessDelta": 0.001674,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.965572,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.001674,
+      "damageSeamScore": 0.020643,
+      "damageTextureDelta": 0.733394,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.017792,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "glyph_too_small_template_fallback",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 13,
+        "width": 213,
+        "x": 3175,
+        "y": 1838
+      },
+      "glyphBoundingBox": {
+        "height": 12,
+        "width": 215,
+        "x": 3175,
+        "y": 1838
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.000851,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.020704,
+          "damageTextureDelta": 4.91538,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.766282,
+          "score": 1.384095,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.001674,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.020643,
+          "damageTextureDelta": 0.733394,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.730754,
+          "score": 0.529282,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.026882,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.000759,
+          "damageTextureDelta": 2.474369,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.723054,
+          "score": 0.873104,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 12,
+        "width": 35,
+        "x": 3175,
+        "y": 1838
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "template_union",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 9,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-009-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.730754,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "fallback",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.9889,
+      "templateSimilarityAfter": 0.965572,
+      "templateSimilarityBefore": 0.386501,
+      "textResidualScore": 0.850507,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.90307,
+      "brightnessDelta": 0.009858,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 236,
+        "x": 3169,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.977457,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.009858,
+      "damageSeamScore": 0.009365,
+      "damageTextureDelta": 0.038791,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.922965,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.001087,
+      "expandedMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "fringeBox": {
+        "height": 52,
+        "width": 177,
+        "x": 3193,
+        "y": 1838
+      },
+      "glyphBoundingBox": {
+        "height": 52,
+        "width": 208,
+        "x": 3175,
+        "y": 1838
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.260394,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.23357,
+          "damageTextureDelta": 0.9905,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.765035,
+          "score": 0.644778,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.009858,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.009365,
+          "damageTextureDelta": 0.038791,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.756843,
+          "score": 0.403229,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.019965,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002423,
+          "damageTextureDelta": 2.757027,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.759913,
+          "score": 0.948448,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 25,
+        "width": 208,
+        "x": 3175,
+        "y": 1838
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3175,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 45,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "union_mask",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 10,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-010-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003344,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.756843,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 88,
+        "width": 251,
+        "x": 3157,
+        "y": 1824
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "mask_bbox",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4482,
+      "templateSimilarityAfter": 0.977457,
+      "templateSimilarityBefore": 0.955443,
+      "textResidualScore": 0.888718,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011-analyze-overlay.png",
+      "blendMode": "selected:candidate_b_medium",
+      "brightGlyphResidualScore": 0.889831,
+      "brightnessDelta": 0.029589,
+      "clampedDetectionBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "conservativeTemplateBox": {
+        "height": 65,
+        "width": 248,
+        "x": 3163,
+        "y": 1839
+      },
+      "cornerTemplateResidual": 0.974515,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": false,
+      "damageLumaDelta": 0.029589,
+      "damageSeamScore": 0.010642,
+      "damageTextureDelta": 3.430125,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.027604,
+        "width": 0.067442,
+        "x": 0.921221,
+        "y": 0.959896
+      },
+      "detectedWatermarkBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.000146,
+      "expandedMaskBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_b_medium"
+      ],
+      "finalMaskBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "fringeBox": {
+        "height": 15,
+        "width": 176,
+        "x": 3194,
+        "y": 1875
+      },
+      "glyphBoundingBox": {
+        "height": 47,
+        "width": 214,
+        "x": 3169,
+        "y": 1843
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.229538,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.202476,
+          "damageTextureDelta": 0.995058,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.786103,
+          "score": 0.650445,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.029589,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.010642,
+          "damageTextureDelta": 3.430125,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.748842,
+          "score": 1.079067,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.024858,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.002163,
+          "damageTextureDelta": 3.462077,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.756135,
+          "score": 1.087854,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 20,
+        "width": 214,
+        "x": 3169,
+        "y": 1843
+      },
+      "mappedProcessBox": {
+        "height": 53,
+        "width": 232,
+        "x": 3169,
+        "y": 1843
+      },
+      "marginBottom": 24,
+      "marginRight": 39,
+      "maskAreaRatioWithinTemplate": 1.0,
+      "maskGenerationMode": "union_mask",
+      "maskHeightRatioWithinTemplate": 1.0,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 11,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-011-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003106,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.748842,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 78,
+        "width": 263,
+        "x": 3151,
+        "y": 1829
+      },
+      "secondPassStrategy": "candidate_b_medium",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "mask_bbox",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.4478,
+      "templateSimilarityAfter": 0.974515,
+      "templateSimilarityBefore": 0.952739,
+      "textResidualScore": 0.880082,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    },
+    {
+      "analyzeOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012-analyze-overlay.png",
+      "blendMode": "selected:candidate_c_aggressive",
+      "brightGlyphResidualScore": 0.43832,
+      "brightnessDelta": 0.044956,
+      "clampedDetectionBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3170,
+        "y": 1838
+      },
+      "conservativeTemplateBox": {
+        "height": 75,
+        "width": 241,
+        "x": 3164,
+        "y": 1834
+      },
+      "cornerTemplateResidual": 0.305954,
+      "cropBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "damageControlPassPassed": true,
+      "damageLumaDelta": 0.044956,
+      "damageSeamScore": 0.008025,
+      "damageTextureDelta": 0.032019,
+      "debugArtifacts": {
+        "damageHeatmapPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/damage-heatmap.png",
+        "diffOrResidualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/diff-or-residual.png",
+        "expandedMaskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/mask-overlay.png",
+        "maskOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/mask-overlay.png",
+        "originalCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/original-crop.png",
+        "pass1Pass2ComparePath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/pass1-pass2-compare.png",
+        "repairedCropPass1Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/repaired-crop-pass1.png",
+        "repairedCropPass2Path": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/repaired-crop-pass2.png",
+        "repairedCropPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/repaired-crop.png",
+        "residualPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/diff-or-residual.png",
+        "structureLineOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012/structure-line-overlay.png"
+      },
+      "degradedMode": false,
+      "detectedBoxNormalized": {
+        "height": 0.032813,
+        "width": 0.063953,
+        "x": 0.921512,
+        "y": 0.957292
+      },
+      "detectedWatermarkBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3170,
+        "y": 1838
+      },
+      "dominantTemplateId": "template_compact",
+      "edgeTemplateResidualScore": 0.005619,
+      "expandedMaskBox": {
+        "height": 111,
+        "width": 303,
+        "x": 3110,
+        "y": 1808
+      },
+      "failureCategory": "watermark removal insufficient",
+      "failureReasonDetailed": "failed_visual_verification",
+      "fallbackChain": [
+        "document_template_lock",
+        "light_complex_diagram_repair_v1",
+        "feather_edge_blend",
+        "selected:candidate_c_aggressive"
+      ],
+      "finalMaskBox": {
+        "height": 111,
+        "width": 303,
+        "x": 3110,
+        "y": 1808
+      },
+      "fringeBox": {
+        "height": 45,
+        "width": 220,
+        "x": 3170,
+        "y": 1850
+      },
+      "glyphBoundingBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3170,
+        "y": 1838
+      },
+      "humanReviewRecommended": true,
+      "lightComplexCandidates": [
+        {
+          "brightnessDelta": 0.23448,
+          "candidateId": "candidate_a_conservative",
+          "damageSeamScore": 0.176766,
+          "damageTextureDelta": 0.987861,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.816094,
+          "score": 0.661911,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.040987,
+          "candidateId": "candidate_b_medium",
+          "damageSeamScore": 0.055463,
+          "damageTextureDelta": 0.161701,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.354226,
+          "score": 0.226472,
+          "structureBreakScore": 0.0
+        },
+        {
+          "brightnessDelta": 0.044956,
+          "candidateId": "candidate_c_aggressive",
+          "damageSeamScore": 0.008025,
+          "damageTextureDelta": 0.032019,
+          "method": "light_complex_diagram_repair_v1",
+          "residualWatermarkScore": 0.33459,
+          "score": 0.18495,
+          "structureBreakScore": 0.0
+        }
+      ],
+      "logoComponentBox": {
+        "height": 26,
+        "width": 220,
+        "x": 3170,
+        "y": 1875
+      },
+      "mappedProcessBox": {
+        "height": 63,
+        "width": 220,
+        "x": 3170,
+        "y": 1838
+      },
+      "marginBottom": 19,
+      "marginRight": 50,
+      "maskAreaRatioWithinTemplate": 0.669818,
+      "maskGenerationMode": "union_mask",
+      "maskHeightRatioWithinTemplate": 1.261364,
+      "mediaBox": {
+        "height": 768.0,
+        "width": 1376.0,
+        "x0": 0.0,
+        "x1": 1376.0,
+        "y0": 0.0,
+        "y1": 768.0
+      },
+      "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+      "page": 12,
+      "pageHeight": 768.0,
+      "pageStyleClass": "light_complex_diagram",
+      "pageTheme": "dark_image_page",
+      "pageWidth": 1376.0,
+      "processOverlayPath": "python/regression/raster-suite/results/external-notebooklm-v2-after/ai-super-individual-blueprint/raster-debug-overlays/page-012-process-overlay.png",
+      "rawDetectionBox": {
+        "height": 96,
+        "width": 343,
+        "x": 3093,
+        "y": 1822
+      },
+      "reason": "failed_visual_verification",
+      "removalPassPassed": false,
+      "renderHeight": 1920,
+      "renderWidth": 3440,
+      "repairAreaRatio": 0.003411,
+      "repairMethod": "light_complex_diagram_repair_v1",
+      "repairPolicy": "light_complex_diagram_repair_v1",
+      "rerunCount": 0,
+      "residualWatermarkScore": 0.33459,
+      "roi": {
+        "height": 92,
+        "width": 337,
+        "x": 3096,
+        "y": 1824
+      },
+      "rotation": 0,
+      "secondPassBox": {
+        "height": 111,
+        "width": 303,
+        "x": 3110,
+        "y": 1808
+      },
+      "secondPassStrategy": "candidate_c_aggressive",
+      "secondPassTriggered": false,
+      "selectedRepairMethod": "light_complex_diagram_repair_v1",
+      "shrinkStrategy": "mask_bbox",
+      "skipReason": "failed_visual_verification",
+      "structureBreakScore": 0.0,
+      "success": false,
+      "templateId": "template_compact",
+      "templateScore": 0.9618,
+      "templateSimilarityAfter": 0.305954,
+      "templateSimilarityBefore": 0.329755,
+      "textResidualScore": 0.48769,
+      "visualVerificationPassed": false,
+      "wasClamped": true,
+      "wasShrunk": false
+    }
+  ],
+  "processMode": "raster_repair_v1",
+  "processedAt": "2026-04-24T03:38:59.225512+00:00",
+  "processedPageCount": 12,
+  "qualityMetrics": {
+    "anchorCount": 12,
+    "appliedOperationCount": 0,
+    "attemptedOperationCount": 12,
+    "candidateCount": 1,
+    "noInstructionRemovedCount": 12,
+    "partialHitCandidateCount": 0,
+    "reliableAnchorCount": 12,
+    "reliableAnchorRate": 1.0,
+    "removalSuccessRate": 0.0,
+    "vectorAppliedOperationCount": 0,
+    "vectorAttemptedOperationCount": 0,
+    "vectorDeleteRemovedZeroCommandsCount": 0,
+    "vectorGraphicsDepthMismatchCount": 0,
+    "vectorMissingPaintSegmentCount": 0,
+    "vectorMissingPathSegmentCount": 0,
+    "vectorNoInstructionRemovedCount": 0,
+    "vectorRemovalSuccessRate": 0,
+    "vectorRequiredPaintOperatorMissingCount": 0,
+    "vectorResidualPaintLeftCount": 0,
+    "vectorResidualPathLeftCount": 0,
+    "vectorSignatureBBoxMismatchCount": 0,
+    "vectorSignatureOperatorSequenceMismatchCount": 0,
+    "vectorSignaturePrefixMismatchCount": 0,
+    "vectorSpanShapeMismatchCount": 0
+  },
+  "repairMethodStats": {},
+  "repairedPageCount": 0,
+  "secondPassTriggeredPageCount": 0,
+  "selectedCandidates": [],
+  "skippedOperations": [
+    {
+      "anchorId": "raster-page:p1",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 1,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p2",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 2,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p3",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 3,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p4",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 4,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p5",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 5,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p6",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 6,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p7",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 7,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p8",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 8,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p9",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 9,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p10",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 10,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p11",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 11,
+      "reason": "failed_visual_verification"
+    },
+    {
+      "anchorId": "raster-page:p12",
+      "candidateId": "raster-page",
+      "detail": {
+        "note": "Repair was applied but the final output still failed removal or damage-control verification.",
+        "stage": "raster_repair"
+      },
+      "page": 12,
+      "reason": "failed_visual_verification"
+    }
+  ],
+  "skippedPageCount": 12,
+  "skippedReasons": {
+    "failed_visual_verification": 12
+  },
+  "status": "failed_visual_verification",
+  "warnings": [],
+  "watermarkDetectionMode": "notebooklm_template_constrained_right_bottom_mask"
+}

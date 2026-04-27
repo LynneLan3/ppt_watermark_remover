@@ -9,7 +9,7 @@ export type DisclaimerContent = {
 
 export const disclaimerContent: DisclaimerContent = {
   title: "Disclaimer",
-  lastUpdated: "April 20, 2026",
+  lastUpdated: "April 25, 2026",
   intro:
     "This page provides important notices about brand references and general use of the NotebookLM Watermark Remover website.",
   sections: [
@@ -25,6 +25,7 @@ export const disclaimerContent: DisclaimerContent = {
       paragraphs: [
         "NotebookLM Watermark Remover includes a temporary upload and preview-first cleanup workflow.",
         "Support depends on file structure and supported-file checks. Unsupported cases may be blocked instead of forcing destructive edits.",
+        "Complex diagrams or dense backgrounds may still show slight residue after cleanup, so review each page before download.",
       ],
     },
     {

@@ -10,14 +10,14 @@ type FooterNavigationGroup = {
 
 export const footerNavigation = {
   description:
-    "Presentation cleanup hub for removing watermark traces and fixing AI-exported slide quality issues before sharing.",
+    "NotebookLM export cleanup hub focused on PDF-first watermark removal with temporary processing and auto delete.",
   groups: [
     {
       title: "Product",
       links: [
         {
           href: "/",
-          label: "PPT cleanup homepage",
+          label: "NotebookLM cleanup homepage",
         },
         {
           href: "/ppt-watermark-remover",
@@ -25,7 +25,7 @@ export const footerNavigation = {
         },
         {
           href: "/contact",
-          label: "Request early access",
+          label: "Contact support",
         },
       ],
     },

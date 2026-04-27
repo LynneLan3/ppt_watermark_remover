@@ -1,4 +1,9 @@
-export type PythonCommandName = "analyze" | "apply-plan";
+export type PythonCommandName =
+  | "analyze"
+  | "apply-plan"
+  | "process-v2"
+  | "process-raster-v1"
+  | "extract-commands";
 
 export type PythonRunnerResult = {
   ok: boolean;

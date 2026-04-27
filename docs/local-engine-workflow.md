@@ -4,7 +4,7 @@ This guide explains the manual handoff from browser planning to local engine exe
 
 ## Browser vs Local Engine Roles
 
-### Browser (`/app/upload`)
+### Browser (Homepage Upload Panel)
 - Load a local PDF.
 - Analyze candidate objects.
 - Select candidate and scope.
@@ -176,7 +176,7 @@ Interpretation:
 - Placeholder paths run literally:
   - Fix: replace `<YOUR_USERNAME>` and any placeholder path tokens before running.
 - Unsupported object / fail-safe abort:
-  - Fix: select a supported candidate in `/app/upload` and regenerate plan.
+  - Fix: select a supported candidate from the homepage upload panel and regenerate plan.
 
 ## When to Regenerate the Plan
 
@@ -187,7 +187,7 @@ Interpretation:
 
 ## Quick Path
 
-1. Download the removal plan JSON from `/app/upload`.
+1. Download the removal plan JSON from the homepage upload panel.
 2. Put the source PDF and plan JSON in `Downloads`.
 3. Copy the example command.
 4. Replace `<YOUR_USERNAME>`.

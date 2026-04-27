@@ -1,0 +1,72 @@
+{
+  "cases": [
+    {
+      "category": "dark_glow_panel",
+      "id": "dark-glow-baseline-001",
+      "label": "Dark Glow Baseline 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/dark_baseline/dark_glow_baseline_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "dark_baseline"
+    },
+    {
+      "category": "dark_plain",
+      "id": "dark-plain-baseline-001",
+      "label": "Dark Plain Baseline 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/dark_baseline/dark_plain_baseline_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "dark_baseline"
+    },
+    {
+      "category": "light_plain",
+      "id": "light-plain-001",
+      "label": "Light Plain 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/light/light_plain_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "light_complex_regression"
+    },
+    {
+      "category": "light_gridline",
+      "id": "light-gridline-001",
+      "label": "Light Gridline 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/light/light_gridline_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "light_complex_regression"
+    },
+    {
+      "category": "light_gradient",
+      "id": "light-gradient-001",
+      "label": "Light Gradient 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/light/light_gradient_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "light_complex_regression"
+    },
+    {
+      "category": "light_complex_diagram",
+      "id": "light-complex-diagram-001",
+      "label": "Light Complex Diagram 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/light/light_complex_diagram_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "light_complex_regression"
+    },
+    {
+      "category": "mixed_structure",
+      "id": "mixed-structure-001",
+      "label": "Mixed Structure 001",
+      "pdfPath": "/Users/lanling/Code/ppt_watermark_remover_release/python/regression/raster-suite/samples/mixed/mixed_structure_001.pdf",
+      "status": "missing_pdf",
+      "suiteRole": "light_complex_regression"
+    }
+  ],
+  "generatedAt": "2026-04-24T02:27:16.349339+00:00",
+  "manifestPath": "python/regression/raster-suite/manifest.v1.json",
+  "outputDir": "python/regression/raster-suite/results",
+  "summary": {
+    "categorySummary": [],
+    "darkBaselineStable": null,
+    "executedPdfCases": 0,
+    "failureCategoryTotals": {},
+    "missingPdfCases": 7,
+    "processFailedCases": 0,
+    "totalPdfCases": 7
+  }
+}

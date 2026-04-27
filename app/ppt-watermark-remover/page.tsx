@@ -8,9 +8,9 @@ import { pptSeoPageContent } from "@/content/pages/ppt-watermark-remover";
 
 export const metadata: Metadata = {
   title:
-    "PPT Watermark Remover | PPTX and Presentation Cleanup Workflow",
+    "PPT Watermark Remover | PDF-first Presentation Cleanup Workflow",
   description:
-    "PPT watermark remover landing page for general presentation cleanup intent. Learn PPT/PPTX scenarios, why manual cleanup is slow, and how upload-preview-download workflow helps.",
+    "PPT watermark remover landing page for presentation cleanup intent. Learn PDF-first scope, why manual cleanup is slow, and how upload-analysis-preview-confirm-download workflow helps.",
 };
 
 export default function PptWatermarkRemoverPage() {

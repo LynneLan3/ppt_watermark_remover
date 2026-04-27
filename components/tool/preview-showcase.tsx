@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import type { HomeToolContent } from "@/content/pages/home-tool";
 
@@ -14,14 +15,34 @@ export function PreviewShowcase({ content }: PreviewShowcaseProps) {
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">{content.description}</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <article className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <h3 className="text-sm font-semibold text-slate-900">{content.beforeCardTitle}</h3>
-            <div className="mt-3 h-36 rounded-lg border border-dashed border-slate-300 bg-white sm:h-44" />
-            <p className="mt-3 text-xs leading-5 text-slate-600">{content.beforeCardHint}</p>
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <Image
+                src="/images/home-before-cleanup.jpg"
+                alt="Before cleanup example with NotebookLM mark"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 50vw"
+                priority
+              />
+            </div>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-700">
+              {content.beforeCardTitle}
+            </p>
           </article>
           <article className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <h3 className="text-sm font-semibold text-slate-900">{content.afterCardTitle}</h3>
-            <div className="mt-3 h-36 rounded-lg border border-dashed border-slate-300 bg-white sm:h-44" />
-            <p className="mt-3 text-xs leading-5 text-slate-600">{content.afterCardHint}</p>
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <Image
+                src="/images/home-after-cleanup.jpg"
+                alt="After cleanup example without NotebookLM mark"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 50vw"
+                priority
+              />
+            </div>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-700">
+              {content.afterCardTitle}
+            </p>
           </article>
         </div>
         <div className="mt-5">

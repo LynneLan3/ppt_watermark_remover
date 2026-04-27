@@ -104,7 +104,7 @@ See `docs/object-level-support-matrix.md` for current Gamma-first / NotebookLM-l
 - Stable fixture generation for reproducible tests.
 
 ## Planner compatibility
-The engine consumes plan schema emitted by `/app/upload` (`planVersion 1.0`) and supports:
+The engine consumes plan schema emitted by the homepage upload panel (`planVersion 1.0`) and supports:
 - `selectedCandidate.objectType = text_run | image_xobject`
 - `selectedCandidate.repeatKey`
 - `selectedCandidate.confidence`

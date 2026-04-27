@@ -1,0 +1,55 @@
+{
+  "suiteName": "notebooklm-raster-light-complex-regression-v1",
+  "description": "Dark baseline + light/complex regression suite for NotebookLM PDF watermark cleanup.",
+  "pdfs": [
+    {
+      "id": "dark-glow-baseline-001",
+      "label": "Dark Glow Baseline 001",
+      "suiteRole": "dark_baseline",
+      "category": "dark_glow_panel",
+      "pdfPath": "samples/dark_baseline/dark_glow_baseline_001.pdf"
+    },
+    {
+      "id": "dark-plain-baseline-001",
+      "label": "Dark Plain Baseline 001",
+      "suiteRole": "dark_baseline",
+      "category": "dark_plain",
+      "pdfPath": "samples/dark_baseline/dark_plain_baseline_001.pdf"
+    },
+    {
+      "id": "light-plain-001",
+      "label": "Light Plain 001",
+      "suiteRole": "light_complex_regression",
+      "category": "light_plain",
+      "pdfPath": "samples/light/light_plain_001.pdf"
+    },
+    {
+      "id": "light-gridline-001",
+      "label": "Light Gridline 001",
+      "suiteRole": "light_complex_regression",
+      "category": "light_gridline",
+      "pdfPath": "samples/light/light_gridline_001.pdf"
+    },
+    {
+      "id": "light-gradient-001",
+      "label": "Light Gradient 001",
+      "suiteRole": "light_complex_regression",
+      "category": "light_gradient",
+      "pdfPath": "samples/light/light_gradient_001.pdf"
+    },
+    {
+      "id": "light-complex-diagram-001",
+      "label": "Light Complex Diagram 001",
+      "suiteRole": "light_complex_regression",
+      "category": "light_complex_diagram",
+      "pdfPath": "samples/light/light_complex_diagram_001.pdf"
+    },
+    {
+      "id": "mixed-structure-001",
+      "label": "Mixed Structure 001",
+      "suiteRole": "light_complex_regression",
+      "category": "mixed_structure",
+      "pdfPath": "samples/mixed/mixed_structure_001.pdf"
+    }
+  ]
+}

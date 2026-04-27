@@ -18,13 +18,13 @@ export type HomeToolContent = {
     title: string;
     description: string;
     trustPoints: string[];
-    primaryCta: ToolNavLink;
     secondaryCta: ToolNavLink;
     uploadCard: {
       title: string;
       description: string;
       placeholder: string;
       hint: string;
+      algorithmProfile: string;
       chooseFileLabel: string;
       generatePreviewLabel: string;
       waitingStatus: string;
@@ -85,61 +85,62 @@ export const homeToolContent: HomeToolContent = {
   },
   uploadHero: {
     eyebrow: "NotebookLM Export Cleanup",
-    title: "Remove NotebookLM export watermarks from supported files",
+    title: "Free beta preview for NotebookLM PDF cleanup",
     description:
-      "A focused tool flow for NotebookLM PDF and PPTX exports: upload, review preview, and download only after confirmation.",
+      "Upload a NotebookLM PDF export, review cleaned pages, and download only after preview confirmation.",
     trustPoints: [
-      "Preview before download",
-      "Temporary upload",
-      "Auto delete and no training",
-      "Secure processing for eligible files",
+      "Preview the cleaned result before downloading.",
+      "Works best for NotebookLM PDF exports with bottom-right marks.",
+      "Complex diagrams or dense backgrounds may leave slight residue.",
+      "Review every page before downloading.",
     ],
-    primaryCta: { label: "Upload and preview", href: "/app/upload" },
     secondaryCta: { label: "View processing steps", href: "#how-it-works" },
     uploadCard: {
       title: "Upload NotebookLM export",
-      description: "Select a NotebookLM PDF or PPTX export to start a local preview skeleton.",
-      placeholder: "Drag and drop PDF/PPTX here",
-      hint: "Homepage preview is local-only skeleton. Use upload page for real processing.",
+      description:
+        "PDF only. Current Beta supports NotebookLM PDF exports up to 50MB and 30 pages.",
+      placeholder: "Drag and drop PDF here",
+      hint: "Files are processed temporarily and automatically deleted after download or short expiry.",
+      algorithmProfile: "stable-light-complex-v5",
       chooseFileLabel: "Choose NotebookLM export",
       generatePreviewLabel: "Generate preview",
-      waitingStatus: "Upload NotebookLM export file",
-      selectedStatus: "File selected, click Generate preview",
-      previewReadyStatus: "Preview cleaned result is ready",
+      waitingStatus: "Upload NotebookLM PDF export",
+      selectedStatus: "File selected, ready to upload and process",
+      previewReadyStatus: "Cleaned preview is ready",
     },
   },
   previewShowcase: {
-    id: "preview",
+    id: "homepage-preview-showcase",
     title: "Preview cleaned result before you download",
     description:
       "The workflow emphasizes visual review. You can compare before and after states before confirming cleanup output.",
-    beforeCardTitle: "Before",
+    beforeCardTitle: "Before cleanup",
     beforeCardHint: "NotebookLM watermark visible in export preview",
-    afterCardTitle: "After",
+    afterCardTitle: "After cleanup",
     afterCardHint: "Watermark area cleaned in supported object-level cases",
     note: "This preview area is a static showcase on the homepage.",
-    primaryCta: { label: "Upload and preview", href: "/app/upload" },
+    primaryCta: { label: "Start from homepage upload", href: "/#homepage-upload" },
   },
   workflowSteps: {
     id: "how-it-works",
     title: "How it works",
-    description: "A simple four-step tool flow designed for NotebookLM export cleanup.",
+    description: "A Stage 2 product workflow for NotebookLM PDF cleanup.",
     steps: [
       {
-        title: "Upload NotebookLM export",
-        description: "Start by uploading your exported PDF or PPTX file.",
+        title: "Upload PDF",
+        description: "Upload your NotebookLM-exported PDF into temporary processing storage.",
       },
       {
-        title: "Detect watermark area",
-        description: "The tool identifies repeated watermark-like regions in eligible files.",
+        title: "Automatic processing",
+        description: "Processing starts automatically after upload using the stable-light-complex-v5 profile.",
       },
       {
-        title: "Preview cleaned result",
-        description: "Review the cleaned preview result before any download action.",
+        title: "Preview and download",
+        description: "Review original and cleaned pages side by side, then download the cleaned PDF.",
       },
       {
-        title: "Download after confirmation",
-        description: "Download cleaned file only after you confirm the previewed result.",
+        title: "Download and auto delete",
+        description: "Download cleaned output after preview confirmation; temporary files are deleted after download or short expiry.",
       },
     ],
   },
@@ -170,9 +171,9 @@ export const homeToolContent: HomeToolContent = {
     description: "Common questions for NotebookLM export watermark cleanup.",
     items: [
       {
-        question: "Does this support NotebookLM PDF and PPTX exports?",
+        question: "Does this support NotebookLM exports?",
         answer:
-          "The tool is positioned for NotebookLM export cleanup and focuses on supported object-level PDF and PPTX scenarios.",
+          "Yes. Stage 2 is PDF-first for NotebookLM exports. PPTX support is not available yet.",
       },
       {
         question: "Can I preview the result before downloading?",
@@ -198,7 +199,6 @@ export const homeToolContent: HomeToolContent = {
   footer: {
     productLinks: [
       { label: "Try the tool", href: "/" },
-      { label: "Go to uploader", href: "/app/upload" },
       { label: "NotebookLM cleanup page", href: "/notebooklm-watermark-remover" },
     ],
     legalLinks: [
@@ -212,7 +212,7 @@ export const homeToolContent: HomeToolContent = {
       { label: "FAQ", href: "/#faq" },
     ],
     disclaimer:
-      "This tool focuses on supported NotebookLM export watermark scenarios with temporary upload and secure processing.",
+      "NotebookLM Watermark Remover is currently PDF-first with temporary upload, short retention, and auto delete after download or expiry.",
     copyright: "© NotebookLM Watermark Remover",
   },
 };
