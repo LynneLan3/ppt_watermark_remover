@@ -4,16 +4,37 @@
 This repository is for NotebookLM Watermark Remover, a productized PDF-first NotebookLM cleanup tool with supporting marketing and SEO pages.
 
 ## Current Stage
-Stage 2 is active: productized NotebookLM cleanup workflow with temporary processing is the primary path.
+Stage 2 Beta: NotebookLM PDF cleanup workflow with temporary Blob-backed storage and server-side processing.
 
-Core path:
-- upload PDF
-- temporary job storage
-- server-side analyze
-- preview cleaned result
-- confirm cleanup action
-- cleaned artifact download
-- delete after download or short expiry
+### Core Workflow (Active)
+- NotebookLM PDF temporary upload
+- Blob-backed job manifest (`jobs/{jobId}/job.json`)
+- Server-side analyze (detect watermark candidates)
+- Server-side process (remove supported watermarks)
+- Preview cleaned result (before/after comparison)
+- Download cleaned PDF
+- Auto delete/expire temporary files after download or TTL
+
+### Currently Allowed
+- Upload backend API (`/api/jobs/*` routes)
+- Vercel Blob storage pipeline (job metadata + source PDFs)
+- Server/client cleanup workflow
+- Temporary processing with short retention
+- Preview confirmation UI
+- Download cleaned artifacts
+- Automatic/manual job deletion
+
+### Explicitly Out of Scope (Do Not Add)
+- User authentication / auth system
+- Billing / pricing / payment
+- User dashboard / account management
+- Database-backed user account system
+- Blog / CMS
+- Analytics integrations
+- Permanent document archive
+- Queue infrastructure (not needed for current scale)
+- PPTX upload/cleanup (PDF-first only)
+- Admin area (no multi-user management needed)
 
 ## Current Goals
 Build:
@@ -61,6 +82,15 @@ Build:
 - Delete files after download or short expiry.
 - Do not log raw document contents.
 - Do not claim universal cleanup success; fail safely for unsupported structures.
+
+## Blob-Backed Job Storage (Vercel Production)
+- Job metadata is stored in Vercel Blob at `jobs/{jobId}/job.json`.
+- Source PDFs are stored at `jobs/{jobId}/source.pdf`.
+- Analysis artifacts are stored alongside job metadata in Blob storage.
+- Processed outputs are uploaded to Blob after Python processing completes.
+- Local filesystem is used for temporary Python processing files only.
+- Blob storage requires `BLOB_READ_WRITE_TOKEN` environment variable.
+- When `BLOB_READ_WRITE_TOKEN` is not set, system falls back to local filesystem (development mode).
 
 ## Project Fact Recording Rules (MUST FOLLOW)
 

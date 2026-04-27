@@ -1,6 +1,8 @@
 import "server-only";
 
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 
 import { PDFDocument } from "pdf-lib";
 
@@ -22,6 +24,8 @@ import {
   setUploadToken,
   transitionJobStatus,
   verifyUploadToken,
+  getSourcePdfForProcessing,
+  UploadNotFinalizedError,
 } from "@/lib/jobs/repository";
 import type {
   JobErrorCode,
@@ -35,6 +39,7 @@ import type {
 import { runPythonCommand } from "@/lib/server/python-runner/process";
 import { getStorageAdapter } from "@/lib/storage/local-adapter";
 import { validateUploadedPdf } from "@/lib/storage/upload";
+import { isBlobStorageEnabled } from "@/lib/blob-storage/job-store";
 
 const DEFAULT_ALGORITHM_PROFILE = "stable-light-complex-v5";
 
@@ -88,52 +93,95 @@ export async function uploadSourcePdf(params: {
 export async function analyzeJobV1(jobId: string): Promise<{ job: JobRecord; review: JobReviewPayload }> {
   await transitionJobStatus(jobId, "analyzing");
   const job = await readJob(jobId);
-  if (!job.sourcePdfPath) {
-    throw new Error("source pdf missing");
-  }
-  const paths = resolvePaths(jobId);
-  const previousReview = await readReviewPayload(jobId);
-  const result = await runPythonCommand({
-    commandName: "analyze",
-    args: [
-      "engine/python/cli.py",
-      "analyze",
-      "--input",
-      job.sourcePdfPath,
-      "--output",
-      paths.analysisRawPath,
-    ],
-    options: {
-      timeoutMs: 45_000,
-    },
-  });
-  if (!result.ok) {
-    await transitionJobStatus(jobId, "failed", {
-      code: "analysis_failed",
-      message: result.stderr || "python analyze failed",
-    });
-    throw new Error(result.stderr || "python analyze failed");
+
+  // Check for source PDF - either local path or blob URL
+  if (!job.sourcePdfPath && !job.sourceBlobUrl) {
+    throw new UploadNotFinalizedError(jobId);
   }
 
-  const extractResult = await runPythonCommand({
-    commandName: "extract-commands",
-    args: [
-      "python/extract_page_commands.py",
-      "--input",
-      job.sourcePdfPath,
-      "--output",
-      paths.pageCommandsPath,
-    ],
-    options: {
-      timeoutMs: 45_000,
-    },
-  });
-  if (!extractResult.ok) {
-    await transitionJobStatus(jobId, "failed", {
-      code: "analysis_failed",
-      message: extractResult.stderr || "python extract page commands failed",
+  const paths = resolvePaths(jobId);
+  const previousReview = await readReviewPayload(jobId);
+
+  // Determine input path for Python analysis
+  let inputPdfPath: string;
+  let cleanupTempFile: (() => Promise<void>) | undefined;
+
+  if (job.sourcePdfPath && !isBlobStorageEnabled()) {
+    // Local filesystem mode
+    inputPdfPath = job.sourcePdfPath;
+  } else if (job.sourceBlobUrl) {
+    // Blob storage mode - download to temp file for Python processing
+    const sourceResult = await getSourcePdfForProcessing(jobId);
+    if (!sourceResult.buffer) {
+      throw new UploadNotFinalizedError(jobId);
+    }
+
+    // Write to temp file for Python processing
+    const tempDir = join(tmpdir(), "notebooklm-jobs", jobId);
+    await mkdir(tempDir, { recursive: true });
+    inputPdfPath = join(tempDir, "source.pdf");
+    await writeFile(inputPdfPath, sourceResult.buffer);
+
+    cleanupTempFile = async () => {
+      try {
+        const { rm } = await import("node:fs/promises");
+        await rm(tempDir, { recursive: true, force: true });
+      } catch {
+        // Ignore cleanup errors
+      }
+    };
+  } else {
+    throw new UploadNotFinalizedError(jobId);
+  }
+
+  try {
+    const result = await runPythonCommand({
+      commandName: "analyze",
+      args: [
+        "engine/python/cli.py",
+        "analyze",
+        "--input",
+        inputPdfPath,
+        "--output",
+        paths.analysisRawPath,
+      ],
+      options: {
+        timeoutMs: 45_000,
+      },
     });
-    throw new Error(extractResult.stderr || "python extract page commands failed");
+    if (!result.ok) {
+      await transitionJobStatus(jobId, "failed", {
+        code: "analysis_failed",
+        message: result.stderr || "python analyze failed",
+      });
+      throw new Error(result.stderr || "python analyze failed");
+    }
+
+    const extractResult = await runPythonCommand({
+      commandName: "extract-commands",
+      args: [
+        "python/extract_page_commands.py",
+        "--input",
+        inputPdfPath,
+        "--output",
+        paths.pageCommandsPath,
+      ],
+      options: {
+        timeoutMs: 45_000,
+      },
+    });
+    if (!extractResult.ok) {
+      await transitionJobStatus(jobId, "failed", {
+        code: "analysis_failed",
+        message: extractResult.stderr || "python extract page commands failed",
+      });
+      throw new Error(extractResult.stderr || "python extract page commands failed");
+    }
+  } finally {
+    // Cleanup temp file if it was created
+    if (cleanupTempFile) {
+      await cleanupTempFile();
+    }
   }
 
   const rawAnalysis = await getStorageAdapter().readJson<unknown>(paths.analysisRawPath);
@@ -215,11 +263,46 @@ export async function processJob(
     errorCode: null,
     errorMessage: null,
   };
+  let inputPdfPath: string;
+  let cleanupTempFile: (() => Promise<void>) | undefined;
+
   try {
     const job = await readJob(jobId);
-    if (!job.sourcePdfPath) {
-      throw new Error("source pdf missing");
+
+    // Check for source PDF - either local path or blob URL
+    if (!job.sourcePdfPath && !job.sourceBlobUrl) {
+      throw new UploadNotFinalizedError(jobId);
     }
+
+    // Determine input path for Python processing
+    if (job.sourcePdfPath && !isBlobStorageEnabled()) {
+      // Local filesystem mode
+      inputPdfPath = job.sourcePdfPath;
+    } else if (job.sourceBlobUrl) {
+      // Blob storage mode - download to temp file for Python processing
+      const sourceResult = await getSourcePdfForProcessing(jobId);
+      if (!sourceResult.buffer) {
+        throw new UploadNotFinalizedError(jobId);
+      }
+
+      // Write to temp file for Python processing
+      const tempDir = join(tmpdir(), "notebooklm-jobs", jobId);
+      await mkdir(tempDir, { recursive: true });
+      inputPdfPath = join(tempDir, "source.pdf");
+      await writeFile(inputPdfPath, sourceResult.buffer);
+
+      cleanupTempFile = async () => {
+        try {
+          const { rm } = await import("node:fs/promises");
+          await rm(tempDir, { recursive: true, force: true });
+        } catch {
+          // Ignore cleanup errors
+        }
+      };
+    } else {
+      throw new UploadNotFinalizedError(jobId);
+    }
+
     const reviewPayload = await readReviewPayload(jobId);
     const processMode = params.processMode ?? "raster_repair_v1";
     if (processMode === "object_level_v2" && !reviewPayload) {
@@ -233,7 +316,7 @@ export async function processJob(
 
     const requestPayload = {
       jobId: job.jobId,
-      sourcePdfPath: job.sourcePdfPath,
+      sourcePdfPath: inputPdfPath,
       outputPdfPath: paths.processedPdfPath,
       reportPath: paths.processReportPath,
       executionMapPath: paths.executionMapPath,
@@ -270,7 +353,7 @@ export async function processJob(
             "--request",
             paths.processRequestPath,
             "--input",
-            job.sourcePdfPath,
+            inputPdfPath,
             "--output",
             paths.processedPdfPath,
             "--report",
@@ -281,7 +364,7 @@ export async function processJob(
             "--request",
             paths.processRequestPath,
             "--input",
-            job.sourcePdfPath,
+            inputPdfPath,
             "--output",
             paths.processedPdfPath,
             "--report",
@@ -318,7 +401,7 @@ export async function processJob(
     );
 
     const report = await readOptionalJson<ProcessReportV2>(paths.processReportPath);
-    const originalPageCount = await readPdfPageCount(job.sourcePdfPath);
+    const originalPageCount = await readPdfPageCount(inputPdfPath);
     const processedFileExists = await fileExists(paths.processedPdfPath);
     const processedPageCount = processedFileExists ? await readPdfPageCount(paths.processedPdfPath) : 0;
     const processReportPageCount = resolveProcessReportPageCount(report);
@@ -470,6 +553,11 @@ export async function processJob(
       "utf-8",
     );
     throw error;
+  } finally {
+    // Cleanup temp file if it was created
+    if (cleanupTempFile) {
+      await cleanupTempFile();
+    }
   }
 }
 

@@ -313,10 +313,11 @@ export function UploadHero({ content }: UploadHeroProps) {
       });
       const analyzeResult = (await analyzeResp.json()) as JobApiResponse<Record<string, unknown>>;
       if (!analyzeResp.ok || !analyzeResult.success) {
-        throw new Error(
-          (analyzeResult as { message?: string }).message ||
-            "Analysis failed. Please try another PDF or report this file.",
-        );
+        const errorCode = (analyzeResult as { code?: string }).code;
+        const errorMessage = (analyzeResult as { message?: string }).message;
+        // Map error codes to user-friendly messages
+        const userMessage = getAnalyzeErrorMessage(errorCode, errorMessage);
+        throw new Error(userMessage);
       }
       if (isStale()) {
         return;
@@ -767,6 +768,23 @@ export function UploadHero({ content }: UploadHeroProps) {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getAnalyzeErrorMessage(code: string | undefined, originalMessage: string | undefined): string {
+  switch (code) {
+    case "job_not_found":
+      return "Job not found. Please refresh and try again.";
+    case "upload_not_finalized":
+      return "Upload not complete. Please try uploading again.";
+    case "analysis_failed":
+      return originalMessage || "Analysis failed. Please try another PDF or report this file.";
+    case "invalid_state":
+      return "Invalid job state. Please refresh and try again.";
+    case "validation_error":
+      return originalMessage || "Validation failed. Please check your file and try again.";
+    default:
+      return originalMessage || "Analysis failed. Please try another PDF or report this file.";
+  }
 }
 
 function clampNumber(value: number, min: number, max: number): number {

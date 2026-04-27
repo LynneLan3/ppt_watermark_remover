@@ -151,12 +151,18 @@ export type JobRecord = {
   retentionSeconds: number;
   sourceFilename?: string;
   sourcePdfPath?: string;
+  sourceBlobUrl?: string;
+  sourcePathname?: string;
+  sourceSize?: number;
+  sourceContentType?: string;
   uploadToken?: string;
   uploadTokenExpiresAt?: string;
   analysis?: JobAnalysisSnapshot;
   selection?: JobSelection;
   processOutputPath?: string;
   processReportPath?: string;
+  processOutputBlobUrl?: string;
+  processReportBlobUrl?: string;
   downloadedAt?: string;
   failureCode?: JobErrorCode;
   failureMessage?: string;
@@ -471,8 +477,11 @@ export type QualityMetricsComparison = {
 };
 
 export type JobErrorCode =
+  | "ok"
   | "validation_error"
   | "not_found"
+  | "job_not_found"
+  | "upload_not_finalized"
   | "invalid_state"
   | "upload_token_invalid"
   | "upload_token_expired"

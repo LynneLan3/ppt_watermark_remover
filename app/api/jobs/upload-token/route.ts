@@ -12,16 +12,26 @@ type UploadTokenRequest = {
 };
 
 export async function POST(request: Request) {
+  const startTime = Date.now();
   const contentType = request.headers.get("content-type") ?? "";
+
   if (contentType.includes("multipart/form-data")) {
-    return handleMultipartUpload(request);
+    return handleMultipartUpload(request, startTime);
   }
-  return handleIssueToken(request);
+  return handleIssueToken(request, startTime);
 }
 
-async function handleIssueToken(request: Request) {
+async function handleIssueToken(request: Request, startTime: number) {
   try {
     const body = (await request.json()) as UploadTokenRequest;
+
+    console.log({
+      level: "info",
+      phase: "upload_token_start",
+      jobId: body.jobId,
+      timestamp: new Date().toISOString(),
+    });
+
     if (!body.jobId) {
       return jobError({
         httpStatus: 400,
@@ -29,7 +39,18 @@ async function handleIssueToken(request: Request) {
         message: "jobId is required.",
       });
     }
+
     const token = await issueUploadToken(body.jobId);
+
+    console.log({
+      level: "info",
+      phase: "upload_token_complete",
+      jobId: token.job.jobId,
+      status: token.job.status,
+      durationMs: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
+    });
+
     return jobOk(
       "Upload token issued.",
       {
@@ -41,6 +62,14 @@ async function handleIssueToken(request: Request) {
       token.job,
     );
   } catch (error) {
+    console.error({
+      level: "error",
+      phase: "upload_token_error",
+      error: error instanceof Error ? error.message : "unknown error",
+      durationMs: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
+    });
+
     const mapped = mapRepositoryError(error);
     return jobError({
       httpStatus: mapped.httpStatus,
@@ -50,12 +79,19 @@ async function handleIssueToken(request: Request) {
   }
 }
 
-async function handleMultipartUpload(request: Request) {
+async function handleMultipartUpload(request: Request, startTime: number) {
   try {
     const form = await request.formData();
     const jobId = form.get("jobId");
     const uploadToken = form.get("uploadToken");
     const file = form.get("file");
+
+    console.log({
+      level: "info",
+      phase: "upload_start",
+      jobId: typeof jobId === "string" ? jobId : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
     if (typeof jobId !== "string" || typeof uploadToken !== "string" || !(file instanceof File)) {
       return jobError({
@@ -70,6 +106,17 @@ async function handleMultipartUpload(request: Request) {
       uploadToken,
       file,
     });
+
+    console.log({
+      level: "info",
+      phase: "upload_complete",
+      jobId: job.jobId,
+      status: job.status,
+      sourceBlobUrl: job.sourceBlobUrl ? "exists" : "missing",
+      durationMs: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
+    });
+
     return jobOk(
       "Source PDF uploaded.",
       {
@@ -80,6 +127,14 @@ async function handleMultipartUpload(request: Request) {
       job,
     );
   } catch (error) {
+    console.error({
+      level: "error",
+      phase: "upload_error",
+      error: error instanceof Error ? error.message : "unknown error",
+      durationMs: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
+    });
+
     const mapped = mapRepositoryError(error);
     const code =
       mapped.message.toLowerCase().includes("only pdf") ||

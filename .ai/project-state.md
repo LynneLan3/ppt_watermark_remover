@@ -21,6 +21,10 @@
 - [x] 修复 Vercel 运行时临时目录不可写：将 process.cwd() 改为 os.tmpdir()
 - [x] 确保所有 API 路由都有 nodejs runtime 配置
 - [x] 首页主流程使用 /api/jobs/* 链路正确
+- [x] 实现 Blob-backed job 持久化存储
+- [x] 修复 analyze 404 错误（区分 JOB_NOT_FOUND vs UPLOAD_NOT_FINALIZED）
+- [x] 添加 API 路由详细日志
+- [x] 更新前端错误显示
 
 ### Pending
 - [ ] Vercel Preview 部署验证主流程（上传 -> 处理 -> 预览 -> 下载）
@@ -45,12 +49,20 @@
 
 | 时间 | 文件 | 修改类型 | 说明 |
 |------|------|----------|------|
-| 2026-04-27 | app/layout.tsx | modify | 移除 next/font/google Geist/Geist_Mono 字体导入，改用系统字体，修复离线构建失败 |
-| 2026-04-27 | lib/server/temp-storage/paths.ts | modify | getTempJobsRoot() 改为使用 os.tmpdir() 替代 process.cwd()，修复 Vercel 不可写问题 |
-| 2026-04-27 | lib/storage/job-paths.ts | modify | getJobsRoot() 改为使用 os.tmpdir() 替代 process.cwd()，修复 Vercel 不可写问题 |
-| 2026-04-27 | .ai/devlog/2026-04-27-fix-deployment-blockers.md | create | 记录上线阻断问题修复过程 |
-| 2026-04-27 | .ai/project-state.md | modify | 更新当前状态为上线阻断修复完成 |
-| 2026-04-27 | next.config.ts | modify | 移除 turbopack.root: process.cwd() 配置，修复 Vercel NFT tracing 错误导致构建失败 |
+| 2026-04-27 | lib/blob-storage/job-store.ts | create | 实现 Vercel Blob-backed job 持久化存储：readJob, writeJob, saveSourcePdf, getSourcePdfBuffer 等 |
+| 2026-04-27 | lib/jobs/repository.ts | modify | 集成 Blob 存储，支持根据 BLOB_READ_WRITE_TOKEN 自动切换存储后端 |
+| 2026-04-27 | lib/jobs/types.ts | modify | 添加 sourceBlobUrl, sourcePathname, sourceSize, sourceContentType, processOutputBlobUrl 等字段 |
+| 2026-04-27 | lib/jobs/api.ts | modify | 添加 JobNotFoundError 和 UploadNotFinalizedError 错误映射 |
+| 2026-04-27 | lib/jobs/service.ts | modify | 更新 analyzeJobV1 和 processJob 支持 Blob 存储，下载 source PDF 到临时文件 |
+| 2026-04-27 | app/api/jobs/create/route.ts | modify | 添加详细日志记录 |
+| 2026-04-27 | app/api/jobs/upload-token/route.ts | modify | 添加详细日志记录 |
+| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | 修复错误处理，区分 JOB_NOT_FOUND (404) 和 UPLOAD_NOT_FINALIZED (409)，添加详细日志 |
+| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | 添加详细日志和错误处理 |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | 添加错误 code 映射，显示用户友好的错误信息 |
+| 2026-04-27 | AGENTS.md | modify | 添加 Blob-Backed Job Storage (Vercel Production) 章节 |
+| 2026-04-27 | package.json | modify | 添加 @vercel/blob 依赖 |
+| 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |
+| 2026-04-27 | .ai/devlog/2026-04-27-fix-analyze-404.md | create | 记录 analyze 404 修复过程 |
 
 ---
 

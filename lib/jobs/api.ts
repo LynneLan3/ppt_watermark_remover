@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { JobApiResponse, JobErrorCode, JobRecord } from "@/lib/jobs/types";
+import { JobNotFoundError, UploadNotFinalizedError } from "@/lib/jobs/repository";
 
 export function jobOk<T>(message: string, data?: T, job?: JobRecord) {
   return NextResponse.json<JobApiResponse<T>>({
@@ -36,11 +37,37 @@ export function mapRepositoryError(error: unknown): {
 } {
   const message = error instanceof Error ? error.message : "internal error";
   const lower = message.toLowerCase();
-  if (lower.includes("enoent") || lower.includes("no such file")) {
+
+  // Handle specific error types first
+  if (error instanceof JobNotFoundError) {
     return {
-      code: "not_found",
+      code: "job_not_found",
+      message: `Job not found: ${error.jobId}`,
+      httpStatus: 404,
+    };
+  }
+
+  if (error instanceof UploadNotFinalizedError) {
+    return {
+      code: "upload_not_finalized",
+      message: `Upload not finalized for job: ${error.jobId}`,
+      httpStatus: 409,
+    };
+  }
+
+  if (lower.includes("enoent") || lower.includes("no such file") || lower.includes("job not found")) {
+    return {
+      code: "job_not_found",
       message: "Job not found, expired, or already deleted.",
       httpStatus: 404,
+    };
+  }
+
+  if (lower.includes("upload not finalized") || lower.includes("source pdf missing")) {
+    return {
+      code: "upload_not_finalized",
+      message: "Upload not finalized. Please upload a file first.",
+      httpStatus: 409,
     };
   }
   if (lower.includes("invalid state transition") || lower.includes("invalid state")) {
