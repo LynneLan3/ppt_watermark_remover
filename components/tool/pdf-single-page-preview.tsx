@@ -87,8 +87,12 @@ export function PdfSinglePagePreview({
         if (!context) {
           throw new Error("Canvas context unavailable");
         }
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
+        // 保持原始宽高比，但限制最大宽度
+        const maxWidth = 800;
+        const scale = Math.min(1.4, maxWidth / viewport.width);
+        const scaledViewport = pdfPage.getViewport({ scale });
+        canvas.width = Math.floor(scaledViewport.width);
+        canvas.height = Math.floor(scaledViewport.height);
 
         const renderTask = pdfPage.render({
           canvasContext: context,

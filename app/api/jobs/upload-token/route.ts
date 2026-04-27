@@ -3,6 +3,10 @@ import { issueUploadToken, uploadSourcePdf } from "@/lib/jobs/service";
 
 export const runtime = "nodejs";
 
+// 增加 body size limit 以支持最大 50MB 上传
+export const dynamic = "force-dynamic";
+export const maxBodyLength = 50 * 1024 * 1024; // 50MB
+
 type UploadTokenRequest = {
   jobId?: string;
 };

@@ -219,6 +219,12 @@ export function UploadHero({ content }: UploadHeroProps) {
       setErrorMessage("PDF only. Please upload a PDF file.");
       return;
     }
+    // Vercel 平台限制 4.5MB，设置 4MB 安全上限
+    const MAX_FILE_SIZE = 4 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setErrorMessage(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum allowed is 4MB due to platform limits.`);
+      return;
+    }
 
     setSelectedFile(file);
     setSourcePageCount(null);
@@ -622,7 +628,7 @@ export function UploadHero({ content }: UploadHeroProps) {
       </div>
 
       {showPreview ? (
-        <div id="result-preview" className="mx-auto mt-8 max-w-6xl space-y-6">
+        <div id="result-preview" className="mx-auto mt-8 max-w-5xl space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <PdfSinglePagePreview
               title="Original PDF preview"

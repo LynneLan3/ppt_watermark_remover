@@ -98,7 +98,7 @@ export const homeToolContent: HomeToolContent = {
     uploadCard: {
       title: "Upload NotebookLM export",
       description:
-        "PDF only. Current Beta supports NotebookLM PDF exports up to 50MB and 30 pages.",
+        "PDF only. Maximum file size 4MB. Works best for NotebookLM PDF exports up to 30 pages.",
       placeholder: "Drag and drop PDF here",
       hint: "Files are processed temporarily and automatically deleted after download or short expiry.",
       algorithmProfile: "stable-light-complex-v5",
