@@ -482,6 +482,7 @@ export type JobErrorCode =
   | "not_found"
   | "job_not_found"
   | "upload_not_finalized"
+  | "blob_path_conflict"
   | "invalid_state"
   | "upload_token_invalid"
   | "upload_token_expired"

@@ -279,18 +279,22 @@ export async function persistAnalyzeOutputs(params: {
       put(analysisPathname, JSON.stringify(params.rawAnalysis, null, 2), {
         contentType: "application/json",
         access: "private",
+        allowOverwrite: true,
       }),
       put(pageCommandsPathname, JSON.stringify(params.pageCommands, null, 2), {
         contentType: "application/json",
         access: "private",
+        allowOverwrite: true,
       }),
       put(candidatesPathname, JSON.stringify(params.candidates, null, 2), {
         contentType: "application/json",
         access: "private",
+        allowOverwrite: true,
       }),
       put(reviewPathname, JSON.stringify(params.reviewPayload, null, 2), {
         contentType: "application/json",
         access: "private",
+        allowOverwrite: true,
       }),
     ]);
 
@@ -424,6 +428,7 @@ export async function persistProcessOutput(params: {
     const outputBlob = await put(`${getJobsRoot()}/${jobId}/processed.pdf`, outputBuffer, {
       contentType: "application/pdf",
       access: "private",
+      allowOverwrite: true,
     });
     outputBlobUrl = outputBlob.url;
 
@@ -432,6 +437,7 @@ export async function persistProcessOutput(params: {
     const reportBlob = await put(`${getJobsRoot()}/${jobId}/process-report.json`, reportBuffer, {
       contentType: "application/json",
       access: "private",
+      allowOverwrite: true,
     });
     reportBlobUrl = reportBlob.url;
   }

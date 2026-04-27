@@ -62,19 +62,34 @@ async function handleIssueToken(request: Request, startTime: number) {
       token.job,
     );
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "unknown error";
     console.error({
       level: "error",
       phase: "upload_token_error",
-      error: error instanceof Error ? error.message : "unknown error",
+      error: errorMessage,
       durationMs: Date.now() - startTime,
       timestamp: new Date().toISOString(),
     });
 
     const mapped = mapRepositoryError(error);
+
+    // Sanitize error message - don't expose internal details
+    const lowerError = errorMessage.toLowerCase();
+    let sanitizedMessage = mapped.message;
+    if (
+      lowerError.includes("vercel") ||
+      lowerError.includes("blob") ||
+      lowerError.includes("token") ||
+      lowerError.includes("internal") ||
+      lowerError.includes("path")
+    ) {
+      sanitizedMessage = "Failed to prepare upload. Please try again.";
+    }
+
     return jobError({
       httpStatus: mapped.httpStatus,
       code: mapped.code,
-      message: mapped.message,
+      message: sanitizedMessage,
     });
   }
 }
@@ -127,13 +142,28 @@ async function handleMultipartUpload(request: Request, startTime: number) {
       job,
     );
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "unknown error";
     console.error({
       level: "error",
       phase: "upload_error",
-      error: error instanceof Error ? error.message : "unknown error",
+      error: errorMessage,
       durationMs: Date.now() - startTime,
       timestamp: new Date().toISOString(),
     });
+
+    // Check for Blob pathname conflict
+    const lowerError = errorMessage.toLowerCase();
+    if (
+      lowerError.includes("blob already exists") ||
+      lowerError.includes("this blob already exists") ||
+      lowerError.includes("already exists")
+    ) {
+      return jobError({
+        httpStatus: 409,
+        code: "blob_path_conflict",
+        message: "Temporary upload path already exists. Please try again.",
+      });
+    }
 
     const mapped = mapRepositoryError(error);
     const code =
@@ -141,10 +171,22 @@ async function handleMultipartUpload(request: Request, startTime: number) {
       mapped.message.toLowerCase().includes("uploaded pdf")
         ? "unsupported_format"
         : mapped.code;
+
+    // Sanitize error message - don't expose internal details
+    let sanitizedMessage = mapped.message;
+    if (
+      lowerError.includes("vercel") ||
+      lowerError.includes("blob") ||
+      lowerError.includes("token") ||
+      lowerError.includes("internal")
+    ) {
+      sanitizedMessage = "Upload failed. Please try again.";
+    }
+
     return jobError({
       httpStatus: mapped.httpStatus,
       code,
-      message: mapped.message,
+      message: sanitizedMessage,
     });
   }
 }

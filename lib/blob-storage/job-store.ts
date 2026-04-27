@@ -75,6 +75,7 @@ export async function writeJob(job: JobRecord): Promise<void> {
   await put(pathname, JSON.stringify(job, null, 2), {
     contentType: "application/json",
     access: "private",
+    allowOverwrite: true,
   });
 }
 
@@ -104,12 +105,14 @@ export async function saveSourcePdf(
     const blob = await put(pathname, file, {
       contentType: file.type || "application/pdf",
       access: "private",
+      allowOverwrite: true,
     });
     blobResult = { url: blob.url, pathname: blob.pathname, size: file.size };
   } else if (file instanceof Buffer) {
     const blob = await put(pathname, file, {
       contentType: "application/pdf",
       access: "private",
+      allowOverwrite: true,
     });
     blobResult = { url: blob.url, pathname: blob.pathname, size: file.length };
   } else {
@@ -118,6 +121,7 @@ export async function saveSourcePdf(
     const blob = await put(pathname, buffer, {
       contentType: "application/pdf",
       access: "private",
+      allowOverwrite: true,
     });
     blobResult = { url: blob.url, pathname: blob.pathname, size: buffer.length };
   }

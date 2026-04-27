@@ -63,6 +63,7 @@ export function UploadHero({ content }: UploadHeroProps) {
   const [feedbackNote, setFeedbackNote] = useState("");
   const [debugQueryEnabled, setDebugQueryEnabled] = useState(false);
   const pipelineRunIdRef = useRef(0);
+  const uploadingRef = useRef(false);
 
   const fileSizeText = useMemo(() => {
     if (!selectedFile) {
@@ -211,6 +212,11 @@ export function UploadHero({ content }: UploadHeroProps) {
   };
 
   const handleSelectFile = (list: FileList | null) => {
+    // Prevent duplicate uploads
+    if (uploadingRef.current) {
+      return;
+    }
+
     const file = list?.[0];
     if (!file) {
       return;
@@ -225,6 +231,9 @@ export function UploadHero({ content }: UploadHeroProps) {
       setErrorMessage(`File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum allowed is 4MB due to platform limits.`);
       return;
     }
+
+    // Set uploading lock
+    uploadingRef.current = true;
 
     setSelectedFile(file);
     setSourcePageCount(null);
@@ -243,13 +252,19 @@ export function UploadHero({ content }: UploadHeroProps) {
     setProcessingStage("uploading");
     const runId = pipelineRunIdRef.current + 1;
     pipelineRunIdRef.current = runId;
-    void runProcessingPipeline(file, runId);
+    void runProcessingPipeline(file, runId).finally(() => {
+      uploadingRef.current = false;
+    });
   };
 
   const handleDrop = (event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setIsDragActive(false);
     if (workflowState === "processing" || workflowState === "ready_for_download") {
+      return;
+    }
+    // Prevent duplicate uploads
+    if (uploadingRef.current) {
       return;
     }
     handleSelectFile(event.dataTransfer.files);
@@ -360,24 +375,40 @@ export function UploadHero({ content }: UploadHeroProps) {
         return;
       }
       setWorkflowState("failed");
-      setErrorMessage(error instanceof Error ? error.message : "Processing failed.");
+      const rawMessage = error instanceof Error ? error.message : "Processing failed.";
+      setErrorMessage(sanitizeErrorMessage(rawMessage) || "Processing failed. Please try again.");
       setNoticeMessage(null);
+    } finally {
+      uploadingRef.current = false;
     }
   };
 
   const handleRetry = () => {
-    if (!selectedFile) {
+    if (!selectedFile || uploadingRef.current) {
       return;
     }
+    // Reset job state before retry
+    resetJobState();
+    setErrorMessage(null);
+    setNoticeMessage(null);
+    setProcessedPdfUrl(null);
+    setProcessedPreviewReady(false);
+    setProcessedPreviewError(null);
+    setProcessedPageCount(null);
+
+    uploadingRef.current = true;
     const runId = pipelineRunIdRef.current + 1;
     pipelineRunIdRef.current = runId;
     setWorkflowState("processing");
     setProcessingStage("uploading");
-    void runProcessingPipeline(selectedFile, runId);
+    void runProcessingPipeline(selectedFile, runId).finally(() => {
+      uploadingRef.current = false;
+    });
   };
 
   const handleProcessAnother = () => {
     pipelineRunIdRef.current += 1;
+    uploadingRef.current = false;
     if (originalPdfUrl) {
       URL.revokeObjectURL(originalPdfUrl);
     }
@@ -389,6 +420,13 @@ export function UploadHero({ content }: UploadHeroProps) {
     setNoticeMessage(null);
     setWorkflowState("idle");
     setProcessedPageCount(null);
+    setProcessedPdfUrl(null);
+    setProcessedPreviewReady(false);
+    setProcessedPreviewError(null);
+    // Reset file input
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   const handleDownload = async () => {
@@ -782,9 +820,32 @@ function getAnalyzeErrorMessage(code: string | undefined, originalMessage: strin
       return "Invalid job state. Please refresh and try again.";
     case "validation_error":
       return originalMessage || "Validation failed. Please check your file and try again.";
+    case "blob_path_conflict":
+    case "BLOB_PATH_CONFLICT":
+      return "Upload was retried with the same temporary file path. Please try again.";
     default:
-      return originalMessage || "Analysis failed. Please try another PDF or report this file.";
+      return sanitizeErrorMessage(originalMessage) || "Analysis failed. Please try another PDF or report this file.";
   }
+}
+
+function sanitizeErrorMessage(message: string | undefined): string | undefined {
+  if (!message) return undefined;
+  // Hide technical details like vercel.link, internal paths, tokens
+  const lower = message.toLowerCase();
+  if (
+    lower.includes("blob already exists") ||
+    lower.includes("this blob already exists") ||
+    lower.includes("vercel.blob") ||
+    lower.includes("vercel link") ||
+    lower.includes("token")
+  ) {
+    return "Upload was retried with the same temporary file path. Please try again.";
+  }
+  // Remove internal paths
+  if (message.includes("jobs/") || message.includes("/tmp/")) {
+    return "Processing failed. Please try again or use a different PDF.";
+  }
+  return message;
 }
 
 function clampNumber(value: number, min: number, max: number): number {

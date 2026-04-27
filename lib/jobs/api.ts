@@ -70,6 +70,13 @@ export function mapRepositoryError(error: unknown): {
       httpStatus: 409,
     };
   }
+  if (lower.includes("blob already exists") || lower.includes("already exists")) {
+    return {
+      code: "blob_path_conflict",
+      message: "Temporary upload path already exists. Please try again.",
+      httpStatus: 409,
+    };
+  }
   if (lower.includes("invalid state transition") || lower.includes("invalid state")) {
     return {
       code: "invalid_state",

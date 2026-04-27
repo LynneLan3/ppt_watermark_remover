@@ -49,20 +49,16 @@
 
 | 时间 | 文件 | 修改类型 | 说明 |
 |------|------|----------|------|
-| 2026-04-27 | lib/blob-storage/job-store.ts | create | 实现 Vercel Blob-backed job 持久化存储：readJob, writeJob, saveSourcePdf, getSourcePdfBuffer 等 |
-| 2026-04-27 | lib/jobs/repository.ts | modify | 集成 Blob 存储，支持根据 BLOB_READ_WRITE_TOKEN 自动切换存储后端 |
-| 2026-04-27 | lib/jobs/types.ts | modify | 添加 sourceBlobUrl, sourcePathname, sourceSize, sourceContentType, processOutputBlobUrl 等字段 |
-| 2026-04-27 | lib/jobs/api.ts | modify | 添加 JobNotFoundError 和 UploadNotFinalizedError 错误映射 |
-| 2026-04-27 | lib/jobs/service.ts | modify | 更新 analyzeJobV1 和 processJob 支持 Blob 存储，下载 source PDF 到临时文件 |
-| 2026-04-27 | app/api/jobs/create/route.ts | modify | 添加详细日志记录 |
-| 2026-04-27 | app/api/jobs/upload-token/route.ts | modify | 添加详细日志记录 |
-| 2026-04-27 | app/api/jobs/[jobId]/analyze/route.ts | modify | 修复错误处理，区分 JOB_NOT_FOUND (404) 和 UPLOAD_NOT_FINALIZED (409)，添加详细日志 |
-| 2026-04-27 | app/api/jobs/[jobId]/process/route.ts | modify | 添加详细日志和错误处理 |
-| 2026-04-27 | components/tool/upload-hero.tsx | modify | 添加错误 code 映射，显示用户友好的错误信息 |
-| 2026-04-27 | AGENTS.md | modify | 添加 Blob-Backed Job Storage (Vercel Production) 章节 |
-| 2026-04-27 | package.json | modify | 添加 @vercel/blob 依赖 |
+| 2026-04-27 | lib/blob-storage/job-store.ts | modify | 所有 put 调用添加 allowOverwrite: true 修复 Blob pathname 冲突 |
+| 2026-04-27 | lib/jobs/repository.ts | modify | persistAnalyzeOutputs 和 persistProcessOutput 中的 put 添加 allowOverwrite: true |
+| 2026-04-27 | components/tool/upload-hero.tsx | modify | 添加 uploadingRef 锁防止重复上传；改进错误消息清理；完善 handleRetry 和 handleProcessAnother 状态重置 |
+| 2026-04-27 | app/api/jobs/upload-token/route.ts | modify | 捕获 Blob already exists 错误返回 409 blob_path_conflict；错误消息脱敏处理 |
+| 2026-04-27 | lib/jobs/types.ts | modify | 添加 blob_path_conflict 错误码 |
+| 2026-04-27 | lib/jobs/api.ts | modify | 添加 blob_path_conflict 错误映射 |
+| 2026-04-27 | AGENTS.md | modify | 更新为 Stage 2 Beta，明确允许范围和禁止事项 |
+| 2026-04-27 | docs/prd.md | modify | 更新为 Stage 2 Beta 目标和成功标准 |
 | 2026-04-27 | .ai/project-state.md | modify | 更新项目状态 |
-| 2026-04-27 | .ai/devlog/2026-04-27-fix-analyze-404.md | create | 记录 analyze 404 修复过程 |
+| 2026-04-27 | .ai/devlog/2026-04-27-fix-blob-conflict.md | create | 记录 Blob pathname 冲突和重复上传修复过程 |
 
 ---
 
